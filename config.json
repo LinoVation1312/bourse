@@ -1,0 +1,99 @@
+{
+  "capital_initial": 2500,
+  "cash_reserve_pct": 0.2,
+  "risque_par_trade": 0.02,
+  "max_positions": 3,
+  "position_max_pct": 0.3,
+  "position_min_eur": 200,
+  "max_lev": 2,
+  "score_min": 40,
+  "score_levier_2x": 75,
+  "frais_ordre": 1.0,
+  "spread_pct": 0.001,
+  "change_pct": 0.005,
+  "frais_max_pct_position": 0.02,
+  "ratio_gain_frais_min": 5,
+  "atr_pct_max": 0.07,
+  "jours_max_levier": 20,
+  "jours_max_1x": 120,
+  "coupe_circuit_pct": 0.15,
+  "pause_jours": 14,
+  "benchmark": "QQQ",
+  "watchlist": [
+    {
+      "ticker": "NVDA",
+      "nom": "Nvidia",
+      "devise": "USD",
+      "secteur": "SMH"
+    },
+    {
+      "ticker": "AVGO",
+      "nom": "Broadcom",
+      "devise": "USD",
+      "secteur": "SMH"
+    },
+    {
+      "ticker": "MSFT",
+      "nom": "Microsoft",
+      "devise": "USD",
+      "secteur": "XLK"
+    },
+    {
+      "ticker": "PLTR",
+      "nom": "Palantir",
+      "devise": "USD",
+      "atr_pct_max": 0.09
+    },
+    {
+      "ticker": "AMD",
+      "nom": "AMD",
+      "devise": "USD",
+      "atr_pct_max": 0.08,
+      "secteur": "SMH"
+    },
+    {
+      "ticker": "LLY",
+      "nom": "Eli Lilly",
+      "devise": "USD",
+      "secteur": "XLV"
+    },
+    {
+      "ticker": "ASML.AS",
+      "nom": "ASML",
+      "devise": "EUR"
+    },
+    {
+      "ticker": "QBTS",
+      "nom": "D-Wave Quantum",
+      "devise": "USD",
+      "atr_pct_max": 0.14,
+      "max_lev": 1
+    }
+  ],
+  "veille": {
+    "paliers": [
+      0.02,
+      0.03,
+      0.05,
+      0.075,
+      0.1
+    ],
+    "gap_pct": 0.03,
+    "rvol_min": 2.0,
+    "accel_15m": 0.02,
+    "accel_1h": 0.03,
+    "reversal_pct": 0.03,
+    "range_x": 2.0,
+    "simul_pct": 0.02,
+    "p3_max_par_valeur": 3,
+    "position_drop_pct": 0.04,
+    "position_up_pct": 0.08,
+    "stale_minutes": 60,
+    "news_hours": 3,
+    "news_max_par_valeur": 3,
+    "bench": {
+      "USD": "QQQ",
+      "EUR": "^STOXX50E"
+    }
+  }
+}
