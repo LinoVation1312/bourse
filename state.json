@@ -1,1 +1,26 @@
-{"offset": 0, "positions": {}, "sent": {}, "dca_month": "", "dd_level": {}}
+{
+ "offset": 125508281,
+ "positions": {},
+ "sent": {},
+ "dca_month": "",
+ "dd_level": {},
+ "slot_sent": {
+  "open": "2026-10-11"
+ },
+ "last_verdict": {
+  "PAEEM.PA": "GARDER",
+  "WPEA.PA": "GARDER",
+  "BNK.PA": "GARDER",
+  "GC=F": "GARDER",
+  "MSFT": "ACHETER",
+  "META": "ACHETER",
+  "NVDA": "ACHETER",
+  "ENGI.PA": "VENDRE",
+  "1810.HK": "GARDER",
+  "CSIQ": "VENDRE",
+  "QBTS": "GARDER",
+  "QNC": "GARDER",
+  "GHY.WA": "GARDER",
+  "LHYFE.PA": "GARDER"
+ }
+}
