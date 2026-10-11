@@ -1,6 +1,6 @@
 """Assistant Bourse. Aucun ordre n'est passé : il donne un avis (acheter / garder / vendre + confiance + levier), tu décides.
 
-  python bot.py daily   -> récap du matin, à l'ouverture de la bourse de Paris (9h)
+  python bot.py daily   -> 2 récaps : 7h45 (pré-ouverture) et 9h05 (confirmation à l'ouverture de Paris)
   python bot.py veille  -> toutes les 15 min en séance : t'écrit seulement si quelque chose se passe
                            (grosse variation sur la journée, mouvement brutal sur 1 h, actualité sensible)
 
@@ -33,7 +33,7 @@ PARIS = NOW.astimezone(ZoneInfo("Europe/Paris"))
 
 cfg = json.load(open("config.json"))
 state = json.load(open("state.json"))
-for k, v in {"offset": 0, "positions": {}, "sent": {}, "dca_month": "", "daily_sent": "", "last_verdict": {}}.items():
+for k, v in {"offset": 0, "positions": {}, "sent": {}, "dca_month": "", "slot_sent": {}, "last_verdict": {}}.items():
     state.setdefault(k, v)
 WL = cfg["watchlist"]
 JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
@@ -340,16 +340,57 @@ def statut():
 
 
 # ------------------------------------------------------------ récap du matin (9h Paris)
-def daily():
-    if not MANUAL and (PARIS.hour != 9 or state["daily_sent"] == str(TODAY)):
-        return  # deux crons (été/hiver) : on n'envoie qu'une fois, à 9h heure de Paris
-    state["daily_sent"] = str(TODAY)
+def slot():
+    """« pre » (7h45) ou « open » (9h05). Le cron donne le créneau ; à défaut, l'heure de Paris."""
+    sch = os.environ.get("EVENT_SCHEDULE", "").split()
+    if sch and not MANUAL:
+        return "pre" if sch[0] == "45" else "open"
+    return "pre" if PARIS.hour < 9 else "open"
 
-    rows, fails, ordres, prevu = [], [], [], []
+
+def en_ligne(w, a, m1=None, old=None):
+    chg = f" (avant : {old})" if old and old != a["verdict"] else ""
+    return (f"{ICON[a['verdict']]} {w['nom']} — {a['verdict']} ({a['conf']} %){chg}\n"
+            f"   {', '.join(a['why'][:2])}" + (f" · {pct(m1)} hier" if m1 is not None else "")
+            + f"\n   Levier : {a['levier']}")
+
+
+def pied(out, fails):
+    month = f"{TODAY.year}-{TODAY.month:02d}"
+    if TODAY.day >= cfg["dca_jour"] and state["dca_month"] != month:
+        state["dca_month"] = month
+        etfs = ", ".join(w["nom"] for w in WL if w.get("dca"))
+        out.append(f"📅 Rappel du mois : ton versement sur tes ETF ({etfs}).")
+    if fails:
+        out.append("ℹ️ Pas de données : " + ", ".join(fails) + ".")
+    out.append("Avis automatique basé sur la tendance ; la confiance n'est pas une probabilité. "
+               "Pas un conseil en investissement.")
+
+
+def daily():
+    s = slot()
+    if not MANUAL:
+        ok = (7 <= PARIS.hour < 9) if s == "pre" else (9 <= PARIS.hour < 11)
+        if not ok or state["slot_sent"].get(s) == str(TODAY):
+            return  # plusieurs crons (été/hiver) : un seul envoi par créneau, à la bonne heure de Paris
+    state["slot_sent"][s] = str(TODAY)
+    recap_pre() if s == "pre" else recap_open()
+
+
+def lire(w):
+    """(séance complète, barres terminées, séance du jour présente ?)"""
+    full = history(w["ticker"])
+    today = full.index[-1].date() == NOW.astimezone(ZoneInfo(tzname(w["ticker"]))).date()
+    return full, finished_bars(full, w["ticker"]), today
+
+
+def recap_pre():
+    """7h45 : avis du jour sur les clôtures d'hier + ce qui s'est passé cette nuit."""
+    rows, fails, nuit, news = [], [], [], []
     for w in WL:
         try:
-            df = finished_bars(history(w["ticker"]), w["ticker"])
-            a = avis(w, df)
+            full, df, today = lire(w)
+            a = avis(w, df, last_live=float(full.Close.iloc[-1]) if today else None)
         except Exception:
             fails.append(w["nom"])
             continue
@@ -357,35 +398,70 @@ def daily():
         old = state["last_verdict"].get(w["ticker"])
         state["last_verdict"][w["ticker"]] = a["verdict"]
         rows.append((w, a, m1, old))
+        if today:
+            mn = float(full.Close.iloc[-1] / full.Close.iloc[-2] - 1)
+            if abs(mn) >= cfg["veille"]["jour"][w["cat"]] / 2:
+                nuit.append(f"{w['nom']} : {pct(mn)} cette nuit")
+        for ico, title, src, url in news_sensibles(w["ticker"], heures=14):
+            news.append(f"{ico} {w['nom']} : « {title} » ({src}) {url}".strip())
 
-    for w, a, m1, old in rows:
-        chg = f" (hier : {old})" if old and old != a["verdict"] else ""
-        if a["verdict"] != "GARDER":
-            ordres.append(f"{ICON[a['verdict']]} {w['nom']} — {a['verdict']} ({a['conf']} %){chg}\n"
-                          f"   {', '.join(a['why'][:2])} · {pct(m1)} hier\n   Levier : {a['levier']}")
-        else:
-            prevu.append(f"{w['nom']} ({a['conf']} %){chg}")
-        for n in a["notes"]:
-            if "résultats" in n:
-                ordres.append(f"⚠️ {w['nom']} : {n}")
+    ordres = [en_ligne(w, a, m1, old) for w, a, m1, old in rows if a["verdict"] != "GARDER"]
+    prevu = [f"{w['nom']} ({a['conf']} %)" + (f" [avant : {old}]" if old and old != a["verdict"] else "")
+             for w, a, m1, old in rows if a["verdict"] == "GARDER"]
+    resultats = [f"⚠️ {w['nom']} : {n}" for w, a, m1, old in rows for n in a["notes"] if "résultats" in n]
 
-    out = [f"📊 Bourse — {JOURS[PARIS.weekday()]} {PARIS.day} {MOIS[PARIS.month - 1]} · ouverture"]
+    out = [f"🌅 Pré-ouverture — {JOURS[PARIS.weekday()]} {PARIS.day} {MOIS[PARIS.month - 1]} · 7h45\n"
+           f"Trade Republic est ouvert (7h30). Euronext ouvre à 9h : je te redonne un point à 9h05."]
+    if nuit:
+        out.append("🌙 Cette nuit\n" + "\n".join("• " + x for x in nuit))
+    if news:
+        out.append("📰 Actualités de la nuit\n" + "\n".join(news))
     if ordres:
         out.append("\n".join(ordres))
     if prevu:
         out.append("⚪ GARDER : " + ", ".join(prevu))
+    if resultats:
+        out.append("\n".join(resultats))
     if not ordres:
-        out.insert(1, "✅ Rien à faire : pas de signal net aujourd'hui.")
+        out.insert(1, "✅ Pas de signal net aujourd'hui.")
+    pied(out, fails)
+    notify("\n\n".join(out))
 
-    month = f"{TODAY.year}-{TODAY.month:02d}"
-    if TODAY.day >= cfg["dca_jour"] and state["dca_month"] != month:
-        state["dca_month"] = month
-        etfs = ", ".join(w["nom"] for w in WL if w.get("dca"))
-        out.append(f"📅 Rappel du mois : ton versement sur tes ETF ({etfs}).")
+
+def recap_open():
+    """9h05 : seulement ce qui a changé depuis 7h45 (écarts d'ouverture, avis modifiés)."""
+    changes, ecarts, fails = [], [], []
+    for w in WL:
+        try:
+            full, df, today = lire(w)
+            last = float(full.Close.iloc[-1]) if today else None
+            a = avis(w, df, last_live=last)
+        except Exception:
+            fails.append(w["nom"])
+            continue
+        old = state["last_verdict"].get(w["ticker"])
+        state["last_verdict"][w["ticker"]] = a["verdict"]
+        if old and old != a["verdict"]:
+            changes.append(f"{w['nom']} : {old} → {ICON[a['verdict']]} {a['verdict']} ({a['conf']} %). "
+                           f"Levier : {a['levier'].split(' (')[0]}.")
+        if today and tzname(w["ticker"]).startswith("Europe/"):
+            prev = float(full.Close.iloc[-2])
+            gap = float(full.Open.iloc[-1]) / prev - 1
+            now = last / prev - 1
+            if abs(gap) >= cfg["veille"]["jour"][w["cat"]] / 2 or abs(now) >= cfg["veille"]["jour"][w["cat"]] / 2:
+                ecarts.append(f"{w['nom']} : {pct(gap)} à l'ouverture, {pct(now)} depuis la veille. "
+                              f"Avis : {ligne_avis(a)}")
+
+    out = [f"🔔 Ouverture — {JOURS[PARIS.weekday()]} {PARIS.day} {MOIS[PARIS.month - 1]} · 9h05"]
+    if ecarts:
+        out.append("📈 Écarts à l'ouverture (Paris)\n" + "\n".join("• " + x for x in ecarts))
+    if changes:
+        out.append("↔️ Avis modifiés depuis 7h45\n" + "\n".join("• " + x for x in changes))
+    if not ecarts and not changes:
+        out.append("✅ Ouverture calme : avis inchangés, pas d'écart notable à Paris. "
+                   "Les valeurs américaines ouvrent à 15h30.")
     if fails:
-        out.append("ℹ️ Pas de données aujourd'hui : " + ", ".join(fails) + ".")
-    out.append("Avis automatique basé sur la tendance ; la confiance n'est pas une probabilité. "
-               "Pas un conseil en investissement.")
+        out.append("ℹ️ Pas de données : " + ", ".join(fails) + ".")
     notify("\n\n".join(out))
 
 
