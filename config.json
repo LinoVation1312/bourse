@@ -1,7 +1,7 @@
 {
-  "capital_swing": 5000,
-  "risque_par_trade": 0.01,
-  "mise_max_pct": 0.25,
+  "capital_swing": 2500,
+  "risque_par_trade": 0.03,
+  "mise_max_pct": 0.35,
   "frais_ordre": 1.0,
 
   "alertes": {
