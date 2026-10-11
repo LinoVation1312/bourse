@@ -1,1 +1,111 @@
-{"sent": {}, "news_seen": []}
+{
+ "sent": {
+  "ASML.AS:earn:2026-10-14:2": "2026-10-11"
+ },
+ "news_seen": [],
+ "news_titles": {},
+ "cal": {
+  "NVDA": {
+   "fetched": "2026-10-11",
+   "earn": "2026-11-17",
+   "exdiv": "2026-09-10"
+  },
+  "AVGO": {
+   "fetched": "2026-10-11",
+   "earn": "2026-12-09",
+   "exdiv": "2026-09-21"
+  },
+  "MSFT": {
+   "fetched": "2026-10-11",
+   "earn": "2026-10-28",
+   "exdiv": "2026-11-19"
+  },
+  "PLTR": {
+   "fetched": "2026-10-11",
+   "earn": "2026-11-02",
+   "exdiv": null
+  },
+  "AMD": {
+   "fetched": "2026-10-11",
+   "earn": "2026-11-03",
+   "exdiv": "1995-04-27"
+  },
+  "LLY": {
+   "fetched": "2026-10-11",
+   "earn": "2026-10-29",
+   "exdiv": "2026-08-14"
+  },
+  "ASML.AS": {
+   "fetched": "2026-10-11",
+   "earn": "2026-10-14",
+   "exdiv": "2026-07-27"
+  },
+  "QBTS": {
+   "fetched": "2026-10-11",
+   "earn": "2026-11-05",
+   "exdiv": null
+  }
+ },
+ "daily": {},
+ "maxlvl": {},
+ "p3count": {
+  "ASML.AS:2026-10-11": 1
+ },
+ "flags": {
+  "NVDA": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "AVGO": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "MSFT": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "PLTR": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "AMD": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "LLY": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "ASML.AS": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  },
+  "QBTS": {
+   "date": "2026-10-11",
+   "level": "data",
+   "why": "donn\u00e9es p\u00e9rim\u00e9es"
+  }
+ },
+ "journal": [
+  {
+   "ts": "2026-10-11T12:47+00:00",
+   "d": "2026-10-11",
+   "t": "ASML.AS",
+   "kind": "calendrier",
+   "prio": 3,
+   "held": false,
+   "px": null,
+   "txt": "ASML.AS : R\u00e9sultats le 2026-10-14 (J-2 s\u00e9ances)."
+  }
+ ],
+ "weekly": {
+  "unknown": "2026-41"
+ }
+}
