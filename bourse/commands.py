@@ -27,6 +27,11 @@ def parse_args(tokens):
     return name, (nums[0] if nums else None), (nums[1] if len(nums) > 1 else None), word
 
 
+def currency_mismatch(px, ref, tol=0.08):
+    """Vrai si le prix donné s'écarte trop du cours Yahoo : probablement une autre devise (€ au lieu de $, HK$...)."""
+    return bool(px and ref and abs(px / ref - 1) > tol)
+
+
 def handle(ctx, text):
     parts = text.strip().split()
     if not parts or not parts[0].startswith("/"):
@@ -114,6 +119,12 @@ def achat(ctx, args):
         ref = " (cours Yahoo du moment)"
     else:
         ref = ""
+        yahoo = data.last_price(t, ctx.now) or (float(ind.Close.iloc[-1]) if ind is not None else None)
+        if currency_mismatch(px, yahoo):                 # ex. prix payé en € sur Trade Republic, cours Yahoo en $
+            ctx.tg.send(f"⚠️ Ton prix ({num(px)}) est très différent du cours Yahoo ({price(t, yahoo)}) : probablement "
+                        f"une autre devise (€ au lieu de $, par exemple). Je prends le cours Yahoo comme prix de référence "
+                        f"pour que le stop et l'objectif restent cohérents. Astuce : écris simplement /achat {esc(args[0])}.")
+            px, ref = yahoo, " (cours Yahoo du moment)"
     pos = P.new_position(ctx.cfg, w, px, qty, kind, setup, ind, ctx.now.date())
     ctx.state["positions"][t] = pos
     msg = [f"📌 Je suis ta position {b(w['nom'])} à {price(t, px)}{ref}"
