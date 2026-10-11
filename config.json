@@ -1,99 +1,34 @@
 {
-  "capital_initial": 2500,
-  "cash_reserve_pct": 0.2,
-  "risque_par_trade": 0.02,
-  "max_positions": 3,
-  "position_max_pct": 0.3,
-  "position_min_eur": 200,
-  "max_lev": 2,
-  "score_min": 40,
-  "score_levier_2x": 75,
-  "frais_ordre": 1.0,
-  "spread_pct": 0.001,
-  "change_pct": 0.005,
-  "frais_max_pct_position": 0.02,
-  "ratio_gain_frais_min": 5,
-  "atr_pct_max": 0.07,
-  "jours_max_levier": 20,
-  "jours_max_1x": 120,
-  "coupe_circuit_pct": 0.15,
-  "pause_jours": 14,
-  "benchmark": "QQQ",
-  "watchlist": [
-    {
-      "ticker": "NVDA",
-      "nom": "Nvidia",
-      "devise": "USD",
-      "secteur": "SMH"
-    },
-    {
-      "ticker": "AVGO",
-      "nom": "Broadcom",
-      "devise": "USD",
-      "secteur": "SMH"
-    },
-    {
-      "ticker": "MSFT",
-      "nom": "Microsoft",
-      "devise": "USD",
-      "secteur": "XLK"
-    },
-    {
-      "ticker": "PLTR",
-      "nom": "Palantir",
-      "devise": "USD",
-      "atr_pct_max": 0.09
-    },
-    {
-      "ticker": "AMD",
-      "nom": "AMD",
-      "devise": "USD",
-      "atr_pct_max": 0.08,
-      "secteur": "SMH"
-    },
-    {
-      "ticker": "LLY",
-      "nom": "Eli Lilly",
-      "devise": "USD",
-      "secteur": "XLV"
-    },
-    {
-      "ticker": "ASML.AS",
-      "nom": "ASML",
-      "devise": "EUR"
-    },
-    {
-      "ticker": "QBTS",
-      "nom": "D-Wave Quantum",
-      "devise": "USD",
-      "atr_pct_max": 0.14,
-      "max_lev": 1
-    }
-  ],
+  "dca_jour": 5,
+
   "veille": {
-    "paliers": [
-      0.02,
-      0.03,
-      0.05,
-      0.075,
-      0.1
-    ],
-    "gap_pct": 0.03,
-    "rvol_min": 2.0,
-    "accel_15m": 0.02,
-    "accel_1h": 0.03,
-    "reversal_pct": 0.03,
-    "range_x": 2.0,
-    "simul_pct": 0.02,
-    "p3_max_par_valeur": 3,
-    "position_drop_pct": 0.04,
-    "position_up_pct": 0.08,
-    "stale_minutes": 60,
-    "news_hours": 3,
-    "news_max_par_valeur": 3,
-    "bench": {
-      "USD": "QQQ",
-      "EUR": "^STOXX50E"
-    }
-  }
+    "jour":  {"etf": 0.03, "grande": 0.05, "pari": 0.10},
+    "flash": {"etf": 0.015, "grande": 0.03, "pari": 0.06}
+  },
+
+  "positions": {
+    "perte_depuis_achat":  {"etf": 0.08, "grande": 0.10, "pari": 0.20},
+    "recul_depuis_sommet": {"etf": 0.10, "grande": 0.15, "pari": 0.25}
+  },
+
+  "levier": {"vol_max": 0.30, "confiance_min": 65},
+
+  "watchlist": [
+    {"ticker": "PAEEM.PA", "nom": "MSCI Emerging Markets (PEA)", "cat": "etf", "dca": true,  "alias": ["emergents", "em"]},
+    {"ticker": "WPEA.PA",  "nom": "MSCI World Swap (PEA)",       "cat": "etf", "dca": true,  "alias": ["world", "monde"]},
+    {"ticker": "BNK.PA",   "nom": "Stoxx Europe 600 Banques",    "cat": "etf", "dca": true,  "alias": ["banques", "banks"]},
+    {"ticker": "GC=F",     "nom": "Or (cours en dollars)",       "cat": "etf", "dca": false, "alias": ["or", "gold"]},
+
+    {"ticker": "MSFT",    "nom": "Microsoft",       "cat": "grande", "alias": ["microsoft"]},
+    {"ticker": "META",    "nom": "Meta",            "cat": "grande", "alias": []},
+    {"ticker": "NVDA",    "nom": "Nvidia",          "cat": "grande", "alias": ["nvidia"]},
+    {"ticker": "ENGI.PA", "nom": "Engie",           "cat": "grande", "alias": ["engie"]},
+    {"ticker": "1810.HK", "nom": "Xiaomi",          "cat": "grande", "alias": ["xiaomi"]},
+    {"ticker": "CSIQ",    "nom": "Canadian Solar",  "cat": "grande", "alias": ["solar", "canadian"]},
+
+    {"ticker": "QBTS",    "nom": "D-Wave Quantum",  "cat": "pari", "alias": ["dwave", "d-wave"]},
+    {"ticker": "QNC",     "nom": "Quantum eMotion", "cat": "pari", "alias": ["quantum", "qem"]},
+    {"ticker": "GHY.WA",  "nom": "Global Hydrogen", "cat": "pari", "alias": ["hydrogen", "ghy"]},
+    {"ticker": "LHYFE.PA","nom": "Lhyfe",           "cat": "pari", "alias": ["lhyfe"]}
+  ]
 }

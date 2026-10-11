@@ -1,40 +1,55 @@
-"""Assistant de trading par notifications Telegram (aucun ordre n'est passé automatiquement).
+"""Assistant Bourse. Aucun ordre n'est passé : il donne un avis (acheter / garder / vendre + confiance + levier), tu décides.
 
-Lancé par GitHub Actions 2 fois par jour (matin / soir) ou à la main.
-Commandes Telegram (traitées à chaque exécution) :
-  /achat TICKER PRIX_SOUS_JACENT LEVIER MISE_EUR   ex: /achat NVDA 134.5 2 600
-  /vente TICKER PRIX_SOUS_JACENT [PNL_REEL_EUR]    ex: /vente NVDA 150
-  /statut   /bilan   /aide
+  python bot.py daily   -> récap du matin, à l'ouverture de la bourse de Paris (9h)
+  python bot.py veille  -> toutes les 15 min en séance : t'écrit seulement si quelque chose se passe
+                           (grosse variation sur la journée, mouvement brutal sur 1 h, actualité sensible)
+
+Commandes Telegram (lues à chaque exécution) :
+  /avis nvidia    : l'avis détaillé sur une valeur
+  /achat nvidia   : le bot suit ta position (prix de référence = cours Yahoo du moment)
+  /vente nvidia   : il arrête de la suivre
+  /statut         : l'avis sur toutes tes valeurs
 """
 import os
+import sys
 import json
+import math
+import hashlib
 import datetime as dt
+from zoneinfo import ZoneInfo
 
 import requests
 import pandas as pd
 import yfinance as yf
 
-from core import load, add_indicators, tech_buy, stop_mult
-
 TOKEN = os.environ["TG_TOKEN"]
 CHAT = str(os.environ["TG_CHAT"])
 FH = os.environ.get("FINNHUB_KEY")
-EVENT = os.environ.get("GITHUB_EVENT_NAME", "manual")
-MANUAL = EVENT in ("workflow_dispatch", "manual")
+MODE = sys.argv[1] if len(sys.argv) > 1 else "daily"
+MANUAL = os.environ.get("GITHUB_EVENT_NAME", "manual") in ("workflow_dispatch", "manual")
 NOW = dt.datetime.now(dt.timezone.utc)
 TODAY = NOW.date()
-MORNING = NOW.hour < 12 and not MANUAL
+PARIS = NOW.astimezone(ZoneInfo("Europe/Paris"))
 
 cfg = json.load(open("config.json"))
 state = json.load(open("state.json"))
-for k, v in {"offset": 0, "positions": {}, "history": [], "realized": 0.0,
-             "peak_equity": None, "pause_until": None, "alerts": {}}.items():
+for k, v in {"offset": 0, "positions": {}, "sent": {}, "dca_month": "", "daily_sent": "", "last_verdict": {}}.items():
     state.setdefault(k, v)
-WL = {w["ticker"]: w for w in cfg["watchlist"]}
-errors = []
+WL = cfg["watchlist"]
+JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
+MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+ICON = {"ACHETER": "🟢", "GARDER": "⚪", "VENDRE": "🔴"}
+
+NEG_KW = ["investigation", "probe", "lawsuit", "sues", "subpoena", "sec charges", "fraud", "indict",
+          "antitrust", "bankrupt", "chapter 11", "going concern", "delist", "trading halt", "halted",
+          "stock offering", "public offering", "dilut", "private placement", "downgrad", "profit warning",
+          "cuts guidance", "lowers guidance", "resigns", "steps down", "cyberattack", "data breach", "recall",
+          "plunge", "tumble", "short seller", "short report"]
+POS_KW = ["upgrade", "raises guidance", "record revenue", "beats estimates", "buyback", "to acquire",
+          "acquisition", "contract win", "fda approval", "surge", "soars"]
 
 
-# ---------------------------------------------------------------- Telegram
+# ------------------------------------------------------------ outils
 def notify(text):
     """Envoie par morceaux < 3800 caractères, coupés aux sauts de paragraphe."""
     chunks, cur = [], ""
@@ -47,86 +62,69 @@ def notify(text):
     chunks.append(cur)
     for c in chunks:
         requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                      data={"chat_id": CHAT, "text": c[:4000]}, timeout=20)
+                      data={"chat_id": CHAT, "text": c[:4000], "disable_web_page_preview": "true"}, timeout=20)
 
 
-# ---------------------------------------------------------------- Argent
-def equity():
-    return cfg["capital_initial"] + state["realized"]
+def pct(x):
+    d = 1 if abs(x) < 0.1 else 0
+    return f"{x * 100:+.{d}f} %".replace(".", ",")
 
 
-def invested():
-    return sum(p["mise"] for p in state["positions"].values())
+def px(x):
+    return f"{x:.2f}".replace(".", ",")
 
 
-def cash():
-    return equity() - invested()
+def once(key, days=0):
+    """Vrai si cette alerte n'a pas déjà été envoyée (depuis `days` jours)."""
+    last = state["sent"].get(key)
+    if last and (TODAY - dt.date.fromisoformat(last)).days <= days:
+        return False
+    state["sent"][key] = str(TODAY)
+    return True
 
 
-def reserve():
-    return equity() * cfg["cash_reserve_pct"]
+def prune():
+    lim = TODAY - dt.timedelta(days=10)
+    state["sent"] = {k: v for k, v in state["sent"].items() if dt.date.fromisoformat(v) >= lim}
 
 
-def is_eur(t):
-    return WL.get(t, {}).get("devise", "EUR" if "." in t else "USD") == "EUR"
+def tzname(t):
+    if t.endswith((".PA", ".AS", ".DE")):
+        return "Europe/Paris"
+    if t.endswith(".HK"):
+        return "Asia/Hong_Kong"
+    if t.endswith(".WA"):
+        return "Europe/Warsaw"
+    return "America/New_York"
 
 
-def frais_ar(mise, t):
-    """Frais estimés d'un aller-retour : courtage + spread (+ change si devise étrangère)."""
-    change = 0 if is_eur(t) else 2 * cfg["change_pct"]
-    return 2 * cfg["frais_ordre"] + mise * (2 * cfg["spread_pct"] + change)
+def history(t):
+    df = yf.download(t, period="1y", interval="1d", auto_adjust=True, progress=False)
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+    df = df.dropna(subset=["Close"])
+    if len(df) < 60:
+        raise ValueError("pas assez de données")
+    return df
 
 
-def veille_flag(t):
-    """Drapeau posé par la veille (événement critique, suspension, données douteuses) sur les 2 derniers jours."""
-    try:
-        f = json.load(open("veille_state.json")).get("flags", {}).get(t)
-        if f and dt.date.fromisoformat(f["date"]) >= TODAY - dt.timedelta(days=2):
-            return f
-    except Exception:
-        pass
+def finished_bars(df, t):
+    """Retire la séance du jour si elle est peut-être encore en cours."""
+    if df.index[-1].date() == NOW.astimezone(ZoneInfo(tzname(t))).date():
+        df = df.iloc[:-1]
+    return df
+
+
+def resolve(q):
+    q = q.lower().strip()
+    for w in WL:
+        names = {w["ticker"].lower(), w["ticker"].split(".")[0].lower(), *w.get("alias", [])}
+        if q in names:
+            return w
     return None
 
 
-def paused():
-    p = state["pause_until"]
-    return bool(p) and TODAY <= dt.date.fromisoformat(p)
-
-
-# ---------------------------------------------------------------- Données
-def prep(t, period="2y"):
-    """Indicateurs sur barres journalières TERMINÉES uniquement."""
-    df = load(t, period)
-    if df.index[-1].date() == TODAY and NOW.hour < 21:
-        df = df.iloc[:-1]
-    return add_indicators(df)
-
-
-_news_cache = {}
-NEG_WORDS = ["offering", "dilution", "downgrade", "probe", "lawsuit", "short report",
-             "export ban", "investigation", "sec charges", "recall", "fraud"]
-
-
-def bad_news(t):
-    """Garde-fou grossier par mots-clés (Finnhub, actions US uniquement). Ne déclenche jamais un achat."""
-    if not FH or "." in t:
-        return []
-    if t in _news_cache:
-        return _news_cache[t]
-    try:
-        d1 = TODAY
-        d0 = d1 - dt.timedelta(days=3)
-        r = requests.get("https://finnhub.io/api/v1/company-news",
-                         params={"symbol": t, "from": d0, "to": d1, "token": FH}, timeout=20).json()
-        hits = [x["headline"] for x in r[:20] if any(w in x["headline"].lower() for w in NEG_WORDS)]
-    except Exception:
-        hits = []
-    _news_cache[t] = hits
-    return hits
-
-
 def earnings_in_days(t):
-    """Jours avant les prochains résultats, ou None si inconnu (à vérifier à la main)."""
     try:
         cal = yf.Ticker(t).calendar
         d = cal.get("Earnings Date") if isinstance(cal, dict) else None
@@ -139,41 +137,139 @@ def earnings_in_days(t):
         return None
 
 
-def conviction(t, df, bench):
-    """Score 0-100 : tendance (35) + force relative (25) + croissance (25) + volatilité (15)."""
-    l = df.iloc[-1]
-    s = 0
-    if l.Close > l.ema20 > l.ema50:
-        s += 25
-    elif l.Close > l.ema50:
-        s += 10
-    pente = df.ema50.iloc[-1] / df.ema50.iloc[-21] - 1
-    s += 10 if pente > 0.03 else 5 if pente > 0 else 0
-    if l.ret63 > bench["ret63"]:
-        s += 12
-    if l.ret126 > bench["ret126"]:
-        s += 13
-    try:  # données fondamentales parfois absentes : pas de points, jamais inventés
-        info = yf.Ticker(t).info
-        g, m = info.get("revenueGrowth"), info.get("profitMargins")
-        if g is not None:
-            s += 15 if g > 0.25 else 10 if g > 0.10 else 5 if g > 0 else 0
-        if m is not None:
-            s += 10 if m > 0.15 else 5 if m > 0 else 0
+# ------------------------------------------------------------ l'avis (acheter / garder / vendre)
+def rsi14(c):
+    d = c.diff()
+    up = d.clip(lower=0).rolling(14).mean()
+    dn = (-d.clip(upper=0)).rolling(14).mean()
+    u, n = float(up.iloc[-1]), float(dn.iloc[-1])
+    return 100.0 if n == 0 else 100 - 100 / (1 + u / n)
+
+
+def avis(w, df, last_live=None):
+    """Avis à partir de la tendance (moyennes 50/200 j, élan 3 mois, surchauffe RSI).
+
+    Le « niveau de confiance » est un indice maison (accord des signaux, moins une pénalité si la valeur
+    est très volatile). Ce n'est PAS une probabilité de gain."""
+    c = df.Close.astype(float)
+    last = float(c.iloc[-1]) if last_live is None else last_live
+    t, cat = w["ticker"], w["cat"]
+    sma50 = float(c.tail(50).mean())
+    sma200 = float(c.tail(200).mean()) if len(c) >= 200 else None
+    mom3 = last / float(c.iloc[-64]) - 1 if len(c) >= 64 else 0.0
+    rsi = rsi14(c)
+    vol = float(c.pct_change().tail(60).std() * math.sqrt(252))
+
+    score, why = 0, []
+    if last > sma50:
+        score += 1; why.append("au-dessus de sa moyenne 50 j")
+    else:
+        score -= 1; why.append("sous sa moyenne 50 j")
+    if sma200 is not None:
+        if last > sma200:
+            score += 1; why.append("tendance longue haussière")
+        else:
+            score -= 1; why.append("sous sa moyenne 200 j")
+    if mom3 > 0.05:
+        score += 1; why.append(f"{pct(mom3)} sur 3 mois")
+    elif mom3 < -0.05:
+        score -= 1; why.append(f"{pct(mom3)} sur 3 mois")
+    if rsi > 75:
+        score -= 1; why.append("surchauffe (RSI élevé)")
+    elif rsi < 25:
+        score += 1; why.append("très survendue (rebond possible)")
+
+    verdict = "ACHETER" if score >= 3 else "VENDRE" if score <= -3 else "GARDER"
+    conf = 50 + 10 * abs(score) if verdict != "GARDER" else 70 - 10 * abs(score)
+    conf -= 10 if vol > 0.60 else 5 if vol > 0.40 else 0
+
+    notes = []
+    e = earnings_in_days(t) if cat != "etf" else None
+    if e is not None and e <= 5:
+        conf -= 10
+        notes.append("résultats " + ("aujourd'hui" if e == 0 else f"dans {e} j") + " : cours imprévisible")
+
+    pos = state["positions"].get(t)
+    if pos:
+        perf, recul = last / pos["ref"] - 1, last / max(pos["peak"], last) - 1
+        if perf <= -cfg["positions"]["perte_depuis_achat"][cat]:
+            verdict, conf = "VENDRE", max(conf, 70)
+            why.insert(0, f"ta position est à {pct(perf)} (seuil de perte atteint)")
+        elif recul <= -cfg["positions"]["recul_depuis_sommet"][cat]:
+            verdict, conf = "VENDRE", max(conf, 65)
+            why.insert(0, f"recul de {pct(recul)} depuis le sommet de ta position : sécuriser le gain")
+        notes.append(f"ta position : {pct(perf)} depuis le suivi")
+
+    conf = max(35, min(85, conf))
+
+    lev_ok = (verdict == "ACHETER" and cat != "pari" and conf >= cfg["levier"]["confiance_min"]
+              and vol <= cfg["levier"]["vol_max"] and sma200 is not None and last > sma200
+              and rsi <= 70 and not (e is not None and e <= 5))
+    if lev_ok:
+        levier = "possible, prudent (x2 max, stop serré, petite part du capital)"
+    elif cat == "pari":
+        levier = "non (jamais sur un pari très risqué)"
+    elif verdict != "ACHETER":
+        levier = "non (pas de signal d'achat net)"
+    else:
+        levier = "non (confiance ou volatilité insuffisantes)"
+
+    return {"verdict": verdict, "conf": int(conf), "levier": levier, "lev_ok": lev_ok,
+            "why": why, "notes": notes, "last": last, "vol": vol}
+
+
+def ligne_avis(a):
+    return f"{ICON[a['verdict']]} {a['verdict']} ({a['conf']} %) · levier : {'oui' if a['lev_ok'] else 'non'}"
+
+
+# ------------------------------------------------------------ actualités
+def news_items(t):
+    """[(titre, source, url, timestamp)] : Yahoo pour tout le monde, Finnhub en plus pour les actions US."""
+    out = []
+    try:
+        for n in yf.Ticker(t).news or []:
+            c = n.get("content") or n
+            ts = c.get("pubDate") or c.get("providerPublishTime")
+            if not ts or not c.get("title"):
+                continue
+            ts = float(ts) if isinstance(ts, (int, float)) else pd.Timestamp(ts).timestamp()
+            url = (c.get("canonicalUrl") or {}).get("url") or c.get("link") or ""
+            src = (c.get("provider") or {}).get("displayName") or c.get("publisher") or "Yahoo"
+            out.append((c["title"], src, url, ts))
     except Exception:
         pass
-    atr_pct = l.atr / l.Close
-    s += 15 if atr_pct < 0.03 else 8 if atr_pct < 0.05 else 0
-    return s
+    if FH and "." not in t and "=" not in t:
+        try:
+            r = requests.get("https://finnhub.io/api/v1/company-news",
+                             params={"symbol": t, "from": TODAY - dt.timedelta(days=1), "to": TODAY, "token": FH},
+                             timeout=20).json()
+            out += [(x["headline"], x.get("source", "?"), x.get("url", ""), x.get("datetime", 0)) for x in r
+                    if x.get("headline")]
+        except Exception:
+            pass
+    return out
 
 
-# ---------------------------------------------------------------- Commandes
+def news_sensibles(t, heures=3):
+    """Actualités récentes avec un mot-clé sensible, jamais renvoyées deux fois."""
+    lim = NOW.timestamp() - heures * 3600
+    res = []
+    for title, src, url, ts in sorted(news_items(t), key=lambda x: -x[3]):
+        low = title.lower()
+        neg, pos = any(k in low for k in NEG_KW), any(k in low for k in POS_KW)
+        if ts < lim or not (neg or pos):
+            continue
+        if once("news:" + hashlib.md5(title.lower().encode()).hexdigest()[:12], 30):
+            res.append(("⚠️" if neg else "📰", title[:110], src, url))
+    return res[:2]
+
+
+# ------------------------------------------------------------ commandes Telegram
 def read_commands():
     try:
         r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates",
                          params={"offset": state["offset"] + 1}, timeout=20).json()
-    except Exception as e:
-        errors.append(f"Telegram illisible : {e}")
+    except Exception:
         return
     for u in r.get("result", []):
         state["offset"] = u["update_id"]
@@ -185,257 +281,175 @@ def read_commands():
             continue
         cmd = p[0].split("@")[0].lower()
         try:
-            if cmd == "/achat":
-                cmd_achat(p)
-            elif cmd == "/vente":
-                cmd_vente(p)
+            if cmd == "/achat" and len(p) >= 2:
+                cmd_achat(p[1])
+            elif cmd == "/vente" and len(p) >= 2:
+                cmd_vente(p[1])
+            elif cmd == "/avis" and len(p) >= 2:
+                cmd_avis(p[1])
             elif cmd == "/statut":
-                notify(summary())
-            elif cmd == "/journal":
-                notify(journal_veille())
-            elif cmd == "/bilan":
-                notify(bilan())
+                notify(statut())
             else:
-                notify("Commandes :\n/achat TICKER PRIX LEVIER MISE_EUR\n/vente TICKER PRIX [PNL_EUR]\n/statut\n/bilan\n/journal")
+                notify("Commandes :\n/avis nvidia : mon avis détaillé\n/achat nvidia : je suis ta position\n"
+                       "/vente nvidia : j'arrête de la suivre\n/statut : mon avis sur toutes tes valeurs")
         except Exception as e:
-            notify(f"⚠️ Commande non comprise ({e}). Exemple : /achat NVDA 134.5 2 600")
+            notify(f"Je n'ai pas compris ({e}). Exemple : /avis nvidia")
 
 
-def cmd_achat(p):
-    t, px, lev, mise = p[1].upper(), float(p[2]), float(p[3]), float(p[4])
-    stop_init = None
-    try:
-        l = prep(t).iloc[-1]
-        stop_init = float(px - stop_mult(lev) * l.atr)
-    except Exception:
-        pass
-    state["positions"][t] = {"entry": px, "lev": lev, "mise": mise, "date": str(TODAY),
-                             "peak": px, "stop": stop_init}
-    s = f"{stop_init:.2f}" if stop_init else "non calculé"
-    notify(f"📝 Position enregistrée : {t} @ {px} (x{lev}, {mise:.0f} €)\n"
-           f"Stop initial sous-jacent : {s}. Pose-le dans l'app si le produit le permet.\n"
-           f"Cash restant : {cash():.0f} €")
-
-
-def cmd_vente(p):
-    t, px = p[1].upper(), float(p[2])
-    pos = state["positions"].pop(t, None)
-    if not pos:
-        notify(f"Aucune position {t} enregistrée.")
+def cmd_avis(q):
+    w = resolve(q)
+    if not w:
+        notify(f"Je ne connais pas « {q} ».")
         return
-    frais = frais_ar(pos["mise"], t)
-    pnl = float(p[3]) if len(p) > 3 else pos["mise"] * pos["lev"] * (px / pos["entry"] - 1) - frais
-    state["realized"] += pnl
-    state["history"].append({"t": t, "lev": pos["lev"], "mise": pos["mise"], "entry": pos["entry"],
-                             "exit": px, "pnl": round(pnl, 2), "frais": round(frais, 2),
-                             "open": pos["date"], "close": str(TODAY)})
-    eq = equity()
-    state["peak_equity"] = max(state["peak_equity"] or cfg["capital_initial"], eq)
-    txt = f"📝 {t} clôturée : {pnl:+.1f} € net (frais estimés {frais:.1f} €)\nPoche : {eq:.0f} €"
-    if eq <= state["peak_equity"] * (1 - cfg["coupe_circuit_pct"]):
-        until = TODAY + dt.timedelta(days=cfg["pause_jours"])
-        state["pause_until"] = str(until)
-        txt += (f"\n⛔ COUPE-CIRCUIT : la poche a perdu {cfg['coupe_circuit_pct']:.0%} depuis son plus haut. "
-                f"Plus de signaux d'achat jusqu'au {until}. Relis ton journal avant de reprendre.")
-    notify(txt)
+    a = avis(w, finished_bars(history(w["ticker"]), w["ticker"]))
+    notify(f"{w['nom']}\n{ligne_avis(a)}\nPourquoi : " + ", ".join(a["why"]) +
+           f"\nLevier : {a['levier']}\nVolatilité : {a['vol'] * 100:.0f} %/an"
+           + ("".join(f"\n• {n}" for n in a["notes"]))
+           + "\n\nLa confiance est un indice maison, pas une probabilité de gain.")
 
 
-def journal_veille():
-    try:
-        j = json.load(open("veille_state.json")).get("journal", [])
-    except Exception:
-        j = []
-    j = [x for x in j if x.get("kind") != "news-info"][-10:]
-    if not j:
-        return "Journal de veille vide."
-    lines = []
-    for x in j:
-        suivi = f" → {x['ret_suivi']:+.1%} depuis" if x.get("ret_suivi") is not None else ""
-        lines.append(f"P{x['prio']} {x['d']} {x['t']} [{x['kind']}] {x['txt'][:70]}{suivi}")
-    return "📓 10 dernières alertes de veille :\n" + "\n".join(lines)
+def cmd_achat(q):
+    w = resolve(q)
+    if not w:
+        notify(f"Je ne connais pas « {q} ». Essaie le nom court (ex. nvidia) ou le ticker.")
+        return
+    last = float(history(w["ticker"]).Close.iloc[-1])
+    state["positions"][w["ticker"]] = {"ref": last, "peak": last, "date": str(TODAY)}
+    notify(f"📌 Je suis maintenant ta position {w['nom']}.\nPrix de référence : {px(last)} "
+           f"(cours Yahoo dans sa devise, pas forcément celui de ton courtier).\n"
+           f"Je te préviens si elle recule trop. Pense à poser un stop dans l'app si c'est possible.")
 
 
-def bilan():
-    h = state["history"]
-    if not h:
-        return "Aucun trade clôturé pour l'instant."
-    wins = [x for x in h if x["pnl"] > 0]
-    tot = sum(x["pnl"] for x in h)
-    fr = sum(x["frais"] for x in h)
-    return (f"📒 Bilan : {len(h)} trades, {len(wins) / len(h):.0%} gagnants\n"
-            f"Net total : {tot:+.1f} € | moyenne {tot / len(h):+.1f} €/trade\n"
-            f"Frais payés (estimés) : {fr:.1f} €\nPoche : {equity():.0f} €")
+def cmd_vente(q):
+    w = resolve(q)
+    if w and state["positions"].pop(w["ticker"], None):
+        notify(f"✅ J'arrête de suivre ta position {w['nom']}.")
+    else:
+        notify(f"Aucune position « {q} » suivie.")
 
 
-# ---------------------------------------------------------------- Signaux
-def sell_signal(t, pos):
-    df = prep(t)
-    l = df.iloc[-1]
-    bar = str(df.index[-1].date())
-    since = df[df.index >= pd.Timestamp(pos["date"])]
-    pos["peak"] = float(max(pos["peak"], since.Close.max() if len(since) else pos["peak"]))
-    trail = pos["peak"] - stop_mult(pos["lev"]) * l.atr
-    old_stop = pos.get("stop") or 0
-    pos["stop"] = float(max(old_stop, trail))          # le stop ne descend jamais
-    why = []
-    if l.Close < pos["stop"]:
-        why.append(f"stop suiveur touché ({pos['stop']:.2f})")
-    if l.Close < l.ema50:
-        why.append("cassure de l'EMA50")
-    elif l.Close < l.ema20 and l.rsi < 45:
-        why.append("cassure de l'EMA20 avec RSI faible")
-    age = (TODAY - dt.date.fromisoformat(pos["date"])).days
-    limite = cfg["jours_max_levier"] if pos["lev"] > 1 else cfg["jours_max_1x"]
-    if age > limite:
-        why.append(f"durée max dépassée ({age} j) : le levier s'use avec le temps")
-    nb = bad_news(t)
-    if nb:
-        why.append(f"news négative : {nb[0][:90]}")
-    e = earnings_in_days(t)
-    if e is not None and e <= 2:
-        why.append(f"résultats dans {e} j (risque de gap)")
-    if not why:
-        return None, bar
-    perf = max(-1.0, (l.Close / pos["entry"] - 1) * pos["lev"])
-    return (f"🔴 SIGNAL VENTE {t} @ {l.Close:.2f} (≈ {perf:+.0%} sur le produit)\n- "
-            + "\n- ".join(why) + f"\nUne fois vendu : /vente {t} {l.Close:.2f}"), bar
-
-
-def scan_buys(bench):
-    cands = []
-    for item in cfg["watchlist"]:
-        t = item["ticker"]
-        if t in state["positions"]:
-            continue
+def statut():
+    lines = ["📋 Mon avis sur tes valeurs"]
+    for w in WL:
         try:
-            df = prep(t)
-        except Exception as e:
-            errors.append(f"{t} : {e}")
-            continue
-        l = df.iloc[-1]
-        if not tech_buy(l, bench["ret63"], item.get("atr_pct_max", cfg["atr_pct_max"])):
-            continue
-        nb, e = bad_news(t), earnings_in_days(t)
-        if nb:
-            cands.append((-1, t, item, df, f"⚪ {t} : signal technique BLOQUÉ (news : {nb[0][:80]})"))
-            continue
-        if e is not None and e <= 5:
-            cands.append((-1, t, item, df, f"⚪ {t} : signal technique BLOQUÉ (résultats dans {e} j)"))
-            continue
-        fl = veille_flag(t)
-        if fl and (fl["level"] == "critical" or (fl["level"] == "data" and fl["date"] == str(TODAY))):
-            cands.append((-1, t, item, df, f"⚪ {t} : signal technique BLOQUÉ par la veille ({fl['why']})"))
-            continue
-        score = conviction(t, df, bench)
-        if score >= cfg["score_min"]:
-            cands.append((score, t, item, df, None))
-    cands.sort(key=lambda c: -c[0])
-
-    msgs = []
-    slots = cfg["max_positions"] - len(state["positions"])
-    dispo = cash() - reserve()
-    for score, t, item, df, blocked in cands:
-        bar = str(df.index[-1].date())
-        key = f"{t}:buy"
-        if not MANUAL and state["alerts"].get(key) == bar:
-            continue
-        state["alerts"][key] = bar
-        if blocked:
-            msgs.append(blocked)
-            continue
-        l = df.iloc[-1]
-        lev_cap = min(cfg["max_lev"], item.get("max_lev", cfg["max_lev"]))
-        lev = 2 if (score >= cfg["score_levier_2x"] and lev_cap >= 2) else 1
-        m = stop_mult(lev)
-        stop = float(l.Close - m * l.atr)
-        stop_pct = (l.Close - stop) / l.Close
-        risque = equity() * cfg["risque_par_trade"]
-        mise = min(risque / (lev * stop_pct), equity() * cfg["position_max_pct"], dispo)
-        head = f"{t} ({item['nom']}) score {score}/100"
-        if slots <= 0:
-            msgs.append(f"⚪ {head} : signal, mais {cfg['max_positions']} positions déjà ouvertes.")
-            continue
-        if mise < cfg["position_min_eur"]:
-            msgs.append(f"⚪ {head} : signal, mais mise possible ({mise:.0f} €) trop petite pour amortir les frais.")
-            continue
-        frais = frais_ar(mise, t)
-        fr_pct = frais / mise
-        gain_vise = 2 * risque
-        if fr_pct > cfg["frais_max_pct_position"] or gain_vise < cfg["ratio_gain_frais_min"] * frais:
-            msgs.append(f"⚪ {head} : signal ignoré, frais trop lourds ({frais:.1f} €, {fr_pct:.1%}).")
-            continue
-        msgs.append(
-            f"🟢 SIGNAL ACHAT {head}\n"
-            f"Cours {l.Close:.2f} | levier suggéré x{lev}\n"
-            f"Stop sous-jacent : {stop:.2f} (≈ -{lev * stop_pct:.0%} sur le produit)\n"
-            f"Mise : {mise:.0f} € (risque ≈ {risque:.0f} €) | frais A/R ≈ {frais:.1f} € ({fr_pct:.1%})\n"
-            f"Gain visé ≈ +{gain_vise:.0f} € (2x le risque)\n"
-            f"Si tu achètes : /achat {t} {l.Close:.2f} {lev} {mise:.0f}"
-            + (f"\n⚠️ La veille signale un événement à analyser avant d'entrer : {fl['why']}"
-               if (fl := veille_flag(t)) and fl["level"] == "important" else ""))
-        slots -= 1
-        dispo -= mise
-    return msgs
-
-
-def summary():
-    lines = [f"📊 Poche : {equity():.0f} € | cash {cash():.0f} € | investi {invested():.0f} € "
-             f"(réserve visée {reserve():.0f} €)"]
-    if paused():
-        lines.append(f"⛔ Pause active jusqu'au {state['pause_until']} (coupe-circuit)")
-    for t, p in state["positions"].items():
-        try:
-            px = float(prep(t).iloc[-1].Close)
-            pu = px / p["entry"] - 1
-            st = f"{p['stop']:.2f}" if p.get("stop") else "?"
-            lines.append(f"• {t} x{p['lev']} : {pu:+.1%} sous-jacent ≈ {max(-1.0, pu * p['lev']):+.1%} produit | stop {st}")
-        except Exception as e:
-            lines.append(f"• {t} : données indisponibles ({e})")
-    if not state["positions"]:
-        lines.append("Aucune position ouverte.")
+            a = avis(w, finished_bars(history(w["ticker"]), w["ticker"]))
+            lines.append(f"• {w['nom']} : {ligne_avis(a)}")
+        except Exception:
+            lines.append(f"• {w['nom']} : pas de données")
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------- Principal
-def main():
-    read_commands()
-    msgs = []
+# ------------------------------------------------------------ récap du matin (9h Paris)
+def daily():
+    if not MANUAL and (PARIS.hour != 9 or state["daily_sent"] == str(TODAY)):
+        return  # deux crons (été/hiver) : on n'envoie qu'une fois, à 9h heure de Paris
+    state["daily_sent"] = str(TODAY)
 
-    for t, pos in list(state["positions"].items()):
+    rows, fails, ordres, prevu = [], [], [], []
+    for w in WL:
         try:
-            m, bar = sell_signal(t, pos)
-            key = f"{t}:sell"
-            if m and (MANUAL or state["alerts"].get(key) != bar):
-                state["alerts"][key] = bar
-                msgs.append(m)
-        except Exception as e:
-            errors.append(f"{t} : {e}")
+            df = finished_bars(history(w["ticker"]), w["ticker"])
+            a = avis(w, df)
+        except Exception:
+            fails.append(w["nom"])
+            continue
+        m1 = float(df.Close.iloc[-1] / df.Close.iloc[-2] - 1)
+        old = state["last_verdict"].get(w["ticker"])
+        state["last_verdict"][w["ticker"]] = a["verdict"]
+        rows.append((w, a, m1, old))
 
-    if paused():
-        msgs.append(f"⏸ Pause jusqu'au {state['pause_until']} : pas de nouveaux signaux d'achat.")
-    else:
+    for w, a, m1, old in rows:
+        chg = f" (hier : {old})" if old and old != a["verdict"] else ""
+        if a["verdict"] != "GARDER":
+            ordres.append(f"{ICON[a['verdict']]} {w['nom']} — {a['verdict']} ({a['conf']} %){chg}\n"
+                          f"   {', '.join(a['why'][:2])} · {pct(m1)} hier\n   Levier : {a['levier']}")
+        else:
+            prevu.append(f"{w['nom']} ({a['conf']} %){chg}")
+        for n in a["notes"]:
+            if "résultats" in n:
+                ordres.append(f"⚠️ {w['nom']} : {n}")
+
+    out = [f"📊 Bourse — {JOURS[PARIS.weekday()]} {PARIS.day} {MOIS[PARIS.month - 1]} · ouverture"]
+    if ordres:
+        out.append("\n".join(ordres))
+    if prevu:
+        out.append("⚪ GARDER : " + ", ".join(prevu))
+    if not ordres:
+        out.insert(1, "✅ Rien à faire : pas de signal net aujourd'hui.")
+
+    month = f"{TODAY.year}-{TODAY.month:02d}"
+    if TODAY.day >= cfg["dca_jour"] and state["dca_month"] != month:
+        state["dca_month"] = month
+        etfs = ", ".join(w["nom"] for w in WL if w.get("dca"))
+        out.append(f"📅 Rappel du mois : ton versement sur tes ETF ({etfs}).")
+    if fails:
+        out.append("ℹ️ Pas de données aujourd'hui : " + ", ".join(fails) + ".")
+    out.append("Avis automatique basé sur la tendance ; la confiance n'est pas une probabilité. "
+               "Pas un conseil en investissement.")
+    notify("\n\n".join(out))
+
+
+# ------------------------------------------------------------ veille (toutes les 15 min en séance)
+def flash_move(t):
+    """Variation sur ~1 h à partir de données 5 min. None si la bourse est fermée ou sans données."""
+    df = yf.download(t, period="1d", interval="5m", auto_adjust=True, progress=False)
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+    df = df.dropna(subset=["Close"])
+    if len(df) < 13:
+        return None
+    if (pd.Timestamp(NOW) - df.index[-1].tz_convert("UTC")).total_seconds() > 20 * 60:
+        return None  # dernière bougie trop ancienne : marché fermé
+    return float(df.Close.iloc[-1] / df.Close.iloc[-13] - 1)
+
+
+def veille():
+    lines = []
+    for w in WL:
+        t, cat = w["ticker"], w["cat"]
         try:
-            b = prep(cfg["benchmark"]).iloc[-1]
-            bench = {"ret63": float(b.ret63), "ret126": float(b.ret126)}
-            msgs += scan_buys(bench)
-        except Exception as e:
-            errors.append(f"benchmark {cfg['benchmark']} : {e}")
+            full = history(t)
+        except Exception:
+            continue
+        if full.index[-1].date() != NOW.astimezone(ZoneInfo(tzname(t))).date():
+            continue  # bourse fermée ou pas de séance aujourd'hui
+        c = full.Close
+        last = float(c.iloc[-1])
+        m = float(last / c.iloc[-2] - 1)
+        try:
+            a = avis(w, finished_bars(full, t), last_live=last)
+        except Exception:
+            a = None
+        suite = f"\n   Avis actuel : {ligne_avis(a)}" if a else ""
+        tenu = " (position suivie)" if t in state["positions"] else ""
+        local = []
 
-    if errors:
-        msgs.append("⚠️ Données indisponibles (réessaie plus tard) :\n" + "\n".join(errors))
+        thr = cfg["veille"]["jour"][cat]
+        if abs(m) >= thr and once(f"jour:{t}:{'h' if m > 0 else 'b'}:{TODAY}:{int(abs(m) / thr)}"):
+            local.append(f"⚡ {w['nom']}{tenu} : {pct(m)} sur la journée (cours {px(last)}).")
+        try:
+            f = flash_move(t)
+        except Exception:
+            f = None
+        fthr = cfg["veille"]["flash"][cat]
+        if f is not None and abs(f) >= fthr and once(f"flash:{t}:{'h' if f > 0 else 'b'}:{TODAY}:{PARIS.hour}"):
+            local.append(f"🚨 {w['nom']}{tenu} : {pct(f)} en 1 heure, mouvement brutal.")
+        for ico, title, src, url in news_sensibles(t):
+            local.append(f"{ico} {w['nom']}{tenu} : « {title} » ({src}) {url}".strip())
 
-    out = []
-    if MORNING or MANUAL:
-        out.append(summary())
-    out += msgs
-    if MANUAL and not msgs:
-        out.append("✅ Aucun signal.")
-    if out:
-        notify("\n\n".join(out))
+        if local:
+            lines.append("\n".join(local) + suite)
+    if lines:
+        notify("Alerte bourse\n\n" + "\n\n".join(lines))
+    elif MANUAL:
+        notify("✅ Veille : rien d'anormal en ce moment (ou bourses fermées).")
 
 
+# ------------------------------------------------------------ principal
 if __name__ == "__main__":
     try:
-        main()
+        read_commands()
+        veille() if MODE == "veille" else daily()
     finally:
+        prune()
         json.dump(state, open("state.json", "w"), indent=1)
