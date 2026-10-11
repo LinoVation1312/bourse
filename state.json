@@ -1,1 +1,15 @@
-{"offset": 0, "positions": {}, "journal": [], "sent": {}, "levels": {}, "news_seen": {}, "earn": {}, "slots": {}}
+{
+ "earn": {
+  "NVDA": {
+   "date": "2026-11-17",
+   "fetched": "2026-10-11"
+  }
+ },
+ "journal": [],
+ "levels": {},
+ "news_seen": {},
+ "offset": 125508282,
+ "positions": {},
+ "sent": {},
+ "slots": {}
+}
