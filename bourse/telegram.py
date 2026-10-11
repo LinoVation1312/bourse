@@ -38,12 +38,15 @@ class Telegram:
         for attempt in range(3):
             try:
                 r = requests.post(API.format(token=self.token, method=method), data=data, timeout=25)
-            except requests.RequestException:
+            except requests.RequestException as e:
+                print(f"Telegram {method} : erreur réseau ({type(e).__name__})")
                 time.sleep(2)
                 continue
             if r.status_code == 429:
                 time.sleep(min(int(r.json().get("parameters", {}).get("retry_after", 3)), 30))
                 continue
+            if r.status_code != 200:                       # visible dans les logs GitHub (token ou chat_id faux, etc.)
+                print(f"Telegram {method} -> HTTP {r.status_code} : {r.text[:200]}")
             return r
         return None
 
@@ -67,7 +70,10 @@ class Telegram:
             r = requests.get(API.format(token=self.token, method="getUpdates"),
                              params={"offset": offset + 1, "timeout": 0}, timeout=25).json()
         except (requests.RequestException, ValueError):
+            print("Telegram getUpdates : réponse illisible")
             return []
+        if not r.get("ok", True):
+            print(f"Telegram getUpdates refusé : {str(r)[:200]}")
         out = []
         for u in r.get("result", []):
             msg = u.get("message") or {}
