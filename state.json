@@ -1,1 +1,11 @@
-{"offset": 0, "positions": {}, "history": [], "realized": 0.0, "peak_equity": null, "pause_until": null, "alerts": {}}
+{
+ "offset": 125508280,
+ "positions": {},
+ "history": [],
+ "realized": 0.0,
+ "peak_equity": null,
+ "pause_until": null,
+ "alerts": {
+  "MSFT:buy": "2026-10-09"
+ }
+}
