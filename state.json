@@ -1,11 +1,169 @@
 {
+ "div": {
+  "1810.HK": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "AAPL": {
+   "date": "2026-08-10",
+   "fetched": "2026-10-12"
+  },
+  "AIR.PA": {
+   "date": "2026-04-21",
+   "fetched": "2026-10-12"
+  },
+  "AMD": {
+   "date": "1995-04-27",
+   "fetched": "2026-10-12"
+  },
+  "AMZN": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "ASML.AS": {
+   "date": "2026-07-27",
+   "fetched": "2026-10-12"
+  },
+  "AVGO": {
+   "date": "2026-09-21",
+   "fetched": "2026-10-12"
+  },
+  "BNK.PA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "CSIQ": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "ENGI.PA": {
+   "date": "2026-04-30",
+   "fetched": "2026-10-12"
+  },
+  "GC=F": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "GHY.WA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "GOOGL": {
+   "date": "2026-09-04",
+   "fetched": "2026-10-12"
+  },
+  "JPM": {
+   "date": "2026-10-06",
+   "fetched": "2026-10-12"
+  },
+  "LHYFE.PA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "LLY": {
+   "date": "2026-08-14",
+   "fetched": "2026-10-12"
+  },
+  "MC.PA": {
+   "date": "2026-12-01",
+   "fetched": "2026-10-12"
+  },
+  "META": {
+   "date": "2026-09-21",
+   "fetched": "2026-10-12"
+  },
+  "MSFT": {
+   "date": "2026-11-19",
+   "fetched": "2026-10-12"
+  },
+  "NFLX": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "NVDA": {
+   "date": "2026-09-10",
+   "fetched": "2026-10-12"
+  },
+  "PAEEM.PA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "PLTR": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "QBTS": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "QNC": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "RMS.PA": {
+   "date": "2026-04-21",
+   "fetched": "2026-10-12"
+  },
+  "SAN.PA": {
+   "date": "2026-05-05",
+   "fetched": "2026-10-12"
+  },
+  "SAP.DE": {
+   "date": "2026-05-06",
+   "fetched": "2026-10-12"
+  },
+  "SIE.DE": {
+   "date": "2026-02-13",
+   "fetched": "2026-10-12"
+  },
+  "SPCX": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "SU.PA": {
+   "date": "2026-05-11",
+   "fetched": "2026-10-12"
+  },
+  "TSLA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "TTE.PA": {
+   "date": "2026-12-31",
+   "fetched": "2026-10-12"
+  },
+  "WPEA.PA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  }
+ },
  "earn": {
   "1810.HK": {
    "date": "2026-11-17",
    "fetched": "2026-10-12"
   },
+  "AAPL": {
+   "date": "2026-11-02",
+   "fetched": "2026-10-12"
+  },
+  "AIR.PA": {
+   "date": "2026-10-28",
+   "fetched": "2026-10-12"
+  },
   "AMD": {
    "date": "2026-11-03",
+   "fetched": "2026-10-12"
+  },
+  "AMZN": {
+   "date": "2026-10-29",
+   "fetched": "2026-10-12"
+  },
+  "ASML.AS": {
+   "date": "2026-10-14",
+   "fetched": "2026-10-12"
+  },
+  "AVGO": {
+   "date": "2026-12-09",
    "fetched": "2026-10-12"
   },
   "CSIQ": {
@@ -20,8 +178,24 @@
    "date": null,
    "fetched": "2026-10-12"
   },
+  "GOOGL": {
+   "date": "2026-10-28",
+   "fetched": "2026-10-12"
+  },
+  "JPM": {
+   "date": "2026-10-13",
+   "fetched": "2026-10-12"
+  },
   "LHYFE.PA": {
    "date": null,
+   "fetched": "2026-10-12"
+  },
+  "LLY": {
+   "date": "2026-10-29",
+   "fetched": "2026-10-12"
+  },
+  "MC.PA": {
+   "date": "2026-07-27",
    "fetched": "2026-10-12"
   },
   "META": {
@@ -30,6 +204,10 @@
   },
   "MSFT": {
    "date": "2026-10-28",
+   "fetched": "2026-10-12"
+  },
+  "NFLX": {
+   "date": "2026-10-20",
    "fetched": "2026-10-12"
   },
   "NVDA": {
@@ -46,6 +224,38 @@
   },
   "QNC": {
    "date": "2026-08-17",
+   "fetched": "2026-10-12"
+  },
+  "RMS.PA": {
+   "date": null,
+   "fetched": "2026-10-12"
+  },
+  "SAN.PA": {
+   "date": "2026-10-30",
+   "fetched": "2026-10-12"
+  },
+  "SAP.DE": {
+   "date": "2026-10-21",
+   "fetched": "2026-10-12"
+  },
+  "SIE.DE": {
+   "date": "2026-11-12",
+   "fetched": "2026-10-12"
+  },
+  "SPCX": {
+   "date": "2026-11-03",
+   "fetched": "2026-10-12"
+  },
+  "SU.PA": {
+   "date": "2026-07-30",
+   "fetched": "2026-10-12"
+  },
+  "TSLA": {
+   "date": "2026-10-21",
+   "fetched": "2026-10-12"
+  },
+  "TTE.PA": {
+   "date": "2026-10-29",
    "fetched": "2026-10-12"
   }
  },
@@ -76,6 +286,69 @@
  "positions": {},
  "sent": {},
  "slots": {
-  "matin": "2026-10-12"
+  "matin": "2026-10-12",
+  "soir": "2026-10-12"
+ },
+ "trend": {
+  "1810.HK": {
+   "since": "2026-10-12",
+   "state": "down"
+  },
+  "BNK.PA": {
+   "since": "2026-10-12",
+   "state": "pullback"
+  },
+  "CSIQ": {
+   "since": "2026-10-12",
+   "state": "down"
+  },
+  "ENGI.PA": {
+   "since": "2026-10-12",
+   "state": "down"
+  },
+  "GC=F": {
+   "since": "2026-10-12",
+   "state": "down"
+  },
+  "GHY.WA": {
+   "since": "2026-10-12",
+   "state": "pullback"
+  },
+  "LHYFE.PA": {
+   "since": "2026-10-12",
+   "state": "young"
+  },
+  "META": {
+   "since": "2026-10-12",
+   "state": "up"
+  },
+  "MSFT": {
+   "since": "2026-10-12",
+   "state": "up"
+  },
+  "NVDA": {
+   "since": "2026-10-12",
+   "state": "up"
+  },
+  "PAEEM.PA": {
+   "since": "2026-10-12",
+   "state": "up"
+  },
+  "QBTS": {
+   "since": "2026-10-12",
+   "state": "down"
+  },
+  "QNC": {
+   "since": "2026-10-12",
+   "state": "young"
+  },
+  "SPCX": {
+   "since": "2026-10-12",
+   "state": "young"
+  },
+  "WPEA.PA": {
+   "since": "2026-10-12",
+   "state": "up"
+  }
  }
 }
