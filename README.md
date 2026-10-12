@@ -19,6 +19,16 @@ Le bot ne passe **aucun ordre** : il t'informe, tu agis dans ton application.
 ## Notifications en français
 Tout le texte envoyé est en français. Les titres d'actualité (souvent en anglais chez Yahoo/Finnhub) sont traduits automatiquement ; si la traduction est indisponible, le titre d'origine est conservé. Pour la couper : `"traduire_actus": false` dans `config.json`.
 
+## « Attention X demain » et bilans semaine / mois
+- **Matin** : section « À surveiller (7 jours) » ; **soir** : « Attention : à surveiller sous 48 h ». On y trouve les résultats (ex. « D-Wave : résultats demain »), les détachements de dividende (le cours baisse d'autant) et tes propres événements.
+- Les résultats et dividendes concernent aussi les valeurs de l'`univers` (Apple, Tesla, LVMH…), même sans position ni watchlist. Pour limiter aux valeurs de la watchlist : `"alertes_univers": false`.
+- **Soir** : « Séance inhabituelle » si une valeur a un volume ≥ 3 × la normale ou un gap à l'ouverture.
+- **Dernière séance de la semaine (vendredi) et du mois** : bilan des variations de toutes tes valeurs (🔥 / ⚠️ au-delà d'un seuil), plus hauts/bas sur 12 mois, changements de tendance de la période. Seuils : `recap` dans `config.json`.
+- **Tes événements** (levée de blocage SpaceX, réunion de la Fed…) : ajoute-les dans `config.json`, par exemple
+  `"evenements": [{"ticker": "SPCX", "date": "2026-11-05", "texte": "résultats prévus"}, {"date": "2026-12-16", "texte": "réunion de la Fed"}]`
+  (`ticker` facultatif). Les dates de résultats et de dividendes viennent de Yahoo, parfois incomplètes ou approximatives.
+- Limite : les jours fériés ne sont pas gérés, donc si le vendredi est férié le bilan de semaine saute.
+
 ## Commandes
 `/tendances` · `/idees` (`/idees tout`) · `/avis nvidia` · `/achat nvidia [prix] [quantité] [tendance|pullback|breakout|capitulation|long]` · `/stop nvidia 138,5` · `/vente nvidia [prix]` · `/statut` · `/bilan` · `/aide`
 
