@@ -315,5 +315,19 @@
       "grande": 3.5,
       "pari": 4.5
     }
-  }
+  },
+  "evenements": [],
+  "recap": {
+    "semaine": {
+      "etf": 0.04,
+      "grande": 0.08,
+      "pari": 0.15
+    },
+    "mois": {
+      "etf": 0.08,
+      "grande": 0.15,
+      "pari": 0.3
+    }
+  },
+  "alertes_univers": true
 }
