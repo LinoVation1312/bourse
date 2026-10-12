@@ -2,7 +2,7 @@
 import datetime as dt
 from dataclasses import dataclass, field
 
-from . import analysis as A, data, markets, news as N, positions as P, render as R, state as ST, trend as T
+from . import agenda, analysis as A, data, markets, news as N, positions as P, render as R, state as ST, trend as T
 from .config import scan_entries, watch_entries, entry_for
 from .fmt import b, esc, fr_date, pct, price
 
@@ -105,16 +105,9 @@ def matin(ctx):
     hot = {t: N.sensitive(its, now, ctx.state, hours=16, limit=2) for t, its in items.items()}
     nl = R.news_lines({t: h for t, h in hot.items() if h}, nm)
     out.append(b("📰 Actualités sensibles de la nuit") + "\n" + ("\n".join(nl) if nl else "Rien de notable."))
-    earn = []
-    for w in tracked:
-        if w["cat"] == "etf":
-            continue
-        e = A.earnings_in_days(ctx.state, w["ticker"], now)
-        if e is not None and e <= 7:
-            earn.append(f"{esc(w['nom'])} : {'aujourd’hui' if e == 0 else f'dans {e} j'}"
-                        + (" ⚠ tu détiens cette valeur : gap possible" if w["ticker"] in ctx.state["positions"] else ""))
-    if earn:
-        out.append(b("📅 Résultats (7 jours)") + "\n" + "\n".join(earn))
+    ag = agenda.upcoming(ctx, tracked, 7, "⏰ À surveiller (7 jours)")
+    if ag:
+        out.append(ag)
 
     # setups
     ideas, hidden = visible_ideas(ctx, A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"])))
@@ -155,16 +148,12 @@ def soir(ctx):
     changes = trend_changes(ctx, snap)
     if changes:
         blocks.append(b("🔄 Changements de tendance de fond") + "\n" + "\n".join(t for _, t in changes))
-    soon = []
-    for w in tracked_entries(ctx):
-        if w["cat"] == "etf":
-            continue
-        e = A.earnings_in_days(ctx.state, w["ticker"], now)
-        if e is not None and e <= 2:
-            soon.append(f"{esc(w['nom'])} : {'aujourd’hui' if e == 0 else 'demain' if e == 1 else f'dans {e} j'}"
-                        + (" ⚠ tu détiens cette valeur : gap possible" if w["ticker"] in ctx.state["positions"] else ""))
-    if soon:
-        blocks.append(b("📅 Résultats imminents") + "\n" + "\n".join(soon))
+    ag = agenda.upcoming(ctx, tracked_entries(ctx), 2, "⏰ Attention : à surveiller sous 48 h")
+    if ag:
+        blocks.append(ag)
+    un = agenda.unusual(snap, watch_entries(cfg), cfg, today)
+    if un:
+        blocks.append(un)
     ideas = [i for i in A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"]))
              if i["bar"] == today]
     ideas = [i for i in ideas if ST.fresh(ctx.state, f"idea|{i['w']['ticker']}|{i['setup']}|{i['bar']}", now, 48)]
@@ -174,6 +163,11 @@ def soir(ctx):
     elif hidden_note(hidden):
         blocks.append(hidden_note(hidden))
     blocks.append(T.section(snap, watch_entries(cfg), "📈 Bilan de la séance · tendance de fond", "aujourd'hui", today=today))
+    for unit in ("semaine", "mois"):
+        if agenda.last_business_day(today, unit):
+            rc = agenda.recap(snap, watch_entries(cfg), cfg, ctx.state, today, unit)
+            if rc:
+                blocks.append(rc)
     ctx.tg.send(f"🌙 {b('Clôture')} · {fr_date(today)}\n\n" + "\n\n".join(blocks) + "\n\n" + R.FOOTER)
 
 
