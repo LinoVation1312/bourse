@@ -1,5 +1,5 @@
 """Construction des messages Telegram (HTML)."""
-from . import positions as P, setups as S
+from . import positions as P, setups as S, translate
 from .analysis import trend, next_session
 from .fmt import b, esc, pct, price, num, fr_date, short_date
 
@@ -90,18 +90,5 @@ def news_lines(items_by_ticker, cfg_names):
             ico = "⚠️" if it["kind"] == "neg" else "📰"
             src = f" ({esc(it['src'])})" if it.get("src") else ""
             link = f' <a href="{esc(it["url"])}">lien</a>' if it.get("url") else ""
-            lines.append(f"{ico} {b(cfg_names.get(t, t))} : {esc(it['title'][:120])}{src}{link}")
+            lines.append(f"{ico} {b(cfg_names.get(t, t))} : {esc(translate.fr(it['title'])[:140])}{src}{link}")
     return lines
-
-
-def help_text():
-    return ("<b>Commandes</b>\n"
-            "/idees : les setups swing du moment\n"
-            "/avis nvidia : analyse d'une valeur (tendance, setups, historique)\n"
-            "/achat nvidia [prix] [quantité] [pullback|breakout|capitulation|long] : je suis ta position "
-            "(stop, objectif et délai calculés ; <i>long</i> = suivi sans stop)\n"
-            "/stop nvidia 138,5 : change ton stop suivi\n"
-            "/vente nvidia [prix] : clôture le suivi et note le résultat\n"
-            "/statut : tes positions et la tendance de tes valeurs\n"
-            "/bilan : tes trades clôturés\n\n"
-            "Les commandes sont lues à chaque passage du bot (≈ toutes les 15 min en séance, plus au récap du matin).")

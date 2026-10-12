@@ -50,15 +50,20 @@ def main(mode, dry):
     if mode == "skip":
         print("Rien à faire à cette heure.")
         return
-    ctx = jobs.Ctx(cfg=load_config(), state=state, stats=load_stats(), tg=Telegram(token or "", chat or "", dry),
+    cfg = load_config()
+    if not cfg.get("traduire_actus", True):
+        os.environ["BOURSE_NO_TRANSLATE"] = "1"
+    ctx = jobs.Ctx(cfg=cfg, state=state, stats=load_stats(), tg=Telegram(token or "", chat or "", dry),
                    now=now, finnhub=os.environ.get("FINNHUB_KEY"))
     try:
         if mode == "backtest":
-            from bourse import backtest
+            from bourse import backtest, trend
             st = backtest.run(ctx.cfg, now)
+            st["tendance"] = trend.run_backtest(ctx.cfg, now)
             (ROOT / "stats.json").write_text(json.dumps(st, ensure_ascii=False, indent=1), encoding="utf-8")
-            (ROOT / "report.md").write_text(backtest.report_md(st), encoding="utf-8")
+            (ROOT / "report.md").write_text(backtest.report_md(st) + "\n\n" + trend.report_md(st["tendance"]), encoding="utf-8")
             ctx.tg.send(backtest.telegram_summary(st))
+            ctx.tg.send(trend.telegram_summary(st["tendance"]))
         else:
             for uid, text in ctx.tg.updates(state["offset"]):
                 state["offset"] = max(state["offset"], uid)

@@ -1,10 +1,11 @@
-"""Positions suivies : « swing » (stop, objectif, délai) ou « long » (alerte de recul seulement).
+"""Positions suivies : « swing » (stop, objectif, délai), « tendance » (stop suiveur, pas de délai : on garde tant que la
+tendance tient) ou « long » (alerte de recul seulement).
 Le bot ne passe aucun ordre : il suit tes positions et te prévient, tu agis dans ton application."""
 import datetime as dt
 
 import numpy as np
 
-from . import setups as S
+from . import setups as S, trend as T
 from .fmt import b, esc, pct, price, short_date, num
 
 
@@ -18,7 +19,17 @@ def new_position(cfg, w, entry, qty, kind, setup, ind, today):
         pos.update(stop=entry * (1 - sp), stop0=entry * (1 - sp), risk=entry * sp,
                    target=entry * (1 + p["rr"] * sp) if p["rr"] else None,
                    sma5_exit=p["sma5_exit"], max_days=p["hold"])
+    elif kind == "tendance":
+        k = T.k_for(cfg, w["cat"])
+        atr = float(ind.iloc[-1].atr) if ind is not None and len(ind) else None
+        st = T.initial_stop(entry, atr, k)
+        pos.update(stop=st, stop0=st, stop_told=st, k=k)
     return pos
+
+
+def refresh(w, pos, ind):
+    """Met à jour ce qui dépend de la dernière clôture (stop suiveur des positions « tendance »)."""
+    return T.update_trailing(pos, ind) if pos["type"] == "tendance" and ind is not None and len(ind) else False
 
 
 def days_held(pos, today):
@@ -47,13 +58,17 @@ def line(w, pos, last, today):
         dl = days_left(pos, today)
         delai = "délai atteint" if dl <= 0 else f"{dl} séance{'s' if dl > 1 else ''} restante{'s' if dl > 1 else ''}"
         return f"{head}\n    stop {price(t, pos['stop'])} ({pct(pos['stop'] / last - 1)}){tgt} · {delai}"
+    if pos["type"] == "tendance":
+        return (f"{head}\n    suivi tendance · stop {price(t, pos['stop'])} ({pct(pos['stop'] / last - 1)}) · "
+                f"plus haut de clôture {price(t, pos['peak'])} ({pct(last / pos['peak'] - 1)})")
     return f"{head}\n    suivi long terme · sommet {price(t, pos['peak'])} ({pct(last / pos['peak'] - 1)})"
 
 
 def intraday_events(w, pos, last, today, cfg):
     """Événements à signaler en séance : [(clé, gravité, texte)]. Peut modifier pos (stop suiveur, sommet)."""
     t, ev = w["ticker"], []
-    pos["peak"] = max(pos.get("peak", pos["entry"]), last)
+    if pos["type"] != "tendance":          # tendance : le plus haut est celui des CLÔTURES (mis à jour par refresh)
+        pos["peak"] = max(pos.get("peak", pos["entry"]), last)
     p, _ = pnl(pos, last)
     if pos["type"] == "swing":
         if last <= pos["stop"]:
@@ -75,6 +90,11 @@ def intraday_events(w, pos, last, today, cfg):
         if days_left(pos, today) <= 0:
             ev.append(("time", 2, f"⏱ {b(w['nom'])} : délai de {pos['max_days']} séances atteint ({pct(p)}). "
                                   f"Le plan prévoit de sortir aujourd'hui."))
+    elif pos["type"] == "tendance":
+        if last <= pos["stop"]:
+            ev.append(("stop", 3, f"🛑 {b(w['nom'])} touche ton stop de tendance ({price(t, pos['stop'])}) en séance : cours "
+                                  f"{price(t, last)}, {pct(p)} depuis ton achat. Un stop de tendance se juge surtout à la clôture : "
+                                  f"le bilan du soir te dira s'il est confirmé. À toi de décider."))
     else:
         lt = cfg["long_terme"]
         if p <= -lt["perte_depuis_achat"][w["cat"]]:
@@ -90,9 +110,19 @@ def daily_advice(w, pos, ind, today, when):
     last = ind.iloc[-1]
     c = float(last.Close)
     ev = []
+    qui = "aujourd'hui à l'ouverture" if when == "matin" else "demain à l'ouverture"
+    if pos["type"] == "tendance":
+        refresh(w, pos, ind)
+        if c <= pos["stop"]:
+            ev.append(f"🛑 clôture sous ton stop de tendance ({price(w['ticker'], pos['stop'])}) : la tendance de fond est "
+                      f"cassée selon ta règle. Sors {qui} si tu la suis")
+        elif pos["stop"] >= pos.get("stop_told", 0) * 1.02:
+            pos["stop_told"] = pos["stop"]
+            ev.append(f"🔒 remonte ton stop à {price(w['ticker'], pos['stop'])} dans l'app "
+                      f"({pct(pos['stop'] / pos['entry'] - 1)} par rapport à ton achat)")
+        return ev
     if pos["type"] != "swing":
         return ev
-    qui = "aujourd'hui à l'ouverture" if when == "matin" else "demain à l'ouverture"
     dl = days_left(pos, today)
     if c <= pos["stop"]:
         ev.append(f"🛑 clôture sous ton stop : sors {qui} si ce n'est pas fait")

@@ -1,71 +1,319 @@
 {
+  "traduire_actus": true,
   "capital_swing": 2500,
   "risque_par_trade": 0.03,
   "mise_max_pct": 0.35,
   "frais_ordre": 1.0,
-
   "alertes": {
-    "jour":  {"etf": 0.03,  "grande": 0.05, "pari": 0.10},
-    "flash": {"etf": 0.015, "grande": 0.03, "pari": 0.06}
+    "jour": {
+      "etf": 0.03,
+      "grande": 0.05,
+      "pari": 0.1
+    },
+    "flash": {
+      "etf": 0.015,
+      "grande": 0.03,
+      "pari": 0.06
+    }
   },
-
   "long_terme": {
-    "perte_depuis_achat":  {"etf": 0.08, "grande": 0.10, "pari": 0.20},
-    "recul_depuis_sommet": {"etf": 0.10, "grande": 0.15, "pari": 0.25}
+    "perte_depuis_achat": {
+      "etf": 0.08,
+      "grande": 0.1,
+      "pari": 0.2
+    },
+    "recul_depuis_sommet": {
+      "etf": 0.1,
+      "grande": 0.15,
+      "pari": 0.25
+    }
   },
-
   "swing": {
     "scanner_univers": true,
-    "max_idees": 5
+    "max_idees": 5,
+    "montrer_non_valides": false
   },
-
   "watchlist": [
-    {"ticker": "PAEEM.PA",  "nom": "MSCI Emerging Markets (PEA)", "cat": "etf",    "alias": ["emergents", "em"]},
-    {"ticker": "WPEA.PA",   "nom": "MSCI World Swap (PEA)",       "cat": "etf",    "alias": ["world", "monde"]},
-    {"ticker": "BNK.PA",    "nom": "Stoxx Europe 600 Banques",    "cat": "etf",    "alias": ["banques", "banks"]},
-    {"ticker": "GC=F",      "nom": "Or (en dollars)",             "cat": "etf",    "alias": ["or", "gold"]},
-
-    {"ticker": "MSFT",      "nom": "Microsoft",       "cat": "grande", "alias": ["microsoft"]},
-    {"ticker": "META",      "nom": "Meta",            "cat": "grande", "alias": []},
-    {"ticker": "NVDA",      "nom": "Nvidia",          "cat": "grande", "alias": ["nvidia"]},
-    {"ticker": "ENGI.PA",   "nom": "Engie",           "cat": "grande", "alias": ["engie"]},
-    {"ticker": "1810.HK",   "nom": "Xiaomi",          "cat": "grande", "alias": ["xiaomi"]},
-    {"ticker": "CSIQ",      "nom": "Canadian Solar",  "cat": "grande", "alias": ["solar", "canadian"]},
-
-    {"ticker": "QBTS",      "nom": "D-Wave Quantum",  "cat": "pari",   "alias": ["dwave", "d-wave"]},
-    {"ticker": "QNC",       "nom": "Quantum eMotion", "cat": "pari",   "alias": ["quantum", "qem"]},
-    {"ticker": "GHY.WA",    "nom": "Global Hydrogen", "cat": "pari",   "alias": ["hydrogen", "ghy"]},
-    {"ticker": "LHYFE.PA",  "nom": "Lhyfe",           "cat": "pari",   "alias": ["lhyfe"]}
+    {
+      "ticker": "PAEEM.PA",
+      "nom": "MSCI Emerging Markets (PEA)",
+      "cat": "etf",
+      "alias": [
+        "emergents",
+        "em"
+      ]
+    },
+    {
+      "ticker": "WPEA.PA",
+      "nom": "MSCI World Swap (PEA)",
+      "cat": "etf",
+      "alias": [
+        "world",
+        "monde"
+      ]
+    },
+    {
+      "ticker": "BNK.PA",
+      "nom": "Stoxx Europe 600 Banques",
+      "cat": "etf",
+      "alias": [
+        "banques",
+        "banks"
+      ]
+    },
+    {
+      "ticker": "GC=F",
+      "nom": "Or (en dollars)",
+      "cat": "etf",
+      "alias": [
+        "or",
+        "gold"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "nom": "Microsoft",
+      "cat": "grande",
+      "alias": [
+        "microsoft"
+      ]
+    },
+    {
+      "ticker": "META",
+      "nom": "Meta",
+      "cat": "grande",
+      "alias": []
+    },
+    {
+      "ticker": "NVDA",
+      "nom": "Nvidia",
+      "cat": "grande",
+      "alias": [
+        "nvidia"
+      ]
+    },
+    {
+      "ticker": "ENGI.PA",
+      "nom": "Engie",
+      "cat": "grande",
+      "alias": [
+        "engie"
+      ]
+    },
+    {
+      "ticker": "1810.HK",
+      "nom": "Xiaomi",
+      "cat": "grande",
+      "alias": [
+        "xiaomi"
+      ]
+    },
+    {
+      "ticker": "CSIQ",
+      "nom": "Canadian Solar",
+      "cat": "grande",
+      "alias": [
+        "solar",
+        "canadian"
+      ]
+    },
+    {
+      "ticker": "SPCX",
+      "nom": "SpaceX",
+      "cat": "pari",
+      "alias": [
+        "spacex",
+        "spcx"
+      ]
+    },
+    {
+      "ticker": "QBTS",
+      "nom": "D-Wave Quantum",
+      "cat": "pari",
+      "alias": [
+        "dwave",
+        "d-wave"
+      ]
+    },
+    {
+      "ticker": "QNC",
+      "nom": "Quantum eMotion",
+      "cat": "pari",
+      "alias": [
+        "quantum",
+        "qem"
+      ]
+    },
+    {
+      "ticker": "GHY.WA",
+      "nom": "Global Hydrogen",
+      "cat": "pari",
+      "alias": [
+        "hydrogen",
+        "ghy"
+      ]
+    },
+    {
+      "ticker": "LHYFE.PA",
+      "nom": "Lhyfe",
+      "cat": "pari",
+      "alias": [
+        "lhyfe"
+      ]
+    }
   ],
-
   "univers": [
-    {"ticker": "AAPL",    "nom": "Apple",          "cat": "grande"},
-    {"ticker": "AMZN",    "nom": "Amazon",         "cat": "grande"},
-    {"ticker": "GOOGL",   "nom": "Alphabet",       "cat": "grande"},
-    {"ticker": "TSLA",    "nom": "Tesla",          "cat": "grande"},
-    {"ticker": "AMD",     "nom": "AMD",            "cat": "grande"},
-    {"ticker": "AVGO",    "nom": "Broadcom",       "cat": "grande"},
-    {"ticker": "PLTR",    "nom": "Palantir",       "cat": "grande"},
-    {"ticker": "NFLX",    "nom": "Netflix",        "cat": "grande"},
-    {"ticker": "LLY",     "nom": "Eli Lilly",      "cat": "grande"},
-    {"ticker": "JPM",     "nom": "JPMorgan",       "cat": "grande"},
-    {"ticker": "ASML.AS", "nom": "ASML",           "cat": "grande"},
-    {"ticker": "MC.PA",   "nom": "LVMH",           "cat": "grande"},
-    {"ticker": "AIR.PA",  "nom": "Airbus",         "cat": "grande"},
-    {"ticker": "TTE.PA",  "nom": "TotalEnergies",  "cat": "grande"},
-    {"ticker": "SU.PA",   "nom": "Schneider",      "cat": "grande"},
-    {"ticker": "SAN.PA",  "nom": "Sanofi",         "cat": "grande"},
-    {"ticker": "RMS.PA",  "nom": "Hermès",         "cat": "grande"},
-    {"ticker": "SAP.DE",  "nom": "SAP",            "cat": "grande"},
-    {"ticker": "SIE.DE",  "nom": "Siemens",        "cat": "grande"}
+    {
+      "ticker": "AAPL",
+      "nom": "Apple",
+      "cat": "grande"
+    },
+    {
+      "ticker": "AMZN",
+      "nom": "Amazon",
+      "cat": "grande"
+    },
+    {
+      "ticker": "GOOGL",
+      "nom": "Alphabet",
+      "cat": "grande"
+    },
+    {
+      "ticker": "TSLA",
+      "nom": "Tesla",
+      "cat": "grande"
+    },
+    {
+      "ticker": "AMD",
+      "nom": "AMD",
+      "cat": "grande"
+    },
+    {
+      "ticker": "AVGO",
+      "nom": "Broadcom",
+      "cat": "grande"
+    },
+    {
+      "ticker": "PLTR",
+      "nom": "Palantir",
+      "cat": "grande"
+    },
+    {
+      "ticker": "NFLX",
+      "nom": "Netflix",
+      "cat": "grande"
+    },
+    {
+      "ticker": "LLY",
+      "nom": "Eli Lilly",
+      "cat": "grande"
+    },
+    {
+      "ticker": "JPM",
+      "nom": "JPMorgan",
+      "cat": "grande"
+    },
+    {
+      "ticker": "ASML.AS",
+      "nom": "ASML",
+      "cat": "grande"
+    },
+    {
+      "ticker": "MC.PA",
+      "nom": "LVMH",
+      "cat": "grande"
+    },
+    {
+      "ticker": "AIR.PA",
+      "nom": "Airbus",
+      "cat": "grande"
+    },
+    {
+      "ticker": "TTE.PA",
+      "nom": "TotalEnergies",
+      "cat": "grande"
+    },
+    {
+      "ticker": "SU.PA",
+      "nom": "Schneider",
+      "cat": "grande"
+    },
+    {
+      "ticker": "SAN.PA",
+      "nom": "Sanofi",
+      "cat": "grande"
+    },
+    {
+      "ticker": "RMS.PA",
+      "nom": "Hermès",
+      "cat": "grande"
+    },
+    {
+      "ticker": "SAP.DE",
+      "nom": "SAP",
+      "cat": "grande"
+    },
+    {
+      "ticker": "SIE.DE",
+      "nom": "Siemens",
+      "cat": "grande"
+    }
   ],
-
   "calibration": [
-    {"ticker": "SPY",  "cat": "etf"},   {"ticker": "QQQ",  "cat": "etf"},
-    {"ticker": "IWM",  "cat": "etf"},   {"ticker": "EEM",  "cat": "etf"},
-    {"ticker": "XLF",  "cat": "etf"},   {"ticker": "GLD",  "cat": "etf"},
-    {"ticker": "IONQ", "cat": "pari"},  {"ticker": "RGTI", "cat": "pari"},
-    {"ticker": "PLUG", "cat": "pari"},  {"ticker": "RKLB", "cat": "pari"},
-    {"ticker": "SOUN", "cat": "pari"},  {"ticker": "OKLO", "cat": "pari"}
-  ]
+    {
+      "ticker": "SPY",
+      "cat": "etf"
+    },
+    {
+      "ticker": "QQQ",
+      "cat": "etf"
+    },
+    {
+      "ticker": "IWM",
+      "cat": "etf"
+    },
+    {
+      "ticker": "EEM",
+      "cat": "etf"
+    },
+    {
+      "ticker": "XLF",
+      "cat": "etf"
+    },
+    {
+      "ticker": "GLD",
+      "cat": "etf"
+    },
+    {
+      "ticker": "IONQ",
+      "cat": "pari"
+    },
+    {
+      "ticker": "RGTI",
+      "cat": "pari"
+    },
+    {
+      "ticker": "PLUG",
+      "cat": "pari"
+    },
+    {
+      "ticker": "RKLB",
+      "cat": "pari"
+    },
+    {
+      "ticker": "SOUN",
+      "cat": "pari"
+    },
+    {
+      "ticker": "OKLO",
+      "cat": "pari"
+    }
+  ],
+  "tendance": {
+    "k_atr": {
+      "etf": 3.0,
+      "grande": 3.5,
+      "pari": 4.5
+    }
+  }
 }

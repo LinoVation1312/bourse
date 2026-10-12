@@ -1,7 +1,7 @@
 """Commandes Telegram : /idees /avis /achat /stop /vente /statut /bilan /aide."""
 import datetime as dt
 
-from . import analysis as A, data, positions as P, render as R, setups as S
+from . import analysis as A, data, positions as P, render as R, setups as S, trend as T
 from .config import resolve, scan_entries, watch_entries, entry_for
 from .fmt import b, esc, num, pct, price, short_date
 
@@ -20,7 +20,7 @@ def parse_args(tokens):
         n = parse_number(tok)
         if n is not None:
             nums.append(n)
-        elif tok.lower() in S.SETUPS or tok.lower() in ("long", "swing"):
+        elif tok.lower() in S.SETUPS or tok.lower() in ("long", "swing", "tendance"):
             word = tok.lower()
         elif name is None:
             name = tok
@@ -32,15 +32,32 @@ def currency_mismatch(px, ref, tol=0.08):
     return bool(px and ref and abs(px / ref - 1) > tol)
 
 
+def help_text():
+    return ("<b>Commandes</b>\n"
+            "/tendances : la tendance de fond (2-3 mois et plus) de toutes tes valeurs\n"
+            "/idees : les setups swing validés par le backtest (/idees tout : tous, même non validés)\n"
+            "/avis nvidia : analyse d'une valeur (tendance, setups, historique)\n"
+            "/achat nvidia [prix] [quantité] [tendance|pullback|breakout|capitulation|long] : je suis ta position\n"
+            "    • <i>tendance</i> : stop suiveur, tu gardes tant que la tendance tient (2-3 mois et plus)\n"
+            "    • <i>swing</i> (par défaut, ou pullback/breakout/capitulation) : stop, objectif et délai de 2 jours à 1 semaine\n"
+            "    • <i>long</i> : suivi sans stop, alertes de recul seulement\n"
+            "/stop nvidia 138,5 : change ton stop suivi\n"
+            "/vente nvidia [prix] : clôture le suivi et note le résultat\n"
+            "/statut : tes positions et la tendance de tes valeurs\n"
+            "/bilan : tes trades clôturés\n\n"
+            "Écris ton achat sans prix (/achat nvidia) : je prends le cours Yahoo, dans la même devise que mes calculs.")
+
+
 def handle(ctx, text):
     parts = text.strip().split()
     if not parts or not parts[0].startswith("/"):
         return
     cmd, args = parts[0].split("@")[0].lower(), parts[1:]
     fn = {"/idees": idees, "/idées": idees, "/avis": avis, "/achat": achat, "/stop": stop, "/vente": vente,
-          "/statut": statut, "/positions": statut, "/bilan": bilan}.get(cmd)
+          "/statut": statut, "/positions": statut, "/bilan": bilan, "/tendances": tendances,
+          "/tendance": tendances}.get(cmd)
     if cmd in ("/start", "/aide", "/help") or fn is None:
-        ctx.tg.send(R.help_text())
+        ctx.tg.send(help_text())
         return
     try:
         fn(ctx, args)
@@ -59,8 +76,15 @@ def _need_ticker(ctx, args):
 def idees(ctx, args):
     snap = A.snapshot(scan_entries(ctx.cfg), ctx.now)
     held = set(ctx.state["positions"])
-    ideas = A.find_ideas(snap, ctx.cfg, ctx.stats, ctx.state, ctx.now, exclude=held)
-    ctx.tg.send(R.ideas_section(ideas) + f"\n\n{len(snap)} valeurs analysées.")
+    allideas = A.find_ideas(snap, ctx.cfg, ctx.stats, ctx.state, ctx.now, exclude=held)
+    show_all = bool(args and args[0].lower() in ("tout", "tous", "all")) or ctx.cfg["swing"].get("montrer_non_valides", False)
+    ideas = allideas if show_all else [i for i in allideas if i["validated"]]
+    note = ""
+    if len(ideas) < len(allideas):
+        note = (f"\n\nℹ️ {len(allideas) - len(ideas)} setup(s) non validé(s) par le backtest masqué(s) "
+                f"(/idees tout pour les voir). Aucun n'a de rendement démontré après frais.")
+    ctx.tg.send(R.ideas_section(ideas, "🎯 Setups swing" + ("" if show_all else " validés")) + note
+                + f"\n\n{len(snap)} valeurs analysées.")
 
 
 def avis(ctx, args):
@@ -78,6 +102,7 @@ def avis(ctx, args):
     out = [f"{b(w['nom'])} ({esc(t)}) · {price(t, float(r.Close))} (clôture du {short_date(ind.index[-1].date())})",
            f"Tendance de fond : {tr} · RSI 14 j {float(r.rsi14):.0f} · volatilité {float(r.vol_ann) * 100:.0f} %/an · "
            f"1 j {pct(float(ind.Close.pct_change().iloc[-1]))} · 5 j {pct(float(r.ret5))} · 20 j {pct(float(r.ret20))}"]
+    out.append(T.line(w, T.assess(ind), "1 j"))
     act = S.active(ind)
     if act:
         out.append(R.ideas_section([{"w": w, "setup": n, "plan": S.trade_plan(ind, w["cat"], n, ctx.cfg),
@@ -107,7 +132,7 @@ def achat(ctx, args):
     if not w:
         return
     t = w["ticker"]
-    kind = "long" if word == "long" else "swing"
+    kind = "long" if word == "long" else "tendance" if word == "tendance" else "swing"
     setup = word if word in S.SETUPS else None
     snap = A.snapshot([w], ctx.now)
     ind = snap[t]["ind"] if t in snap else None
@@ -140,6 +165,11 @@ def achat(ctx, args):
         msg.append("Je te préviens si le stop ou l'objectif est touché, quand remonter ton stop, et à l'approche du délai.")
         if qty is None:
             msg.append("(Ajoute la quantité pour que je calcule ton gain en €.)")
+    elif kind == "tendance":
+        msg.append(f"Stop de tendance {price(t, pos['stop'])} ({pct(pos['stop'] / px - 1)}) : pose-le dans l'app. "
+                   f"C'est un stop suiveur : il ne fait que monter, je te dis quand le remonter.")
+        msg.append("Tu gardes tant que la tendance tient (pas de délai). Je te préviens si la clôture passe sous le stop, "
+                   "ou si la tendance de fond de la valeur se retourne.")
     else:
         lt = ctx.cfg["long_terme"]
         msg.append(f"Suivi long terme : alerte si {pct(-lt['perte_depuis_achat'][w['cat']], 0)} depuis ton achat "
@@ -191,8 +221,13 @@ def statut(ctx, args):
     else:
         out.append("💼 Aucune position suivie (/achat nvidia 142,5 10).")
     snap = A.snapshot(watch_entries(ctx.cfg), ctx.now)
-    out.append(R.trend_section(snap, [w["ticker"] for w in watch_entries(ctx.cfg)]))
+    out.append(T.section(snap, watch_entries(ctx.cfg)))
     ctx.tg.send("\n\n".join(out))
+
+
+def tendances(ctx, args):
+    snap = A.snapshot(watch_entries(ctx.cfg), ctx.now)
+    ctx.tg.send(T.section(snap, watch_entries(ctx.cfg)))
 
 
 def bilan(ctx, args):

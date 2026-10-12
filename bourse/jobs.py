@@ -1,8 +1,8 @@
-"""Les trois tâches planifiées : matin (7h45), watch (toutes les 15 min en séance), soir (22h15)."""
+"""Les trois tâches planifiées : matin (≈ 8h), watch (alertes en séance), soir (bilan de clôture, dès 22h30)."""
 import datetime as dt
 from dataclasses import dataclass, field
 
-from . import analysis as A, data, markets, news as N, positions as P, render as R, state as ST
+from . import analysis as A, data, markets, news as N, positions as P, render as R, state as ST, trend as T
 from .config import scan_entries, watch_entries, entry_for
 from .fmt import b, esc, fr_date, pct, price
 
@@ -31,6 +31,33 @@ def tracked_entries(ctx):
 
 def names(ctx):
     return {w["ticker"]: w["nom"] for w in tracked_entries(ctx)}
+
+
+def trend_changes(ctx, snap):
+    """Changements de tendance de fond confirmés (watchlist + positions) depuis la dernière observation.
+    La première observation d'une valeur est silencieuse. Retourne [(niveau, texte)], retournements baissiers d'abord."""
+    out = []
+    for w in tracked_entries(ctx):
+        s = snap.get(w["ticker"])
+        if not s:
+            continue
+        ch = T.detect_change(ctx.state, w["ticker"], T.assess(s["ind"]), ctx.now.date())
+        if ch:
+            out.append(T.change_text(w, *ch))
+    return sorted(out, key=lambda x: x[0] != "alert")
+
+
+def visible_ideas(ctx, ideas):
+    """Seuls les setups validés par le backtest sont proposés (sauf swing.montrer_non_valides = true)."""
+    if ctx.cfg["swing"].get("montrer_non_valides"):
+        return ideas, 0
+    shown = [i for i in ideas if i["validated"]]
+    return shown, len(ideas) - len(shown)
+
+
+def hidden_note(n):
+    return (f"ℹ️ {n} setup(s) non validé(s) par le backtest masqué(s) : aucun n'a de rendement démontré après frais "
+            f"(/idees tout pour les voir)." if n else None)
 
 
 def warn_data(ctx, what):
@@ -63,9 +90,14 @@ def matin(ctx):
                 lines.append(f"{esc(w['nom'])} : pas de données")
                 continue
             ind = snap[t]["ind"]
+            P.refresh(w, pos, ind)
             lines.append(P.line(w, pos, float(ind.Close.iloc[-1]), today))
             lines += [f"    {a}" for a in P.daily_advice(w, pos, ind, today, "matin")]
         out.append("\n".join(lines))
+
+    changes = trend_changes(ctx, snap)
+    if changes:
+        out.append(b("🔄 Changements de tendance de fond") + "\n" + "\n".join(t for _, t in changes))
 
     # actualités de la nuit (titres sensibles) + résultats proches
     items = N.fetch_many([w["ticker"] for w in tracked if w["cat"] != "etf" or w["ticker"] in ctx.state["positions"]],
@@ -85,11 +117,13 @@ def matin(ctx):
         out.append(b("📅 Résultats (7 jours)") + "\n" + "\n".join(earn))
 
     # setups
-    ideas = A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"]))
-    out.append(R.ideas_section(ideas))
+    ideas, hidden = visible_ideas(ctx, A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"])))
+    out.append(R.ideas_section(ideas, "🎯 Setups swing validés du jour"))
+    if hidden_note(hidden):
+        out.append(hidden_note(hidden))
     if not ctx.stats:
         out.append("ℹ️ Aucun backtest encore : lance « backtest » (onglet Actions) pour que les setups soient validés.")
-    out.append(R.trend_section(snap, [w["ticker"] for w in watch_entries(cfg)]))
+    out.append(T.section(snap, watch_entries(cfg)))
     out.append(R.FOOTER)
     ctx.tg.send("\n\n".join(out))
     ctx.state["slots"]["matin"] = str(today)
@@ -97,6 +131,8 @@ def matin(ctx):
 
 # ------------------------------------------------------------------ soir
 def soir(ctx):
+    """Bilan de clôture, envoyé chaque jour de bourse : positions, changements de tendance, résultats de demain,
+    nouveaux setups validés et performance de la séance de chaque valeur."""
     now, today, cfg = ctx.now, ctx.now.date(), ctx.cfg
     snap = A.snapshot(scan_entries(cfg), now)
     ctx.state["slots"]["soir"] = str(today)
@@ -104,23 +140,41 @@ def soir(ctx):
         warn_data(ctx, "Pas de données pour le bilan du soir")
         return
     blocks = []
-    pos_lines = []
-    for t, pos in ctx.state["positions"].items():
-        w = entry_for(cfg, t)
-        if t not in snap:
+    if ctx.state["positions"]:
+        lines = [b("💼 Tes positions")]
+        for t, pos in ctx.state["positions"].items():
+            w = entry_for(cfg, t)
+            if t not in snap:
+                lines.append(f"{esc(w['nom'])} : pas de données")
+                continue
+            ind = snap[t]["ind"]
+            P.refresh(w, pos, ind)
+            lines.append(P.line(w, pos, float(ind.Close.iloc[-1]), today))
+            lines += [f"    {a}" for a in P.daily_advice(w, pos, ind, today, "soir")]
+        blocks.append("\n".join(lines))
+    changes = trend_changes(ctx, snap)
+    if changes:
+        blocks.append(b("🔄 Changements de tendance de fond") + "\n" + "\n".join(t for _, t in changes))
+    soon = []
+    for w in tracked_entries(ctx):
+        if w["cat"] == "etf":
             continue
-        adv = P.daily_advice(w, pos, snap[t]["ind"], today, "soir")
-        if adv:
-            pos_lines.append(P.line(w, pos, float(snap[t]["ind"].Close.iloc[-1]), today) + "\n" + "\n".join(f"    {a}" for a in adv))
-    if pos_lines:
-        blocks.append(b("💼 À faire demain sur tes positions") + "\n" + "\n".join(pos_lines))
+        e = A.earnings_in_days(ctx.state, w["ticker"], now)
+        if e is not None and e <= 2:
+            soon.append(f"{esc(w['nom'])} : {'aujourd’hui' if e == 0 else 'demain' if e == 1 else f'dans {e} j'}"
+                        + (" ⚠ tu détiens cette valeur : gap possible" if w["ticker"] in ctx.state["positions"] else ""))
+    if soon:
+        blocks.append(b("📅 Résultats imminents") + "\n" + "\n".join(soon))
     ideas = [i for i in A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"]))
              if i["bar"] == today]
     ideas = [i for i in ideas if ST.fresh(ctx.state, f"idea|{i['w']['ticker']}|{i['setup']}|{i['bar']}", now, 48)]
+    ideas, hidden = visible_ideas(ctx, ideas)
     if ideas:
-        blocks.append(R.ideas_section(ideas, "🎯 Nouveaux setups à la clôture (pour demain)"))
-    if blocks:
-        ctx.tg.send(f"🌙 {b('Clôture')} · {fr_date(today)}\n\n" + "\n\n".join(blocks) + "\n\n" + R.FOOTER)
+        blocks.append(R.ideas_section(ideas, "🎯 Nouveaux setups validés à la clôture (pour demain)"))
+    elif hidden_note(hidden):
+        blocks.append(hidden_note(hidden))
+    blocks.append(T.section(snap, watch_entries(cfg), "📈 Bilan de la séance · tendance de fond", "aujourd'hui", today=today))
+    ctx.tg.send(f"🌙 {b('Clôture')} · {fr_date(today)}\n\n" + "\n\n".join(blocks) + "\n\n" + R.FOOTER)
 
 
 # ------------------------------------------------------------------ watch
@@ -171,7 +225,7 @@ def held_note(ctx, w, last):
     if not pos:
         return ""
     p = last / pos["entry"] - 1
-    if pos["type"] == "swing":
+    if pos["type"] in ("swing", "tendance"):
         return f"\n    ta position : {pct(p)} · stop {price(w['ticker'], pos['stop'])} ({pct(pos['stop'] / last - 1)})"
     return f"\n    ta position : {pct(p)} depuis ton achat"
 

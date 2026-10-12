@@ -8,7 +8,7 @@ from . import data, setups as S
 from .config import scan_entries, entry_for
 from .indicators import compute
 
-MIN_BARS = 80
+MIN_BARS = 60          # 60 (et non 80) : permet de suivre une introduction en bourse récente (SpaceX)
 MAX_STALE_DAYS = 5
 
 

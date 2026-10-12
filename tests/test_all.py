@@ -147,8 +147,9 @@ class TestSchedule(unittest.TestCase):
         self.assertEqual(decide(self.utc(2026, 12, 9, 6, 45), {}), "matin")       # 7h45 Paris (UTC+1)
         self.assertEqual(decide(self.utc(2026, 12, 9, 5, 45), {}), "skip")        # 6h45 Paris
         self.assertEqual(decide(self.utc(2026, 7, 8, 13, 0), {}), "watch")
-        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 20), {}), "soir")        # 22h20 Paris
-        self.assertEqual(decide(self.utc(2026, 12, 9, 21, 20), {}), "soir")
+        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 20), {}), "skip")        # 22h20 Paris : trop tôt, la barre US n'est pas prête
+        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 35), {}), "soir")        # 22h35 Paris
+        self.assertEqual(decide(self.utc(2026, 12, 9, 21, 35), {}), "soir")
 
     def test_matin_only_once_and_weekend(self):
         self.assertEqual(decide(self.utc(2026, 10, 12, 6, 0), {"matin": "2026-10-12"}), "skip")  # 8h Paris, déjà envoyé
@@ -287,12 +288,16 @@ class TestFlows(unittest.TestCase):
         ev = P.intraday_events(w, pos, 110.5, dt.date(2026, 10, 12), CFG)
         self.assertEqual(ev[0][0], "target")
 
-    def test_soir_silent_without_news(self):
-        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 20, 20, tzinfo=UTC))
+    def test_soir_always_sends_a_bilan(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 20, 40, tzinfo=UTC))
         with mock.patch.object(A, "find_ideas", lambda *a, **k: []):
             jobs.soir(ctx)
-        self.assertEqual(ctx.tg.sent, [])
+        text = "\n".join(ctx.tg.sent)
+        self.assertIn("Clôture", text)
+        self.assertIn("Bilan de la séance", text)
+        self.assertNotIn("Changements de tendance", text)          # 1re observation : silencieuse
         self.assertEqual(ctx.state["slots"]["soir"], "2026-10-12")
+        self.check_html(ctx.tg.sent)
 
 
 class TestIdeas(unittest.TestCase):
