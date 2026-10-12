@@ -5,7 +5,7 @@ Principe honnête : suivre la tendance sert surtout à LIMITER LES GROSSES CHUTE
 haussier, simplement garder gagne souvent davantage. Le mode `backtest` chiffre ce compromis par catégorie
 (rendement par an, baisse maximale, temps investi), frais et écarts inclus : c'est à toi de juger s'il vaut le coup.
 
-Trois règles testées (fixées à l'avance, pas ajustées sur les données) :
+Règles testées (fixées à l'avance, pas ajustées sur les données ; sma100, sma200_large, mom12 et chandelier_large ajoutées après le 1er backtest) :
   sma200      acheter quand la clôture repasse au-dessus de sa moyenne 200 j, vendre quand elle passe 3 % en dessous
   cross       détenir tant que la moyenne 50 j est au-dessus de la moyenne 200 j
   chandelier  acheter sur un plus haut de clôture sur 100 j (au-dessus de la moyenne 200 j), vendre si la clôture passe
@@ -33,7 +33,20 @@ RULES = {
     "chandelier": {"nom": "Cassure + stop suiveur",
                    "regle": "acheter sur un plus haut de clôture sur 100 j au-dessus de la moyenne 200 j, "
                             "vendre si la clôture passe sous (plus haut − k × ATR)"},
+    # Alternatives (ajoutées après le 1er backtest, fixées à l'avance : pas de réglage sur les données)
+    "sma100": {"nom": "Au-dessus de la moyenne 100 j",
+               "regle": "comme la moyenne 200 j mais plus réactive : acheter au-dessus de la moyenne 100 j, vendre 3 % en dessous"},
+    "sma200_large": {"nom": "Moyenne 200 j, sortie large",
+                     "regle": "acheter au-dessus de la moyenne 200 j, vendre seulement 8 % en dessous (moins de faux signaux)"},
+    "mom12": {"nom": "Momentum 12 mois",
+              "regle": "détenir tant que la clôture est au-dessus de celle d'il y a 12 mois (≈ 252 séances)"},
+    "chandelier_large": {"nom": "Cassure 50 j + stop large",
+                         "regle": "acheter sur un plus haut de clôture sur 50 j au-dessus de la moyenne 200 j, "
+                                  "vendre sous (plus haut − (k + 1,5) × ATR) : reste investi plus longtemps"},
 }
+# paramètres des règles : bande de sortie (règles « moyenne »), jours de cassure et ATR supplémentaire (règles « chandelier »)
+SMA_RULES = {"sma200": (200, EXIT_BAND), "sma100": (100, EXIT_BAND), "sma200_large": (200, 0.08)}
+CHANDELIER_RULES = {"chandelier": (BREAKOUT_DAYS, 0.0), "chandelier_large": (50, 1.5)}
 CAT_LABEL = {"etf": "ETF / or", "grande": "grandes valeurs", "pari": "paris", "all": "toutes catégories"}
 
 
@@ -179,14 +192,18 @@ def simulate(ind, rule, cat):
     O, C = ind.Open.values.astype(float), ind.Close.values.astype(float)
     s50, s200 = ind.sma50.values, ind.sma200.values
     atr = ind.atr.values
-    hi = ind.Close.rolling(BREAKOUT_DAYS).max().values
+    bdays, k_plus = CHANDELIER_RULES.get(rule, (BREAKOUT_DAYS, 0.0))
+    hi = ind.Close.rolling(bdays).max().values
+    sma_n, band = SMA_RULES.get(rule, (200, EXIT_BAND))
+    ma = s200 if sma_n == 200 else ind.Close.rolling(sma_n).mean().values
+    mom = np.r_[np.full(252, np.nan), C[:-252]] if len(C) > 252 else np.full(len(C), np.nan)
     n = len(C)
     valid = np.isfinite(s200) & np.isfinite(atr) & np.isfinite(hi)
     first = int(np.argmax(valid)) if valid.any() else None
     if first is None or n - first < 260:
         return None
     side = S.cost_rt(cat) / 2
-    k = K_ATR[cat]
+    k = K_ATR[cat] + k_plus
     eq, curve = 1.0, np.ones(n)
     held = pend_in = pend_out = False
     trades = days_in = 0
@@ -210,17 +227,21 @@ def simulate(ind, rule, cat):
         if not valid[i]:
             continue
         if held:                                                   # décision à la clôture de i
-            if rule == "sma200":
-                pend_out = C[i] < s200[i] * (1 - EXIT_BAND)
+            if rule in SMA_RULES:
+                pend_out = C[i] < ma[i] * (1 - band)
             elif rule == "cross":
                 pend_out = s50[i] < s200[i]
+            elif rule == "mom12":
+                pend_out = C[i] < mom[i]                           # NaN : faux, on reste investi
             else:
                 pend_out = C[i] < stop
         elif not pend_in:
-            if rule == "sma200":
-                pend_in = C[i] > s200[i]
+            if rule in SMA_RULES:
+                pend_in = C[i] > ma[i]
             elif rule == "cross":
                 pend_in = s50[i] > s200[i]
+            elif rule == "mom12":
+                pend_in = C[i] > mom[i]
             else:
                 pend_in = (C[i] >= hi[i]) and (C[i] > s200[i])
     if held:
