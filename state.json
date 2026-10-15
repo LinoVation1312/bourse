@@ -316,11 +316,13 @@
  "positions": {},
  "sent": {
   "flash|GC=F": "2026-10-14T13:39:54+00:00",
+  "idea|AMD|pullback|2026-10-15": "2026-10-15T20:39:08+00:00",
+  "idea|LLY|breakout|2026-10-15": "2026-10-15T20:39:08+00:00",
   "idea|QBTS|capitulation|2026-10-14": "2026-10-14T20:38:44+00:00"
  },
  "slots": {
   "matin": "2026-10-15",
-  "soir": "2026-10-14"
+  "soir": "2026-10-15"
  },
  "trend": {
   "1810.HK": {
@@ -360,8 +362,8 @@
    "state": "up"
   },
   "NVDA": {
-   "since": "2026-10-12",
-   "state": "up"
+   "since": "2026-10-15",
+   "state": "pullback"
   },
   "PAEEM.PA": {
    "since": "2026-10-12",
