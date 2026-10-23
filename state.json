@@ -328,11 +328,12 @@
   "idea|NVDA|capitulation|2026-10-16": "2026-10-16T20:39:50+00:00",
   "idea|PLTR|pullback|2026-10-16": "2026-10-16T20:39:50+00:00",
   "idea|QBTS|capitulation|2026-10-14": "2026-10-14T20:38:44+00:00",
+  "idea|RMS.PA|capitulation|2026-10-23": "2026-10-23T20:40:05+00:00",
   "idea|SAP.DE|breakout|2026-10-22": "2026-10-22T20:40:00+00:00"
  },
  "slots": {
   "matin": "2026-10-23",
-  "soir": "2026-10-22"
+  "soir": "2026-10-23"
  },
  "trend": {
   "1810.HK": {
@@ -364,8 +365,8 @@
    "state": "young"
   },
   "META": {
-   "since": "2026-10-12",
-   "state": "up"
+   "since": "2026-10-23",
+   "state": "pullback"
   },
   "MSFT": {
    "since": "2026-10-12",
