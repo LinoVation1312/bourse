@@ -332,20 +332,24 @@
  "positions": {},
  "sent": {
   "flash|CSIQ": "2026-11-04T15:34:52+00:00",
+  "idea|AAPL|breakout|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|AAPL|capitulation|2026-11-03": "2026-11-03T21:34:20+00:00",
   "idea|AMD|capitulation|2026-11-02": "2026-11-02T21:34:27+00:00",
+  "idea|AMZN|breakout|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|GOOGL|capitulation|2026-10-26": "2026-10-26T21:40:14+00:00",
   "idea|GOOGL|capitulation|2026-10-29": "2026-10-29T21:35:36+00:00",
   "idea|GOOGL|capitulation|2026-10-30": "2026-10-30T21:34:56+00:00",
   "idea|GOOGL|capitulation|2026-11-02": "2026-11-02T21:34:27+00:00",
   "idea|LLY|breakout|2026-10-29": "2026-10-29T21:35:36+00:00",
   "idea|LLY|breakout|2026-10-30": "2026-10-30T21:34:56+00:00",
+  "idea|MSFT|breakout|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|MSFT|pullback|2026-10-30": "2026-10-30T21:34:56+00:00",
+  "idea|TTE.PA|pullback|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|WPEA.PA|pullback|2026-10-30": "2026-10-30T21:34:56+00:00"
  },
  "slots": {
   "matin": "2026-11-04",
-  "soir": "2026-11-03"
+  "soir": "2026-11-04"
  },
  "trend": {
   "1810.HK": {
@@ -389,8 +393,8 @@
    "state": "pullback"
   },
   "PAEEM.PA": {
-   "since": "2026-10-16",
-   "state": "pullback"
+   "since": "2026-11-04",
+   "state": "down"
   },
   "QBTS": {
    "since": "2026-10-12",
