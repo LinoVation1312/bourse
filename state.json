@@ -398,23 +398,26 @@
   "idea|MSFT|breakout|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|MSFT|pullback|2026-10-30": "2026-10-30T21:34:56+00:00",
   "idea|NVDA|capitulation|2026-11-05": "2026-11-05T21:34:53+00:00",
+  "idea|NVDA|capitulation|2026-11-06": "2026-11-06T21:34:30+00:00",
   "idea|TSLA|capitulation|2026-11-05": "2026-11-05T21:34:53+00:00",
+  "idea|TSLA|capitulation|2026-11-06": "2026-11-06T21:34:30+00:00",
   "idea|TTE.PA|pullback|2026-11-04": "2026-11-04T21:34:32+00:00",
   "idea|TTE.PA|pullback|2026-11-05": "2026-11-05T21:34:53+00:00",
+  "idea|TTE.PA|pullback|2026-11-06": "2026-11-06T21:34:30+00:00",
   "idea|WPEA.PA|pullback|2026-10-30": "2026-10-30T21:34:56+00:00"
  },
  "slots": {
   "matin": "2026-11-06",
-  "soir": "2026-11-05"
+  "soir": "2026-11-06"
  },
  "trend": {
   "1810.HK": {
-   "since": "2026-10-12",
-   "state": "down"
+   "since": "2026-11-06",
+   "state": "pullback"
   },
   "BNK.PA": {
    "since": "2026-11-06",
-   "state": "down"
+   "state": "pullback"
   },
   "CSIQ": {
    "since": "2026-10-12",
@@ -465,8 +468,8 @@
    "state": "young"
   },
   "WPEA.PA": {
-   "since": "2026-10-12",
-   "state": "up"
+   "since": "2026-11-06",
+   "state": "pullback"
   }
  }
 }
