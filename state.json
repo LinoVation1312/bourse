@@ -313,20 +313,18 @@
   "flash|QBTS": "2026-11-09T15:35:10+00:00",
   "flash|QNC": "2026-11-13T15:34:38+00:00",
   "idea|AMD|breakout|2026-11-12": "2026-11-12T21:34:48+00:00",
-  "idea|NVDA|capitulation|2026-11-06": "2026-11-06T21:34:30+00:00",
+  "idea|AMZN|pullback|2026-11-16": "2026-11-16T21:34:54+00:00",
   "idea|NVDA|capitulation|2026-11-09": "2026-11-09T21:34:56+00:00",
-  "idea|SIE.DE|breakout|2026-11-12": "2026-11-12T21:34:48+00:00",
-  "idea|TSLA|capitulation|2026-11-06": "2026-11-06T21:34:30+00:00",
-  "idea|TTE.PA|pullback|2026-11-06": "2026-11-06T21:34:30+00:00"
+  "idea|SIE.DE|breakout|2026-11-12": "2026-11-12T21:34:48+00:00"
  },
  "slots": {
   "matin": "2026-11-16",
-  "soir": "2026-11-13"
+  "soir": "2026-11-16"
  },
  "trend": {
   "1810.HK": {
-   "since": "2026-11-06",
-   "state": "pullback"
+   "since": "2026-11-16",
+   "state": "down"
   },
   "BNK.PA": {
    "since": "2026-11-06",
@@ -365,8 +363,8 @@
    "state": "down"
   },
   "PAEEM.PA": {
-   "since": "2026-11-13",
-   "state": "pullback"
+   "since": "2026-11-16",
+   "state": "down"
   },
   "QBTS": {
    "since": "2026-10-12",
