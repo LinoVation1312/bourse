@@ -304,6 +304,15 @@
    "title": "Jensen Huang’s return was worth nearly $950 billion to Nvidia. How much of the stock market should ride on one man?",
    "ts": 1795522860.0,
    "url": "https://www.marketwatch.com/story/jensen-huangs-return-was-worth-nearly-950-billion-to-nvidia-how-much-of-the-stock-market-should-ride-on-one-man-c7129e95?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "CNBC",
+   "t": 1795526122.179644,
+   "title": "Property Play: Commercial real estate activity falls 14% in October, as interest rates rise",
+   "ts": 1795525543.0,
+   "url": "https://www.cnbc.com/2026/11/24/commercial-real-estate-activity-falls-14percent-in-october.html"
   }
  ],
  "journal": [],
@@ -320,6 +329,7 @@
   "371c1ce5e193": 1795428544.464651,
   "42d5604fee1c": 1795502488.253546,
   "47ebadf7c5dc": 1795446511.901323,
+  "52c1dc372bc0": 1795526122.179644,
   "5353c5bd740a": 1795205296.37418,
   "562c97c8a089": 1795199687.089937,
   "5879af611a15": 1795458892.236038,
@@ -356,6 +366,7 @@
   "a6f7834cb3d1": 1795416609.954776,
   "a92ceebbda00": 1795448134.500971,
   "ad1b0375bb6f": 1795201618.915349,
+  "aeb22b922fc7": 1795526122.179644,
   "af83886d780a": 1795451738.967813,
   "aff16fa03298": 1795433713.121632,
   "b12aca4cafa7": 1795187301.716831,
@@ -365,6 +376,7 @@
   "c8785b006043": 1795442964.994116,
   "cb772d6ef89c": 1795460803.529935,
   "cf2048d27f3c": 1795522556.732776,
+  "d1def8ee1884": 1795526122.179644,
   "d5483040aef1": 1795450098.526633,
   "d8cf2473717f": 1795502488.253546,
   "db4b69c15b82": 1795455285.33129,
@@ -372,6 +384,7 @@
   "deb03c929f74": 1795514608.381356,
   "e8055c34ae18": 1795457388.785203,
   "e83b66db901b": 1795187301.716831,
+  "f4cf136aaa8f": 1795526122.179644,
   "fa0c11925ba6": 1795432045.882637
  },
  "news_sigs": {
@@ -391,6 +404,24 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "52c1dc372bc0": {
+   "t": 1795526122.179644,
+   "tk": null,
+   "w": [
+    "14",
+    "activity",
+    "commercial",
+    "estate",
+    "falls",
+    "interest",
+    "october",
+    "play",
+    "property",
+    "rates",
+    "real",
+    "rise"
    ]
   },
   "5c07cd40fdca": {
@@ -460,6 +491,19 @@
     "you"
    ]
   },
+  "aeb22b922fc7": {
+   "t": 1795526122.179644,
+   "tk": "NVDA",
+   "w": [
+    "bernstein",
+    "downgrade",
+    "huang",
+    "nvidia",
+    "return",
+    "reverses",
+    "valuation"
+   ]
+  },
   "cf2048d27f3c": {
    "t": 1795522556.732776,
    "tk": "META",
@@ -475,6 +519,25 @@
     "shareholder"
    ]
   },
+  "d1def8ee1884": {
+   "t": 1795526122.179644,
+   "tk": "NVDA",
+   "w": [
+    "amd",
+    "anthropic",
+    "coverage",
+    "dive",
+    "futures",
+    "live",
+    "market",
+    "nvidia",
+    "off",
+    "sell",
+    "surge",
+    "tech",
+    "today"
+   ]
+  },
   "deb03c929f74": {
    "t": 1795514608.381356,
    "tk": null,
@@ -486,6 +549,20 @@
     "nvidia",
     "premarket",
     "rally"
+   ]
+  },
+  "f4cf136aaa8f": {
+   "t": 1795526122.179644,
+   "tk": "MSFT",
+   "w": [
+    "buy",
+    "fueled",
+    "jumps",
+    "microsoft",
+    "now",
+    "nvidia",
+    "surge",
+    "tech"
    ]
   }
  },
