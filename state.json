@@ -286,6 +286,15 @@
    "title": "Drugmaker Insmed shares rally 14% after Sanofi agrees to buy it in pharma’s biggest deal in three years",
    "ts": 1795514350.0,
    "url": "https://www.cnbc.com/2026/11/24/insmed-sanofi-deal-stock-pharma.html"
+  },
+  {
+   "kind": "pos",
+   "score": 8,
+   "src": "MarketWatch",
+   "t": 1795520603.309126,
+   "title": "The ‘epic’ buying of retail investors paid off after Nvidia’s 31% stock surge, says strategist",
+   "ts": 1795520340.0,
+   "url": "https://www.marketwatch.com/story/the-epic-buying-of-retail-investors-paid-off-after-nvidias-31-stock-surge-says-strategist-c8f9a502?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -308,6 +317,7 @@
   "562c97c8a089": 1795199687.089937,
   "5879af611a15": 1795458892.236038,
   "588971645d39": 1795444477.253619,
+  "5c19c9df9c80": 1795520603.309126,
   "5cae40c399ca": 1795430114.074598,
   "5ee3b98d6374": 1795194384.12371,
   "62ff719631e9": 1795451738.967813,
@@ -373,6 +383,22 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "5c19c9df9c80": {
+   "t": 1795520603.309126,
+   "tk": null,
+   "w": [
+    "31",
+    "buying",
+    "epic",
+    "investors",
+    "nvidia",
+    "off",
+    "paid",
+    "retail",
+    "strategist",
+    "surge"
    ]
   },
   "6e18a147a66f": {
