@@ -259,6 +259,7 @@
    "fetched": "2026-11-23"
   }
  },
+ "flash_log": [],
  "journal": [],
  "levels": {},
  "news_seen": {
@@ -330,6 +331,7 @@
   "fa0c11925ba6": 1795432045.882637,
   "fbb7aa271f14": 1795172874.47453
  },
+ "news_sigs": {},
  "offset": 125508284,
  "positions": {},
  "sent": {
