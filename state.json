@@ -358,6 +358,15 @@
    "title": "A 10% cap on credit-card interest rates? Holiday shoppers shouldn’t bank on it.",
    "ts": 1795536480.0,
    "url": "https://www.marketwatch.com/story/trump-is-open-to-capping-credit-card-interest-rates-but-holiday-shoppers-shouldnt-bank-on-it-yet-34260705?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 6,
+   "src": "CNBC",
+   "t": 1795537315.168179,
+   "title": "Anthropic sinks 12%, falling below $83 IPO price, but analysts are still largely positive",
+   "ts": 1795536718.0,
+   "url": "https://www.cnbc.com/2026/11/24/anthropic-stock-ipo-price.html"
   }
  ],
  "journal": [],
@@ -385,6 +394,7 @@
   "42d5604fee1c": 1795502488.253546,
   "45b91bf9dfab": 1795526589.661643,
   "47ebadf7c5dc": 1795446511.901323,
+  "49decb3579fa": 1795537315.168179,
   "52c1dc372bc0": 1795526122.179644,
   "5353c5bd740a": 1795205296.37418,
   "562c97c8a089": 1795199687.089937,
@@ -490,6 +500,25 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "49decb3579fa": {
+   "t": 1795537315.168179,
+   "tk": null,
+   "w": [
+    "12",
+    "83",
+    "analysts",
+    "anthropic",
+    "below",
+    "but",
+    "falling",
+    "ipo",
+    "largely",
+    "positive",
+    "price",
+    "sinks",
+    "still"
    ]
   },
   "52c1dc372bc0": {
@@ -778,7 +807,7 @@
   "flash|CSIQ": "2026-11-24T15:44:35+00:00",
   "flash|GC=F": "2026-11-23T14:34:37+00:00",
   "flash|NVDA": "2026-11-23T15:35:34+00:00",
-  "flash|PAEEM.PA": "2026-11-23T14:34:37+00:00",
+  "flash|PAEEM.PA": "2026-11-24T16:21:55+00:00",
   "flash|QNC": "2026-11-18T15:35:01+00:00",
   "flash|WPEA.PA": "2026-11-23T14:34:37+00:00",
   "idea|AAPL|pullback|2026-11-20": "2026-11-20T21:33:50+00:00",
