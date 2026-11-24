@@ -340,6 +340,15 @@
    "title": "Nvidia brought Jensen Huang back. But the investigations aren’t over",
    "ts": 1795532616.0,
    "url": "https://www.cnbc.com/2026/11/24/nvidia-jensen-huang-ceo-return.html"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "BusinessWire",
+   "t": 1795535860.382256,
+   "title": "Harvest Group Acquires Good Peeps, Accelerating Growth Toward $10 Billion in Retail Sales and $2 Billion in Media Under Management",
+   "ts": 1795532400.0,
+   "url": "http://www.businesswire.com/news/home/20261124781964/en/Harvest-Group-Acquires-Good-Peeps-Accelerating-Growth-Toward-10-Billion-in-Retail-Sales-and-2-Billion-in-Media-Under-Management/?feedref=JjAwJuNHiystnCoBq_hl-Rc4vIAVcHHkbDcwJimU8QtrtlakeQ9hNboBqTAWIjTge3KWq9s9jif-UkBjBsFRyYAbRTSLTc1mgvhPlnaBA55M-oupQnbXnhKsYk8RmHF_kAy2gZikaX3QWV6xOvgFlA=="
   }
  ],
  "journal": [],
@@ -397,6 +406,7 @@
   "9f009c99dc73": 1795190902.574961,
   "a07a26c96ec2": 1795462503.669837,
   "a6f7834cb3d1": 1795416609.954776,
+  "a734ec8c0602": 1795535860.382256,
   "a92ceebbda00": 1795448134.500971,
   "ab0892278eb4": 1795533190.061694,
   "ad1b0375bb6f": 1795201618.915349,
@@ -568,6 +578,28 @@
     "nvidia",
     "remain",
     "risks"
+   ]
+  },
+  "a734ec8c0602": {
+   "t": 1795535860.382256,
+   "tk": null,
+   "w": [
+    "10",
+    "2",
+    "accelerating",
+    "acquires",
+    "billion",
+    "good",
+    "group",
+    "growth",
+    "harvest",
+    "management",
+    "media",
+    "peeps",
+    "retail",
+    "sales",
+    "toward",
+    "under"
    ]
   },
   "ab0892278eb4": {
