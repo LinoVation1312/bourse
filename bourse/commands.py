@@ -34,6 +34,7 @@ def currency_mismatch(px, ref, tol=0.08):
 
 def help_text():
     return ("<b>Commandes</b>\n"
+            "/synthese : l'aperçu global à l'instant (marché, gros changements, actus, tendances)\n"
             "/tendances : la tendance de fond (2-3 mois et plus) de toutes tes valeurs\n"
             "/idees : les setups swing validés par le backtest (/idees tout : tous, même non validés)\n"
             "/avis nvidia : analyse d'une valeur (tendance, setups, historique)\n"
@@ -55,7 +56,8 @@ def handle(ctx, text):
     cmd, args = parts[0].split("@")[0].lower(), parts[1:]
     fn = {"/idees": idees, "/idées": idees, "/avis": avis, "/achat": achat, "/stop": stop, "/vente": vente,
           "/statut": statut, "/positions": statut, "/bilan": bilan, "/tendances": tendances,
-          "/tendance": tendances}.get(cmd)
+          "/tendance": tendances, "/synthese": synthese, "/synthèse": synthese,
+          "/apercu": synthese, "/aperçu": synthese}.get(cmd)
     if cmd in ("/start", "/aide", "/help") or fn is None:
         ctx.tg.send(help_text())
         return
@@ -71,6 +73,14 @@ def _need_ticker(ctx, args):
     if not w:
         ctx.tg.send(f"Je ne connais pas « {esc(name or '')} ». Essaie le nom court (nvidia) ou le ticker Yahoo (NVDA).")
     return w
+
+
+def synthese(ctx, args):
+    """Aperçu global à l'instant : marché, positions, gros changements, actus, tendances, agenda."""
+    from . import synthese as S_
+    text = S_.compose(ctx, "instant")
+    if text:
+        ctx.tg.send(text)
 
 
 def idees(ctx, args):

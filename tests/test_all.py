@@ -10,10 +10,11 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from bourse import analysis as A, backtest, commands, data, jobs, positions as P, render as R, setups as S, state as ST
+from bourse import analysis as A, backtest, commands, data, flash as F, jobs, positions as P, render as R, setups as S, state as ST
 from bourse.config import load_config, resolve
 from bourse.indicators import compute
 from bourse.schedule import decide
+from bourse.synthese import compose as synthese_compose
 from bourse.telegram import Telegram, chunk
 
 UTC = dt.timezone.utc
@@ -50,7 +51,7 @@ class FakeTG(Telegram):
     def send(self, text):
         self.sent.append(text)
 
-    def updates(self, offset):
+    def updates(self, offset, timeout=0):
         return [(offset + 1 + i, t) for i, t in enumerate(self.inbox)]
 
 
@@ -143,19 +144,32 @@ class TestSchedule(unittest.TestCase):
         return dt.datetime(y, m, d, h, mi, tzinfo=UTC)
 
     def test_summer_and_winter(self):
-        self.assertEqual(decide(self.utc(2026, 7, 8, 5, 45), {}), "matin")        # 7h45 Paris (UTC+2)
-        self.assertEqual(decide(self.utc(2026, 12, 9, 6, 45), {}), "matin")       # 7h45 Paris (UTC+1)
-        self.assertEqual(decide(self.utc(2026, 12, 9, 5, 45), {}), "skip")        # 6h45 Paris
-        self.assertEqual(decide(self.utc(2026, 7, 8, 13, 0), {}), "watch")
-        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 20), {}), "skip")        # 22h20 Paris : trop tôt, la barre US n'est pas prête
-        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 35), {}), "soir")        # 22h35 Paris
-        self.assertEqual(decide(self.utc(2026, 12, 9, 21, 35), {}), "soir")
+        self.assertEqual(decide(self.utc(2026, 7, 8, 13, 45), {}), "ouverture")   # 15h45 Paris (UTC+2)
+        self.assertEqual(decide(self.utc(2026, 12, 9, 14, 45), {}), "ouverture")  # 15h45 Paris (UTC+1)
+        self.assertEqual(decide(self.utc(2026, 7, 8, 13, 25), {}), "watch")       # 15h25 : Wall Street pas encore ouvert
+        self.assertEqual(decide(self.utc(2026, 7, 8, 10, 0), {}), "watch")        # 12h
+        self.assertEqual(decide(self.utc(2026, 7, 8, 5, 45), {}), "flash")        # 7h45 : plus de briefing matinal, mais les grosses infos
+        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 10), {}), "flash")       # 22h10 : trop tôt pour le bilan (barre US pas prête)
+        self.assertEqual(decide(self.utc(2026, 7, 8, 3, 0), {}), "skip")          # 5h : nuit
+        self.assertEqual(decide(self.utc(2026, 7, 8, 20, 22), {}), "soir")        # 22h22 Paris
+        self.assertEqual(decide(self.utc(2026, 12, 9, 21, 25), {}), "soir")
 
-    def test_matin_only_once_and_weekend(self):
-        self.assertEqual(decide(self.utc(2026, 10, 12, 6, 0), {"matin": "2026-10-12"}), "skip")  # 8h Paris, déjà envoyé
-        self.assertEqual(decide(self.utc(2026, 10, 12, 8, 0), {"matin": "2026-10-12"}), "watch")
-        self.assertEqual(decide(self.utc(2026, 10, 10, 10, 0), {}), "skip")                      # samedi
+    def test_briefings_only_once_and_weekend(self):
+        self.assertEqual(decide(self.utc(2026, 10, 12, 13, 50), {"ouverture": "2026-10-12"}), "watch")   # déjà envoyé
+        self.assertEqual(decide(self.utc(2026, 10, 12, 20, 30), {"soir": "2026-10-12"}), "flash")      # bilan déjà envoyé
+        self.assertEqual(decide(self.utc(2026, 10, 10, 13, 50), {}), "skip")                             # samedi
+        self.assertEqual(decide(self.utc(2026, 10, 10, 13, 50), {}, cfg={"flash": {"week_end": True}}), "flash")   # option week-end
+        self.assertEqual(decide(self.utc(2026, 10, 12, 13, 50), {}, cfg={"flash": {"actif": False}}), "ouverture")
         self.assertEqual(decide(self.utc(2026, 10, 12, 10, 0), {}, "test"), "test")
+        self.assertEqual(decide(self.utc(2026, 10, 12, 10, 0), {}, "commands"), "commands")
+
+    def test_matin_can_be_reenabled_and_windows_configured(self):
+        cfg = {"briefings": {"matin": ["07:40", "10:00"]}}
+        self.assertEqual(decide(self.utc(2026, 10, 12, 6, 0), {}, cfg=cfg), "matin")                    # 8h Paris
+        self.assertEqual(decide(self.utc(2026, 10, 12, 7, 30), {"matin": "2026-10-12"}, cfg=cfg), "watch")   # 9h30, déjà envoyé
+        cfg = {"briefings": {"ouverture": ["16:00", "18:00"]}}
+        self.assertEqual(decide(self.utc(2026, 10, 12, 13, 50), {}, cfg=cfg), "watch")                  # 15h50 < 16h
+        self.assertEqual(decide(self.utc(2026, 10, 12, 14, 5), {}, cfg=cfg), "ouverture")
 
 
 class TestMisc(unittest.TestCase):
@@ -200,6 +214,7 @@ class TestFlows(unittest.TestCase):
     def setUp(self):
         self.p = [mock.patch.object(data, "daily", fake_daily),
                   mock.patch.object(data, "last_price", lambda t, now: 100.0),
+                  mock.patch.object(F, "collect", lambda ctx: []),
                   mock.patch.object(A, "earnings_in_days", lambda s, t, n: 3 if t == "MSFT" else None),
                   mock.patch("bourse.news.fetch_many", lambda ts, now, key=None: {t: [{
                       "title": "SEC investigation into " + t, "src": "X", "url": "https://x.test/a", "ts": now.timestamp() - 600}]
@@ -293,8 +308,8 @@ class TestFlows(unittest.TestCase):
         with mock.patch.object(A, "find_ideas", lambda *a, **k: []):
             jobs.soir(ctx)
         text = "\n".join(ctx.tg.sent)
-        self.assertIn("Clôture", text)
-        self.assertIn("Bilan de la séance", text)
+        self.assertIn("Synthèse · clôture", text)
+        self.assertIn("Tendances de fond", text)
         self.assertNotIn("Changements de tendance", text)          # 1re observation : silencieuse
         self.assertEqual(ctx.state["slots"]["soir"], "2026-10-12")
         self.check_html(ctx.tg.sent)
@@ -347,6 +362,299 @@ class TestBacktest(unittest.TestCase):
         self.assertIn("Backtest", backtest.report_md(st))
         self.assertIn("Backtest", backtest.telegram_summary(st))
         json.dumps(st)                                                # sérialisable pour stats.json
+
+
+class TestNews(unittest.TestCase):
+    NOW = dt.datetime(2026, 10, 12, 14, 0, tzinfo=UTC)
+
+    def state(self):
+        return {"news_seen": {}, "news_sigs": {}}
+
+    def item(self, title):
+        return {"title": title, "src": "Yahoo", "url": "https://x.test", "ts": self.NOW.timestamp() - 300}
+
+    def test_same_story_not_repeated_under_another_title_or_ticker(self):
+        from bourse import news as N
+        st = self.state()
+        nv, am = {"ticker": "NVDA", "nom": "Nvidia", "alias": []}, {"ticker": "AMZN", "nom": "Amazon", "alias": []}
+        nv["alias"] = ["amazon"]        # cas réel : l'article est rattaché à Nvidia et cite Amazon
+        a = N.sensitive([self.item("Amazon in talks to acquire AI startup Decart for $7 billion")], self.NOW, st, 4, entry=nv)
+        self.assertEqual(len(a), 1)
+        b = N.sensitive([self.item("Amazon in $7 billion deal talks to acquire AI startup Decart")], self.NOW, st, 4)
+        self.assertEqual(b, [])                                       # même histoire, autre titre : pas renvoyée
+        c = N.sensitive([self.item("Amazon in $7 billion deal talks to acquire AI startup Decart")], self.NOW, st, 4, entry=am)
+        self.assertEqual(c, [])                                       # ni sous une autre valeur
+
+    def test_template_headlines_about_different_companies_are_both_kept(self):
+        from bourse import news as N
+        st = self.state()
+        nv, ms = {"ticker": "NVDA", "nom": "Nvidia", "alias": []}, {"ticker": "MSFT", "nom": "Microsoft", "alias": []}
+        a = N.sensitive([self.item("Nvidia stock falls after SEC investigation")], self.NOW, st, 4, entry=nv)
+        b = N.sensitive([self.item("Microsoft stock falls after SEC investigation")], self.NOW, st, 4, entry=ms)
+        self.assertEqual((len(a), len(b)), (1, 1))
+
+    def test_relevance_filter(self):
+        from bourse import news as N
+        ms = {"ticker": "MSFT", "nom": "Microsoft", "alias": ["microsoft"]}
+        self.assertFalse(N.mentions("Spotify upgraded, Alibaba launched: top Wall Street analysts call", ms))
+        self.assertTrue(N.mentions("Barclays downgrades Microsoft and two software stocks", ms))
+        self.assertTrue(N.mentions("MSFT jumps on cloud deal", ms))
+        em = {"ticker": "PAEEM.PA", "nom": "MSCI Emerging Markets (PEA)", "alias": ["emergents", "em"]}
+        self.assertFalse(N.mentions("The system", em))                # l'alias « em » (2 lettres) ne doit pas matcher
+        st = self.state()
+        out = N.sensitive([self.item("Spotify upgraded, Alibaba launched: analysts call"),
+                           self.item("Barclays downgrades Microsoft ahead of Q3 results")], self.NOW, st, 4, entry=ms)
+        self.assertEqual(len(out), 1)
+        self.assertIn("Microsoft", out[0]["title"])
+
+    def test_preview_does_not_consume_news(self):
+        from bourse import news as N
+        st = self.state()
+        N.sensitive([self.item("Barclays downgrades Microsoft")], self.NOW, st, 4, mark=False)
+        self.assertEqual((st["news_seen"], st["news_sigs"]), ({}, {}))
+
+
+class TestOuverture(unittest.TestCase):
+    NOW = dt.datetime(2026, 10, 12, 13, 50, tzinfo=UTC)       # 9h50 à New York, 15h50 à Paris
+
+    def setUp(self):
+        self.p = [mock.patch.object(data, "daily", fake_daily),
+                  mock.patch.object(F, "collect", lambda ctx: []),
+                  mock.patch.object(A, "earnings_in_days", lambda *a: None),
+                  mock.patch("bourse.news.fetch_many", lambda ts, now, key=None: {t: [{
+                      "title": f"Barclays downgrades {t} ahead of results", "src": "Y", "url": "https://x.test/a",
+                      "ts": now.timestamp() - 600}] for t in ts})]
+        for p in self.p:
+            p.start()
+
+    def tearDown(self):
+        for p in self.p:
+            p.stop()
+
+    def intraday(self, today_close=103.0):
+        idx = pd.DatetimeIndex([pd.Timestamp("2026-10-09 19:55", tz="UTC")] +
+                               list(pd.date_range("2026-10-12 13:30", "2026-10-12 13:50", freq="5min", tz="UTC")))
+        c = pd.Series([100.0] + [today_close] * (len(idx) - 1), index=idx)
+        return pd.DataFrame({"Open": c, "High": c, "Low": c, "Close": c, "Volume": 1.0})
+
+    def position(self):
+        return {"type": "swing", "entry": 100.0, "qty": 10, "date": "2026-10-09", "peak": 100.0, "stop": 95.0,
+                "stop0": 95.0, "risk": 5.0, "target": 110.0, "sma5_exit": False, "max_days": 7, "setup": None}
+
+    def test_briefing_after_open_is_complete_and_well_formed(self):
+        import re
+        ctx = make_ctx(now=self.NOW)
+        ctx.state["positions"]["NVDA"] = self.position()
+        df = self.intraday()
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            jobs.ouverture(ctx)
+        text = "\n".join(ctx.tg.sent)
+        self.assertIn("Synthèse · après l'ouverture", text)
+        self.assertIn("Tes positions", text)
+        self.assertIn("Gros changements", text)
+        self.assertIn("+3,0 %", text)                                # 100 -> 103 depuis la clôture de vendredi
+        self.assertIn("Actus à retenir", text)
+        self.assertNotIn("Setups swing", text)                       # l'entrée « à l'ouverture » est passée
+        self.assertEqual(ctx.state["slots"]["ouverture"], "2026-10-12")
+        for m in ctx.tg.sent:
+            self.assertLessEqual(len(m), 4096)
+            for tag in ("b", "i", "a"):
+                self.assertEqual(len(re.findall(rf"<{tag}[ >]", m)), len(re.findall(rf"</{tag}>", m)))
+
+    def test_no_live_prices_warns_and_retries(self):
+        ctx = make_ctx(now=self.NOW)
+        with mock.patch.object(data, "intraday", lambda ts, **k: {}):
+            jobs.ouverture(ctx)
+        self.assertIn("Aucun cours", "\n".join(ctx.tg.sent))
+        self.assertNotIn("ouverture", ctx.state["slots"])             # pas marqué : nouvel essai au prochain passage
+
+    def test_stop_hit_in_briefing_is_not_repeated_by_watch(self):
+        ctx = make_ctx(now=self.NOW)
+        ctx.state["positions"]["NVDA"] = self.position()
+        df = self.intraday(today_close=94.0)                         # sous le stop à 95
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            jobs.ouverture(ctx)
+            self.assertIn("🛑", "\n".join(ctx.tg.sent))
+            n = len(ctx.tg.sent)
+            jobs.watch(ctx)
+            self.assertFalse(any("🛑" in m for m in ctx.tg.sent[n:]))
+
+
+TOPICS = ["cloud", "chips", "advertising", "gas", "bonds", "mining", "solar", "retail", "autos", "media", "banking",
+          "pharma", "railway", "steel", "telecom"]
+
+
+class TestSynthese(unittest.TestCase):
+    """Aperçu global : même structure à chaque fois, un seul message, rien de consommé par /synthese."""
+    SECTIONS = ["🌍 Marché", "⚡ Gros changements", "📰 Actus à retenir", "📈 Tendances de fond"]
+
+    def setUp(self):
+        self.p = [mock.patch.object(data, "daily", fake_daily),
+                  mock.patch.object(F, "collect", lambda ctx: []),
+                  mock.patch.object(A, "earnings_in_days", lambda *a: None),
+                  mock.patch("bourse.news.fetch_many", lambda ts, now, key=None: {t: [{
+                      "title": f"Barclays downgrades {t} on {TOPICS[i % len(TOPICS)]} outlook", "src": "Y",
+                      "url": "https://x.test/a", "ts": now.timestamp() - 600}] for i, t in enumerate(ts)})]
+        for p in self.p:
+            p.start()
+
+    def tearDown(self):
+        for p in self.p:
+            p.stop()
+
+    def check_order(self, text, sections):
+        pos = [text.index(sec) for sec in sections]
+        self.assertEqual(pos, sorted(pos), "sections dans le désordre")
+
+    def test_soir_is_one_synthesis_plus_one_detail_message(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 20, 40, tzinfo=UTC))
+        ctx.state["positions"]["NVDA"] = P.new_position(CFG, {"cat": "grande"}, 100.0, 10, "swing", "pullback",
+                                                         compute(synth()), dt.date(2026, 10, 7))
+        with mock.patch.object(A, "find_ideas", lambda *a, **k: []):
+            jobs.soir(ctx)
+        main = ctx.tg.sent[0]
+        self.check_order(main, self.SECTIONS[:1] + ["💼 Tes positions"] + self.SECTIONS[1:])
+        self.assertEqual(ctx.state["slots"]["soir"], "2026-10-12")
+
+    def test_news_capped_ranked_and_held_first(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 13, 50, tzinfo=UTC))
+        ctx.state["positions"]["MSFT"] = TestOuverture.position(None)
+        df = TestOuverture.intraday(None)
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            text = synthese_compose(ctx, "instant")
+        news = text[text.index("📰 Actus à retenir"):text.index("📈 Tendances")]
+        self.assertLessEqual(news.count("Barclays"), 6)
+        self.assertIn("autre(s) titre(s)", news)
+        self.assertIn("💼 Microsoft", news.split("\n")[1], "la position doit passer en premier")
+
+    def test_flashed_news_appear_once_in_the_recap(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 13, 50, tzinfo=UTC))
+        F.pick(ctx, [{"title": "Fed cuts interest rates by 50 basis points", "src": "CNBC", "url": "https://x.test/f",
+                      "ts": ctx.now.timestamp() - 600, "bonus": 0}])
+        df = TestOuverture.intraday(None)
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            text = synthese_compose(ctx, "instant")
+        news = text[text.index("📰 Actus à retenir"):text.index("📈 Tendances")]
+        self.assertEqual(news.count("Fed cuts"), 1)
+        self.assertIn("Marché", news)
+
+    def test_instant_does_not_consume_news_or_slots(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 13, 50, tzinfo=UTC))
+        df = TestOuverture.intraday(None)
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            commands.handle(ctx, "/synthese")
+        self.assertEqual(ctx.state["news_seen"], {})
+        self.assertEqual(ctx.state["slots"], {})
+        self.assertIn("Synthèse · à l'instant", ctx.tg.sent[0])
+
+    def test_synthesis_survives_yahoo_failures(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 20, 40, tzinfo=UTC))
+        snap = A.snapshot(jobs.tracked_entries(ctx), ctx.now)
+        with mock.patch("bourse.synthese.indices", side_effect=RuntimeError("yahoo")), \
+                mock.patch("bourse.news.fetch_many", side_effect=RuntimeError("yahoo")):
+            text = synthese_compose(ctx, "soir", snap=snap)
+        self.assertIn("Indices indisponibles", text)
+        self.assertIn("Rien de notable", text)
+
+    def test_alerts_have_a_header_and_point_to_synthese(self):
+        ctx = make_ctx(now=dt.datetime(2026, 10, 12, 13, 50, tzinfo=UTC))
+        df = TestOuverture.intraday(None, today_close=91.0)             # -9 % sur la journée
+        with mock.patch.object(data, "intraday", lambda ts, **k: {t: df for t in ts}):
+            jobs.watch(ctx)
+        self.assertTrue(ctx.tg.sent and ctx.tg.sent[0].startswith("🚨"))
+        self.assertIn("/synthese", ctx.tg.sent[0])
+
+
+class TestFlash(unittest.TestCase):
+    NOW = dt.datetime(2026, 10, 12, 14, 0, tzinfo=UTC)
+
+    def item(self, title, bonus=0, age=300, src="CNBC"):
+        return {"title": title, "src": src, "url": "https://x.test/" + str(abs(hash(title)) % 999),
+                "ts": self.NOW.timestamp() - age, "bonus": bonus}
+
+    def test_scores_big_news_without_any_watchlist_link(self):
+        for title in ("Fed cuts interest rates by 50 basis points", "Oil surges as OPEC announces surprise output cut",
+                      "U.S. government shutdown looms as debt ceiling talks collapse", "Regional bank failure sparks sell-off",
+                      "Amazon in talks to acquire AI startup Decart for $7 billion", "Ceasefire collapses, missile strikes resume"):
+            self.assertGreaterEqual(F.score(title), 4, title)
+
+    def test_scores_filter_out_noise(self):
+        for title in ("Spotify upgraded, Alibaba launched: top Wall Street analysts call", "5 stocks to buy now, says Motley Fool",
+                      "Here's why Tesla stock could rise next year", "Federal Reserve Board announces approval of application by Bank X"):
+            self.assertLess(F.score(title), 4, title)
+
+    def test_pick_dedupes_across_sources_and_never_repeats(self):
+        ctx = make_ctx(now=self.NOW)
+        items = [self.item("Fed cuts interest rates by 50 basis points", src="CNBC"),
+                 self.item("Federal Reserve cuts interest rates by 50 basis points", src="Yahoo", age=200),
+                 self.item("Gold hits record high as inflation fears rise", src="MarketWatch")]
+        self.assertEqual(len(F.pick(ctx, items)), 2)                     # la baisse de taux n'apparaît qu'une fois
+        self.assertEqual(F.pick(ctx, items), [])                         # rien n'est renvoyé au passage suivant
+        self.assertEqual(len(ctx.state["flash_log"]), 2)
+
+    def test_old_items_ignored_and_positions_boost_score(self):
+        ctx = make_ctx(now=self.NOW)
+        self.assertEqual(F.pick(ctx, [self.item("Fed cuts interest rates by 50 basis points", age=5 * 3600)]), [])
+        ctx.state["positions"]["NVDA"] = {"type": "long", "entry": 100.0, "date": "2026-10-09"}
+        out = F.pick(ctx, [self.item("Nvidia unveils new data center chip")])     # 0 point seul, +1 grand nom, +3 position
+        self.assertEqual((len(out), out[0]["touch"]), (1, "held"))
+
+    def test_parse_rss_and_atom_and_reject_entity_bombs(self):
+        rss = (b'<?xml version="1.0"?><rss><channel><item><title>Fed holds rates</title><link>https://a.test/1</link>'
+               b'<pubDate>Mon, 12 Oct 2026 13:55:00 GMT</pubDate></item></channel></rss>')
+        items = F.parse_feed(rss, "CNBC", 1, self.NOW)
+        self.assertEqual((items[0]["title"], items[0]["url"], items[0]["bonus"]), ("Fed holds rates", "https://a.test/1", 1))
+        self.assertAlmostEqual(items[0]["ts"], dt.datetime(2026, 10, 12, 13, 55, tzinfo=UTC).timestamp())
+        atom = (b'<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>Bank failure</title><link href="https://b.test"/>'
+                b'<updated>2026-10-12T13:50:00Z</updated></entry></feed>')
+        self.assertEqual(F.parse_feed(atom, "BCE", 0, self.NOW)[0]["url"], "https://b.test")
+        bomb = b'<?xml version="1.0"?><!DOCTYPE x [<!ENTITY a "aaaa">]><rss><channel><item><title>&a;</title></item></channel></rss>'
+        self.assertEqual(F.parse_feed(bomb, "X", 0, self.NOW), [])
+        self.assertEqual(F.parse_feed(b"pas du xml", "X", 0, self.NOW), [])
+
+    def test_flash_job_sends_one_message_capped_and_survives_feed_failures(self):
+        ctx = make_ctx(now=self.NOW)
+        titles = ["Fed cuts interest rates by 50 basis points", "Oil surges after OPEC output cut", "Regional bank failure sparks sell-off",
+                  "Tariffs on all imports announced by White House", "Ceasefire collapses, missile strikes resume",
+                  "Amazon in talks to acquire AI startup Decart for $7 billion", "Bitcoin plunges 12% in an hour"]
+        with mock.patch.object(F, "collect", lambda c: [self.item(t) for t in titles]):
+            jobs.flash(ctx)
+            self.assertEqual(len(ctx.tg.sent), 1)
+            self.assertIn("Flash marché", ctx.tg.sent[0])
+            self.assertEqual(ctx.tg.sent[0].count("<a href"), 5)             # 5 par message au plus
+            self.assertIn("autre(s) info(s)", ctx.tg.sent[0])
+            jobs.flash(ctx)
+            self.assertEqual(len(ctx.tg.sent), 1)                            # rien de nouveau : silence
+        with mock.patch.object(F, "collect", lambda c: []):
+            jobs.flash(ctx)
+            self.assertEqual(len(ctx.tg.sent), 1)
+
+    def test_recent_flash_feeds_the_synthesis_recap(self):
+        ctx = make_ctx(now=self.NOW)
+        F.pick(ctx, [self.item("Fed cuts interest rates by 50 basis points")])
+        self.assertEqual(len(F.recent(ctx, 10)), 1)
+        self.assertEqual(F.recent(ctx, 0), [])
+
+    def test_daemon_mode_selection(self):
+        import run
+        self.assertEqual(run.next_mode("ouverture", {}, 1000), "ouverture")
+        self.assertEqual(run.next_mode("watch", {}, 1000), "watch")
+        self.assertEqual(run.next_mode("watch", {"watch": 990, "flash": 990}, 1000), "commands")
+        self.assertEqual(run.next_mode("watch", {"watch": 990, "flash": 930}, 1000), "flash")
+        self.assertEqual(run.next_mode("flash", {"flash": 990}, 1000), "commands")
+        self.assertEqual(run.next_mode("skip", {}, 1000), "commands")
+
+
+class TestWebhook(unittest.TestCase):
+    def test_webhook_update_parsing(self):
+        import os
+        import run
+        with mock.patch.dict(os.environ, {"TG_UPDATE": json.dumps({"update_id": 5, "message": {"chat": {"id": 1}, "text": "/aide"}})}):
+            self.assertEqual(run.webhook_update("1"), [(5, "/aide")])
+            self.assertEqual(run.webhook_update("2"), [(5, None)])    # autre chat : ignoré
+        for raw in ("", "null", "pas du json"):
+            with mock.patch.dict(os.environ, {"TG_UPDATE": raw}):
+                self.assertEqual(run.webhook_update("1"), [])
 
 
 if __name__ == "__main__":

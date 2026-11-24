@@ -1,10 +1,13 @@
-"""Les trois tâches planifiées : matin (≈ 8h), watch (alertes en séance), soir (bilan de clôture, dès 22h30)."""
+"""Tâches planifiées : ouverture (briefing après l'ouverture US), watch (alertes en séance), soir (débriefing de clôture)."""
 import datetime as dt
+from zoneinfo import ZoneInfo
 from dataclasses import dataclass, field
 
-from . import agenda, analysis as A, data, markets, news as N, positions as P, render as R, state as ST, trend as T
+from . import agenda, analysis as A, data, flash as F, markets, news as N, positions as P, render as R, state as ST, synthese, trend as T
 from .config import scan_entries, watch_entries, entry_for
 from .fmt import b, esc, fr_date, pct, price
+
+PARIS = ZoneInfo("Europe/Paris")
 
 # durée avant de renvoyer le même événement de position (heures)
 COOLDOWN = {"stop": 3, "target": 6, "time": 20, "trail1": 999, "trail2": 999, "loss": 24, "peak": 24}
@@ -60,6 +63,15 @@ def hidden_note(n):
             f"(/idees tout pour les voir)." if n else None)
 
 
+def hot_news(ctx, items, hours, limit=2, mark=True):
+    """Titres sensibles par valeur : pertinents (le titre cite la valeur) et sans doublon d'une même histoire."""
+    ent = {w["ticker"]: w for w in tracked_entries(ctx)}
+    filt = ctx.cfg.get("actus", {}).get("filtrer_pertinence", True)
+    return {t: N.sensitive(its, ctx.now, ctx.state, hours=hours, limit=limit, mark=mark,
+                                    entry=ent.get(t) if filt else None)
+            for t, its in items.items()}
+
+
 def warn_data(ctx, what):
     if ST.fresh(ctx.state, "warn|data", ctx.now, 20):
         ctx.tg.send(f"⚠️ {esc(what)}. Yahoo Finance est parfois indisponible depuis les serveurs GitHub : je réessaie au prochain passage.")
@@ -102,7 +114,7 @@ def matin(ctx):
     # actualités de la nuit (titres sensibles) + résultats proches
     items = N.fetch_many([w["ticker"] for w in tracked if w["cat"] != "etf" or w["ticker"] in ctx.state["positions"]],
                          now, ctx.finnhub)
-    hot = {t: N.sensitive(its, now, ctx.state, hours=16, limit=2) for t, its in items.items()}
+    hot = hot_news(ctx, items, hours=16)
     nl = R.news_lines({t: h for t, h in hot.items() if h}, nm)
     out.append(b("📰 Actualités sensibles de la nuit") + "\n" + ("\n".join(nl) if nl else "Rien de notable."))
     ag = agenda.upcoming(ctx, tracked, 7, "⏰ À surveiller (7 jours)")
@@ -122,38 +134,33 @@ def matin(ctx):
     ctx.state["slots"]["matin"] = str(today)
 
 
+# ------------------------------------------------------------------ ouverture
+def ouverture(ctx):
+    """Briefing après l'ouverture de Wall Street (≈ 15h45 Paris) : la synthèse globale, au cours actuel.
+    Pas de setups swing ici : leur entrée se fait « à l'ouverture » et l'ouverture est passée ; ils restent dans le soir."""
+    text = synthese.compose(ctx, "ouverture")
+    if text is None:
+        return                                    # slot non marqué : nouvel essai au prochain passage
+    ctx.tg.send(text)
+    ctx.state["slots"]["ouverture"] = str(ctx.now.date())
+
+
 # ------------------------------------------------------------------ soir
 def soir(ctx):
-    """Bilan de clôture, envoyé chaque jour de bourse : positions, changements de tendance, résultats de demain,
-    nouveaux setups validés et performance de la séance de chaque valeur."""
+    """Débriefing de clôture, envoyé chaque jour de bourse, en deux messages : la synthèse globale (marché, positions,
+    gros changements, actus, tendances, agenda), puis le détail (nouveaux setups pour demain, bilans semaine / mois)."""
     now, today, cfg = ctx.now, ctx.now.date(), ctx.cfg
     snap = A.snapshot(scan_entries(cfg), now)
-    ctx.state["slots"]["soir"] = str(today)
     if not snap:
         warn_data(ctx, "Pas de données pour le bilan du soir")
+        return                                    # slot non marqué : nouvel essai au prochain passage (jusqu'à 23h50)
+    text = synthese.compose(ctx, "soir", snap=snap)
+    if text is None:
         return
+    ctx.state["slots"]["soir"] = str(today)
+    ctx.tg.send(text)
+
     blocks = []
-    if ctx.state["positions"]:
-        lines = [b("💼 Tes positions")]
-        for t, pos in ctx.state["positions"].items():
-            w = entry_for(cfg, t)
-            if t not in snap:
-                lines.append(f"{esc(w['nom'])} : pas de données")
-                continue
-            ind = snap[t]["ind"]
-            P.refresh(w, pos, ind)
-            lines.append(P.line(w, pos, float(ind.Close.iloc[-1]), today))
-            lines += [f"    {a}" for a in P.daily_advice(w, pos, ind, today, "soir")]
-        blocks.append("\n".join(lines))
-    changes = trend_changes(ctx, snap)
-    if changes:
-        blocks.append(b("🔄 Changements de tendance de fond") + "\n" + "\n".join(t for _, t in changes))
-    ag = agenda.upcoming(ctx, tracked_entries(ctx), 2, "⏰ Attention : à surveiller sous 48 h")
-    if ag:
-        blocks.append(ag)
-    un = agenda.unusual(snap, watch_entries(cfg), cfg, today)
-    if un:
-        blocks.append(un)
     ideas = [i for i in A.find_ideas(snap, cfg, ctx.stats, ctx.state, now, exclude=set(ctx.state["positions"]))
              if i["bar"] == today]
     ideas = [i for i in ideas if ST.fresh(ctx.state, f"idea|{i['w']['ticker']}|{i['setup']}|{i['bar']}", now, 48)]
@@ -162,13 +169,13 @@ def soir(ctx):
         blocks.append(R.ideas_section(ideas, "🎯 Nouveaux setups validés à la clôture (pour demain)"))
     elif hidden_note(hidden):
         blocks.append(hidden_note(hidden))
-    blocks.append(T.section(snap, watch_entries(cfg), "📈 Bilan de la séance · tendance de fond", "aujourd'hui", today=today))
     for unit in ("semaine", "mois"):
         if agenda.last_business_day(today, unit):
             rc = agenda.recap(snap, watch_entries(cfg), cfg, ctx.state, today, unit)
             if rc:
                 blocks.append(rc)
-    ctx.tg.send(f"🌙 {b('Clôture')} · {fr_date(today)}\n\n" + "\n\n".join(blocks) + "\n\n" + R.FOOTER)
+    if blocks:
+        ctx.tg.send(f"📋 {b('Détail du soir')} · {fr_date(today)}\n\n" + "\n\n".join(blocks))
 
 
 # ------------------------------------------------------------------ watch
@@ -193,9 +200,11 @@ def watch(ctx):
                     key = f"pos|{t}|{pos['date']}|{kind}"
                     if ST.fresh(state, key, now, COOLDOWN.get(kind, 24)):
                         alerts.append(text)
-    alerts += news_alerts(ctx, tracked)
+    fl = F.block(ctx)                                    # grosses infos de marché d'abord, sans filtre sur tes valeurs
+    alerts = ([fl] if fl else []) + alerts + news_alerts(ctx, tracked)
     if alerts:
-        ctx.tg.send("\n\n".join(alerts))
+        hhmm = now.astimezone(PARIS).strftime("%H:%M")
+        ctx.tg.send(f"🚨 {b('Alertes')} · {hhmm}\n\n" + "\n\n".join(alerts) + "\n\n<i>/synthese : l'aperçu global à l'instant</i>")
 
 
 def market_alerts(ctx, w, st, today):
@@ -226,12 +235,21 @@ def held_note(ctx, w, last):
 
 def news_alerts(ctx, tracked):
     now, state = ctx.now, ctx.state
-    if now.minute % 30 >= 15:       # une exécution sur deux (≈ toutes les 30 min), sans rien stocker
+    every = ctx.cfg.get("alertes", {}).get("actus_toutes_les_min", 10)
+    if every >= 30 and now.minute % 30 >= 15:       # ancien rythme : une exécution sur deux
         return []
     cands = [w for w in tracked if w["cat"] != "etf" or w["ticker"] in state["positions"]]
     items = N.fetch_many([w["ticker"] for w in cands], now, ctx.finnhub)
-    hot = {t: N.sensitive(its, now, state, hours=4, limit=2) for t, its in items.items()}
+    hot = hot_news(ctx, items, hours=4)
     return R.news_lines({t: h for t, h in hot.items() if h}, names(ctx))[:6]
+
+
+# ------------------------------------------------------------------ flash
+def flash(ctx):
+    """Grosses infos de marché uniquement (rapide : aucun cours, aucune donnée quotidienne)."""
+    fl = F.block(ctx)
+    if fl:
+        ctx.tg.send(f"{fl}\n\n<i>{ctx.now.astimezone(PARIS).strftime('%H:%M')} · /synthese : l'aperçu global</i>")
 
 
 # ------------------------------------------------------------------ test

@@ -5,7 +5,7 @@ import datetime as dt
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DEFAULT = {"offset": 0, "positions": {}, "journal": [], "sent": {}, "levels": {},
-           "news_seen": {}, "earn": {}, "slots": {}}
+           "news_seen": {}, "news_sigs": {}, "flash_log": [], "earn": {}, "slots": {}}
 
 
 def load(path=None):
@@ -40,6 +40,8 @@ def prune(state, now):
     state["sent"] = {k: v for k, v in state["sent"].items() if dt.datetime.fromisoformat(v) >= lim}
     ts_lim = (now - dt.timedelta(days=4)).timestamp()
     state["news_seen"] = {k: v for k, v in state["news_seen"].items() if v >= ts_lim}
+    state["news_sigs"] = {k: v for k, v in state["news_sigs"].items() if v["t"] >= ts_lim}
+    state["flash_log"] = [e for e in state["flash_log"] if e["t"] >= ts_lim]
     today = now.date().isoformat()
     state["levels"] = {k: v for k, v in state["levels"].items() if k.split("|")[1] == today}
     state["journal"] = state["journal"][-300:]
