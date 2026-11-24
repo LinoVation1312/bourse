@@ -385,6 +385,15 @@
    "title": "Nvidia shares fall 8% as Huang comeback rally cools",
    "ts": 1795538301.0,
    "url": "https://www.cnbc.com/2026/11/24/nvidia-stock-jensen-huang-return.html"
+  },
+  {
+   "kind": "neg",
+   "score": 6,
+   "src": "Reuters",
+   "t": 1795552552.317799,
+   "title": "Trump administration set to unveil new tariffs after probe on excess factory capacity, sources say - Reuters",
+   "ts": 1795546085.0,
+   "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNNklFaE54bEV6OGdKT29ScUxHUlZwRDNyREJ0MzBSZzZGdnptTkVxaXNHeWx2WjFWYVMzMzdMeU92dC1PVmYyZ1BTT3lCTWVRVnJ5ODFEb0NXYWpDd1ZQUlg4bkZ5QVAyck9KQUhMbldjY2FqMmtsZGs3MTFUY0xLZm9wMWRRTFAyS3VvZUZ6Wnk0VzlxTjR3VS1GSkJ1S3VCU2xmZ09FX1E5dUVjTUhfR21wMG1pcktxdGc?oc=5"
   }
  ],
  "journal": [],
@@ -402,6 +411,7 @@
   "12152a371b6d": 1795446511.901323,
   "12ebd8cc15f5": 1795425131.705267,
   "15649170fa5e": 1795536725.684588,
+  "1a1e6d92116a": 1795552552.317799,
   "1afaa755ff3a": 1795526589.661643,
   "1ed5ab6d296f": 1795541616.746251,
   "227813b9d752": 1795453684.32093,
@@ -459,7 +469,6 @@
   "d72bef0062d8": 1795543192.186812,
   "d8cf2473717f": 1795502488.253546,
   "db4b69c15b82": 1795455285.33129,
-  "dc0668007777": 1795206865.345259,
   "dde849c7a232": 1795545239.53704,
   "deb03c929f74": 1795514608.381356,
   "e8055c34ae18": 1795457388.785203,
@@ -499,6 +508,24 @@
     "rates",
     "shoppers",
     "shouldn"
+   ]
+  },
+  "1a1e6d92116a": {
+   "t": 1795552552.317799,
+   "tk": null,
+   "w": [
+    "administration",
+    "capacity",
+    "excess",
+    "factory",
+    "probe",
+    "reuters",
+    "say",
+    "set",
+    "sources",
+    "tariffs",
+    "trump",
+    "unveil"
    ]
   },
   "290006d302a0": {
