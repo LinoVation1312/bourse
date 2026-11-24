@@ -277,6 +277,15 @@
    "title": "Cosmo N.V. acquires 23% stake in surgical AI startup Scialytics",
    "ts": 1795508132.0,
    "url": "https://seekingalpha.com/news/4675993-cosmo-nv-acquires-23-stake-in-surgical-ai-startup-scialytics?utm_source=feed_news_m_a&utm_medium=referral&feed_item_type=news"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795515276.982162,
+   "title": "Drugmaker Insmed shares rally 14% after Sanofi agrees to buy it in pharma’s biggest deal in three years",
+   "ts": 1795514350.0,
+   "url": "https://www.cnbc.com/2026/11/24/insmed-sanofi-deal-stock-pharma.html"
   }
  ],
  "journal": [],
@@ -290,6 +299,7 @@
   "1ce915699263": 1795178251.718475,
   "227813b9d752": 1795453684.32093,
   "2770c4034561": 1795458892.236038,
+  "295892a6f107": 1795515276.982162,
   "2ed5ce3e0659": 1795502488.253546,
   "371c1ce5e193": 1795428544.464651,
   "41b25a94ec72": 1795174515.045039,
@@ -335,7 +345,6 @@
   "aff16fa03298": 1795433713.121632,
   "b12aca4cafa7": 1795187301.716831,
   "b5108330ab78": 1795170897.827653,
-  "b663aa51c800": 1795169297.602263,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
   "c4c8e1a3dab5": 1795196095.032539,
@@ -353,6 +362,24 @@
   "fbb7aa271f14": 1795172874.47453
  },
  "news_sigs": {
+  "295892a6f107": {
+   "t": 1795515276.982162,
+   "tk": null,
+   "w": [
+    "14",
+    "agrees",
+    "biggest",
+    "buy",
+    "deal",
+    "drugmaker",
+    "insmed",
+    "pharma",
+    "rally",
+    "sanofi",
+    "three",
+    "years"
+   ]
+  },
   "6e18a147a66f": {
    "t": 1795514608.381356,
    "tk": null,
