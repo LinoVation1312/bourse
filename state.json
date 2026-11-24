@@ -376,6 +376,15 @@
    "title": "Americans don’t like Trump’s tariffs. He’s doubling down anyway — as soon as this week.",
    "ts": 1795537440.0,
    "url": "https://www.marketwatch.com/story/americans-dont-like-trumps-tariffs-hes-doubling-down-anyway-as-soon-as-this-week-74c8bed5?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "CNBC",
+   "t": 1795538699.349062,
+   "title": "Nvidia shares fall 8% as Huang comeback rally cools",
+   "ts": 1795538301.0,
+   "url": "https://www.cnbc.com/2026/11/24/nvidia-stock-jensen-huang-return.html"
   }
  ],
  "journal": [],
@@ -418,6 +427,7 @@
   "64f62d4fa537": 1795205296.37418,
   "69b5d408c614": 1795444477.253619,
   "6e18a147a66f": 1795514608.381356,
+  "6e1f66ae3eb8": 1795538699.349062,
   "719077d3570a": 1795440882.832036,
   "7ae18b5ff434": 1795455285.33129,
   "7c9845702978": 1795453684.32093,
@@ -612,6 +622,19 @@
     "stake",
     "startup",
     "surgical"
+   ]
+  },
+  "6e1f66ae3eb8": {
+   "t": 1795538699.349062,
+   "tk": null,
+   "w": [
+    "8",
+    "comeback",
+    "cools",
+    "fall",
+    "huang",
+    "nvidia",
+    "rally"
    ]
   },
   "810cf17792a9": {
