@@ -295,6 +295,15 @@
    "title": "The ‘epic’ buying of retail investors paid off after Nvidia’s 31% stock surge, says strategist",
    "ts": 1795520340.0,
    "url": "https://www.marketwatch.com/story/the-epic-buying-of-retail-investors-paid-off-after-nvidias-31-stock-surge-says-strategist-c8f9a502?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "MarketWatch",
+   "t": 1795523415.189579,
+   "title": "Jensen Huang’s return was worth nearly $950 billion to Nvidia. How much of the stock market should ride on one man?",
+   "ts": 1795522860.0,
+   "url": "https://www.marketwatch.com/story/jensen-huangs-return-was-worth-nearly-950-billion-to-nvidia-how-much-of-the-stock-market-should-ride-on-one-man-c7129e95?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -317,6 +326,7 @@
   "562c97c8a089": 1795199687.089937,
   "5879af611a15": 1795458892.236038,
   "588971645d39": 1795444477.253619,
+  "5c07cd40fdca": 1795523415.189579,
   "5c19c9df9c80": 1795520603.309126,
   "5cae40c399ca": 1795430114.074598,
   "5ee3b98d6374": 1795194384.12371,
@@ -385,6 +395,28 @@
     "years"
    ]
   },
+  "5c07cd40fdca": {
+   "t": 1795523415.189579,
+   "tk": null,
+   "w": [
+    "950",
+    "billion",
+    "how",
+    "huang",
+    "jensen",
+    "man",
+    "market",
+    "much",
+    "nearly",
+    "nvidia",
+    "one",
+    "return",
+    "ride",
+    "should",
+    "was",
+    "worth"
+   ]
+  },
   "5c19c9df9c80": {
    "t": 1795520603.309126,
    "tk": null,
@@ -443,7 +475,7 @@
    ]
   }
  },
- "offset": 125508285,
+ "offset": 125508286,
  "positions": {},
  "sent": {
   "flash|CSIQ": "2026-11-23T15:35:34+00:00",
