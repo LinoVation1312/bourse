@@ -394,11 +394,29 @@
    "title": "Trump administration set to unveil new tariffs after probe on excess factory capacity, sources say - Reuters",
    "ts": 1795546085.0,
    "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNNklFaE54bEV6OGdKT29ScUxHUlZwRDNyREJ0MzBSZzZGdnptTkVxaXNHeWx2WjFWYVMzMzdMeU92dC1PVmYyZ1BTT3lCTWVRVnJ5ODFEb0NXYWpDd1ZQUlg4bkZ5QVAyck9KQUhMbldjY2FqMmtsZGs3MTFUY0xLZm9wMWRRTFAyS3VvZUZ6Wnk0VzlxTjR3VS1GSkJ1S3VCU2xmZ09FX1E5dUVjTUhfR21wMG1pcktxdGc?oc=5"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "SeekingAlpha",
+   "t": 1795553825.212848,
+   "title": "SpaceX, Tesla appoint five directors to negotiate on possible deal - FT",
+   "ts": 1795552043.0,
+   "url": "https://seekingalpha.com/news/4676337-spacex-tesla-appoint-five-directors-to-negotiate-on-possible-deal---ft?utm_source=feed_news_m_a&utm_medium=referral&feed_item_type=news"
+  },
+  {
+   "kind": "pos",
+   "score": 4,
+   "src": "BusinessWire",
+   "t": 1795553825.212848,
+   "title": "Digi International Completes Acquisition of Disruptive Technologies, Expanding SmartSense Physical-World Intelligence Capabilities",
+   "ts": 1795550400.0,
+   "url": "http://www.businesswire.com/news/home/20261124402469/en/Digi-International-Completes-Acquisition-of-Disruptive-Technologies-Expanding-SmartSense-Physical-World-Intelligence-Capabilities/?feedref=JjAwJuNHiystnCoBq_hl-Rc4vIAVcHHkbDcwJimU8QtrtlakeQ9hNboBqTAWIjTge3KWq9s9jif-UkBjBsFRyYAbRTSLTc1mgvhPlnaBA55M-oupQnbXnhKsYk8RmHF_kAy2gZikaX3QWV6xOvgFlA=="
   }
  ],
  "journal": [],
  "levels": {
-  "day|2026-11-24|CSIQ|-": 2,
+  "day|2026-11-24|CSIQ|-": 3,
   "day|2026-11-24|NVDA|-": 1,
   "day|2026-11-24|PAEEM.PA|-": 1,
   "day|2026-11-24|QBTS|-": 1
@@ -414,6 +432,7 @@
   "1a1e6d92116a": 1795552552.317799,
   "1afaa755ff3a": 1795526589.661643,
   "1ed5ab6d296f": 1795541616.746251,
+  "2266642a7ea7": 1795553825.212848,
   "227813b9d752": 1795453684.32093,
   "2770c4034561": 1795458892.236038,
   "290006d302a0": 1795537817.617173,
@@ -423,6 +442,7 @@
   "371c1ce5e193": 1795428544.464651,
   "42d5604fee1c": 1795502488.253546,
   "45b91bf9dfab": 1795526589.661643,
+  "476e0b8f0f07": 1795553825.212848,
   "47ebadf7c5dc": 1795446511.901323,
   "49decb3579fa": 1795537315.168179,
   "52c1dc372bc0": 1795526122.179644,
@@ -528,6 +548,20 @@
     "unveil"
    ]
   },
+  "2266642a7ea7": {
+   "t": 1795553825.212848,
+   "tk": null,
+   "w": [
+    "appoint",
+    "deal",
+    "directors",
+    "five",
+    "negotiate",
+    "possible",
+    "spacex",
+    "tesla"
+   ]
+  },
   "290006d302a0": {
    "t": 1795537817.617173,
    "tk": null,
@@ -559,6 +593,24 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "476e0b8f0f07": {
+   "t": 1795553825.212848,
+   "tk": null,
+   "w": [
+    "acquisition",
+    "capabilities",
+    "completes",
+    "digi",
+    "disruptive",
+    "expanding",
+    "intelligence",
+    "international",
+    "physical",
+    "smartsense",
+    "technologies",
+    "world"
    ]
   },
   "49decb3579fa": {
@@ -928,7 +980,7 @@
  "offset": 125508286,
  "positions": {},
  "sent": {
-  "flash|CSIQ": "2026-11-24T17:46:19+00:00",
+  "flash|CSIQ": "2026-11-24T20:57:05+00:00",
   "flash|GC=F": "2026-11-23T14:34:37+00:00",
   "flash|NVDA": "2026-11-23T15:35:34+00:00",
   "flash|PAEEM.PA": "2026-11-24T16:21:55+00:00",
