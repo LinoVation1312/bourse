@@ -349,13 +349,23 @@
    "title": "Harvest Group Acquires Good Peeps, Accelerating Growth Toward $10 Billion in Retail Sales and $2 Billion in Media Under Management",
    "ts": 1795532400.0,
    "url": "http://www.businesswire.com/news/home/20261124781964/en/Harvest-Group-Acquires-Good-Peeps-Accelerating-Growth-Toward-10-Billion-in-Retail-Sales-and-2-Billion-in-Media-Under-Management/?feedref=JjAwJuNHiystnCoBq_hl-Rc4vIAVcHHkbDcwJimU8QtrtlakeQ9hNboBqTAWIjTge3KWq9s9jif-UkBjBsFRyYAbRTSLTc1mgvhPlnaBA55M-oupQnbXnhKsYk8RmHF_kAy2gZikaX3QWV6xOvgFlA=="
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "MarketWatch",
+   "t": 1795536725.684588,
+   "title": "A 10% cap on credit-card interest rates? Holiday shoppers shouldn’t bank on it.",
+   "ts": 1795536480.0,
+   "url": "https://www.marketwatch.com/story/trump-is-open-to-capping-credit-card-interest-rates-but-holiday-shoppers-shouldnt-bank-on-it-yet-34260705?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
  "levels": {
   "day|2026-11-24|CSIQ|-": 2,
   "day|2026-11-24|NVDA|-": 1,
-  "day|2026-11-24|PAEEM.PA|-": 1
+  "day|2026-11-24|PAEEM.PA|-": 1,
+  "day|2026-11-24|QBTS|-": 1
  },
  "news_seen": {
   "027d956e3a5a": 1795453684.32093,
@@ -364,6 +374,7 @@
   "0f6fcf8c1816": 1795531548.179378,
   "12152a371b6d": 1795446511.901323,
   "12ebd8cc15f5": 1795425131.705267,
+  "15649170fa5e": 1795536725.684588,
   "1afaa755ff3a": 1795526589.661643,
   "227813b9d752": 1795453684.32093,
   "2770c4034561": 1795458892.236038,
@@ -403,7 +414,6 @@
   "9908d81ec858": 1795457388.785203,
   "99c36caa473d": 1795451738.967813,
   "9c29f8896c16": 1795196095.032539,
-  "9f009c99dc73": 1795190902.574961,
   "a07a26c96ec2": 1795462503.669837,
   "a6f7834cb3d1": 1795416609.954776,
   "a734ec8c0602": 1795535860.382256,
@@ -446,6 +456,22 @@
     "rating",
     "uncertainty",
     "upgrade"
+   ]
+  },
+  "15649170fa5e": {
+   "t": 1795536725.684588,
+   "tk": null,
+   "w": [
+    "10",
+    "bank",
+    "cap",
+    "card",
+    "credit",
+    "holiday",
+    "interest",
+    "rates",
+    "shoppers",
+    "shouldn"
    ]
   },
   "295892a6f107": {
