@@ -259,7 +259,26 @@
    "fetched": "2026-11-23"
   }
  },
- "flash_log": [],
+ "flash_log": [
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795514608.381356,
+   "title": "Nvidia shares fall 4% in premarket after Huang comeback rally",
+   "ts": 1795513751.0,
+   "url": "https://www.cnbc.com/2026/11/24/nvidia-stock-jensen-huang-return.html"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "SeekingAlpha",
+   "t": 1795514608.381356,
+   "title": "Cosmo N.V. acquires 23% stake in surgical AI startup Scialytics",
+   "ts": 1795508132.0,
+   "url": "https://seekingalpha.com/news/4675993-cosmo-nv-acquires-23-stake-in-surgical-ai-startup-scialytics?utm_source=feed_news_m_a&utm_medium=referral&feed_item_type=news"
+  }
+ ],
  "journal": [],
  "levels": {},
  "news_seen": {
@@ -285,6 +304,7 @@
   "62ff719631e9": 1795451738.967813,
   "64f62d4fa537": 1795205296.37418,
   "69b5d408c614": 1795444477.253619,
+  "6e18a147a66f": 1795514608.381356,
   "719077d3570a": 1795440882.832036,
   "78f4e39827fe": 1795172874.47453,
   "7ae18b5ff434": 1795455285.33129,
@@ -326,12 +346,40 @@
   "d8cf2473717f": 1795502488.253546,
   "db4b69c15b82": 1795455285.33129,
   "dc0668007777": 1795206865.345259,
+  "deb03c929f74": 1795514608.381356,
   "e8055c34ae18": 1795457388.785203,
   "e83b66db901b": 1795187301.716831,
   "fa0c11925ba6": 1795432045.882637,
   "fbb7aa271f14": 1795172874.47453
  },
- "news_sigs": {},
+ "news_sigs": {
+  "6e18a147a66f": {
+   "t": 1795514608.381356,
+   "tk": null,
+   "w": [
+    "23",
+    "acquires",
+    "cosmo",
+    "scialytics",
+    "stake",
+    "startup",
+    "surgical"
+   ]
+  },
+  "deb03c929f74": {
+   "t": 1795514608.381356,
+   "tk": null,
+   "w": [
+    "4",
+    "comeback",
+    "fall",
+    "huang",
+    "nvidia",
+    "premarket",
+    "rally"
+   ]
+  }
+ },
  "offset": 125508284,
  "positions": {},
  "sent": {
