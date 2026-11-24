@@ -412,6 +412,15 @@
    "title": "Digi International Completes Acquisition of Disruptive Technologies, Expanding SmartSense Physical-World Intelligence Capabilities",
    "ts": 1795550400.0,
    "url": "http://www.businesswire.com/news/home/20261124402469/en/Digi-International-Completes-Acquisition-of-Disruptive-Technologies-Expanding-SmartSense-Physical-World-Intelligence-Capabilities/?feedref=JjAwJuNHiystnCoBq_hl-Rc4vIAVcHHkbDcwJimU8QtrtlakeQ9hNboBqTAWIjTge3KWq9s9jif-UkBjBsFRyYAbRTSLTc1mgvhPlnaBA55M-oupQnbXnhKsYk8RmHF_kAy2gZikaX3QWV6xOvgFlA=="
+  },
+  {
+   "kind": "pos",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795556291.720931,
+   "title": "Dell earnings beat on AI strength, company authorizes $25 billion buyback",
+   "ts": 1795555743.0,
+   "url": "https://www.cnbc.com/2026/11/24/dell-earnings-report-q3-2027.html"
   }
  ],
  "journal": [],
@@ -483,6 +492,7 @@
   "b7d649e65d55": 1795528294.351813,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
+  "c71ea1034a15": 1795556291.720931,
   "c8785b006043": 1795442964.994116,
   "cb772d6ef89c": 1795460803.529935,
   "cf2048d27f3c": 1795522556.732776,
@@ -851,6 +861,21 @@
     "returns",
     "street",
     "wall"
+   ]
+  },
+  "c71ea1034a15": {
+   "t": 1795556291.720931,
+   "tk": null,
+   "w": [
+    "25",
+    "authorizes",
+    "beat",
+    "billion",
+    "buyback",
+    "company",
+    "dell",
+    "earnings",
+    "strength"
    ]
   },
   "cf2048d27f3c": {
