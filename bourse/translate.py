@@ -5,6 +5,7 @@ après le premier échec pour ne pas ralentir le bot. Désactivable : "traduire_
 ou variable d'environnement BOURSE_NO_TRANSLATE=1.
 """
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -33,3 +34,12 @@ def fr(text, timeout=6):
         return text
     _cache[text] = out
     return out
+
+
+def fr_many(texts, workers=6):
+    """Traduit plusieurs titres en parallèle et remplit le cache : les appels suivants à fr() sont instantanés."""
+    todo = [t for t in dict.fromkeys(texts) if t and t not in _cache]
+    if not todo or _broken or not enabled():
+        return
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(fr, todo))

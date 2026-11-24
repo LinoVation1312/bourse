@@ -85,6 +85,7 @@ def regime_line(rg):
 
 def news_lines(items_by_ticker, cfg_names):
     lines = []
+    translate.fr_many(it["title"] for items in items_by_ticker.values() for it in items)
     for t, items in items_by_ticker.items():
         for it in items:
             ico = "⚠️" if it["kind"] == "neg" else "📰"

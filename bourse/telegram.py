@@ -62,13 +62,13 @@ class Telegram:
                 self._post("sendMessage", chat_id=self.chat, text=re.sub(r"</?[a-z]+>", "", part),
                            disable_web_page_preview="true")
 
-    def updates(self, offset):
+    def updates(self, offset, timeout=0):
         """[(update_id, texte)] des messages reçus de TON chat uniquement."""
         if self.dry:
             return []
         try:
             r = requests.get(API.format(token=self.token, method="getUpdates"),
-                             params={"offset": offset + 1, "timeout": 0}, timeout=25).json()
+                             params={"offset": offset + 1, "timeout": timeout}, timeout=25 + timeout).json()
         except (requests.RequestException, ValueError):
             print("Telegram getUpdates : réponse illisible")
             return []

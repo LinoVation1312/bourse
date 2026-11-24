@@ -246,7 +246,7 @@ class TestFlowsTendance(unittest.TestCase):
             jobs.soir(ctx)
         text = "\n".join(ctx.tg.sent)
         self.assertIn("passe sous sa moyenne 200 j", text)
-        self.assertIn("Bilan de la séance", text)
+        self.assertIn("Tendances de fond", text)
         check_html(self, ctx.tg.sent)
 
 

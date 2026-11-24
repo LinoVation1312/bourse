@@ -2,17 +2,20 @@ name: bot
 
 on:
   schedule:
-    # Toutes les 30 min, jours ouvrés (heures UTC). Le bot décide lui-même quoi faire selon l'heure de Paris :
-    # matin (≈ 8h), alertes en séance, bilan du soir (≈ 22h30). Passe à "*/15" pour des alertes plus rapides
-    # (consomme 2 fois plus de minutes GitHub).
-    - cron: "*/30 5-22 * * 1-5"
+    # Toutes les 5 min (le minimum de GitHub), jours ouvrés (heures UTC). Le bot décide lui-même quoi faire selon l'heure de Paris :
+    # briefing d'ouverture (≈ 15h45), alertes en séance, débriefing de clôture (≈ 22h25), flash des grosses infos de marché.
+    # Dépôt public = minutes GitHub Actions gratuites. Le cron de GitHub peut avoir du retard (5 à 20 min) :
+    # pour des horaires exacts, déclenche le workflow depuis cron-job.org (voir README).
+    - cron: "*/5 5-22 * * 1-5"
+  repository_dispatch:
+    types: [telegram]          # envoyé par le webhook Telegram (worker/telegram-webhook.js) : réponse en ≈ 30 s
   workflow_dispatch:
     inputs:
       mode:
         description: "Mode à lancer"
         type: choice
         default: auto
-        options: [auto, test, matin, soir, watch, backtest]
+        options: [auto, test, ouverture, matin, soir, watch, flash, commands, backtest]
 
 permissions:
   contents: write
@@ -24,7 +27,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -32,7 +35,7 @@ jobs:
         id: gate
         run: python3 run.py gate
         env:
-          MODE: ${{ inputs.mode }}
+          MODE: ${{ inputs.mode || (github.event_name == 'repository_dispatch' && 'commands') || 'auto' }}
 
       - uses: actions/setup-python@v5
         if: steps.gate.outputs.mode != 'skip'
@@ -51,6 +54,7 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT: ${{ secrets.TG_CHAT }}
           FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          TG_UPDATE: ${{ toJSON(github.event.client_payload.update) }}
 
       - name: Sauvegarder l'état (positions, backtest)
         if: always() && steps.gate.outputs.mode != 'skip'
@@ -58,4 +62,9 @@ jobs:
           git config user.name "bourse-bot"
           git config user.email "bot@users.noreply.github.com"
           for f in state.json stats.json report.md; do [ -f "$f" ] && git add "$f"; done
-          git diff --cached --quiet || (git commit -m "état $(date -u +%F-%H%M)" && git pull --rebase -q && git push)
+          for i in 1 2 3; do
+            git diff --cached --quiet && break
+            git commit -q -m "état $(date -u +%F-%H%M)" 2>/dev/null || true
+            git pull --rebase -q -X theirs && git push -q && break
+            sleep 3
+          done
