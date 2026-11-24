@@ -331,6 +331,15 @@
    "title": "Jensen Huang is back as Nvidia CEO, but investigations and risks remain",
    "ts": 1795529358.0,
    "url": "https://www.cnbc.com/2026/11/24/nvidia-jensen-huang-ceo-return.html"
+  },
+  {
+   "kind": "neg",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795533190.061694,
+   "title": "Nvidia brought Jensen Huang back. But the investigations aren’t over",
+   "ts": 1795532616.0,
+   "url": "https://www.cnbc.com/2026/11/24/nvidia-jensen-huang-ceo-return.html"
   }
  ],
  "journal": [],
@@ -377,7 +386,6 @@
   "822993dcb1b2": 1795442964.994116,
   "8287e9df0d9f": 1795502488.253546,
   "89e2ba1b4d9f": 1795457388.785203,
-  "8a9fca79be6f": 1795187301.716831,
   "8db8cdeef0ac": 1795446511.901323,
   "8eb93a780dec": 1795531548.179378,
   "90334f042df9": 1795188890.950296,
@@ -391,11 +399,11 @@
   "a07a26c96ec2": 1795462503.669837,
   "a6f7834cb3d1": 1795416609.954776,
   "a92ceebbda00": 1795448134.500971,
+  "ab0892278eb4": 1795533190.061694,
   "ad1b0375bb6f": 1795201618.915349,
   "aeb22b922fc7": 1795526122.179644,
   "af83886d780a": 1795451738.967813,
   "aff16fa03298": 1795433713.121632,
-  "b12aca4cafa7": 1795187301.716831,
   "b7d649e65d55": 1795528294.351813,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
@@ -410,7 +418,6 @@
   "dc0668007777": 1795206865.345259,
   "deb03c929f74": 1795514608.381356,
   "e8055c34ae18": 1795457388.785203,
-  "e83b66db901b": 1795187301.716831,
   "f0c41dcec155": 1795527512.06567,
   "f4cf136aaa8f": 1795526122.179644,
   "fa0c11925ba6": 1795432045.882637,
@@ -562,6 +569,20 @@
     "nvidia",
     "remain",
     "risks"
+   ]
+  },
+  "ab0892278eb4": {
+   "t": 1795533190.061694,
+   "tk": null,
+   "w": [
+    "aren",
+    "back",
+    "brought",
+    "but",
+    "huang",
+    "investigations",
+    "jensen",
+    "nvidia"
    ]
   },
   "aeb22b922fc7": {
