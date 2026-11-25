@@ -502,6 +502,15 @@
    "title": "The S&P 500 is headed for a 14% gain next year — and downturns like this one are actually part of the reason, says JPMorgan",
    "ts": 1795612980.0,
    "url": "https://www.marketwatch.com/story/the-s-p-500-is-headed-to-8-200-and-downturns-like-this-one-are-actually-part-of-the-reason-why-says-jpmorgan-b6acae4b?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "MarketWatch",
+   "t": 1795621887.508501,
+   "title": "Nvidia’s stock is giving back more than half of Monday’s rally as dip buyers cash in",
+   "ts": 1795621380.0,
+   "url": "https://www.marketwatch.com/story/nvidias-stock-is-giving-back-more-than-half-of-mondays-rally-as-dip-buyers-cash-in-ee4fa52c?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -607,6 +616,7 @@
   "dcc56d337922": 1795617933.536787,
   "dde849c7a232": 1795545239.53704,
   "deb03c929f74": 1795514608.381356,
+  "e2331c3622a8": 1795621887.508501,
   "e4453a1de96a": 1795617933.536787,
   "e8055c34ae18": 1795457388.785203,
   "eb8de63b6faa": 1795617933.536787,
@@ -1383,6 +1393,22 @@
     "huang",
     "nvidia",
     "premarket",
+    "rally"
+   ]
+  },
+  "e2331c3622a8": {
+   "t": 1795621887.508501,
+   "tk": null,
+   "w": [
+    "back",
+    "buyers",
+    "cash",
+    "dip",
+    "giving",
+    "half",
+    "monday",
+    "more",
+    "nvidia",
     "rally"
    ]
   },
