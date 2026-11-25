@@ -511,6 +511,15 @@
    "title": "Nvidia’s stock is giving back more than half of Monday’s rally as dip buyers cash in",
    "ts": 1795621380.0,
    "url": "https://www.marketwatch.com/story/nvidias-stock-is-giving-back-more-than-half-of-mondays-rally-as-dip-buyers-cash-in-ee4fa52c?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "MarketWatch",
+   "t": 1795626505.570455,
+   "title": "How soon Trump’s new tariffs could hit the economy — and your wallet",
+   "ts": 1795625940.0,
+   "url": "https://www.marketwatch.com/story/u-s-proposes-fresh-tariffs-on-china-others-as-trump-doubles-down-on-his-favorite-trade-weapon-cd9a1df9?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -553,6 +562,7 @@
   "4b9953845022": 1795613157.473528,
   "4d3a3a903399": 1795605165.786654,
   "52c1dc372bc0": 1795526122.179644,
+  "57e8a82f8e8d": 1795626505.570455,
   "5879af611a15": 1795458892.236038,
   "588971645d39": 1795444477.253619,
   "5abfa447c8c3": 1795554985.447776,
@@ -867,6 +877,21 @@
     "rates",
     "real",
     "rise"
+   ]
+  },
+  "57e8a82f8e8d": {
+   "t": 1795626505.570455,
+   "tk": null,
+   "w": [
+    "could",
+    "economy",
+    "hit",
+    "how",
+    "soon",
+    "tariffs",
+    "trump",
+    "wallet",
+    "your"
    ]
   },
   "5b5ac4c02a87": {
