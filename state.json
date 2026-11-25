@@ -583,6 +583,15 @@
    "title": "Elon Musk and SpaceX to donate roughly $17.8 billion to ‘Trump accounts’",
    "ts": 1795643400.0,
    "url": "https://www.marketwatch.com/story/elon-musk-and-spacex-to-donate-roughly-17-8-billion-to-trump-accounts-071c12e1?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "MarketWatch",
+   "t": 1795644992.27454,
+   "title": "Nvidia’s stock has given back a big chunk of Monday’s rally as dip buyers cash in",
+   "ts": 1795644660.0,
+   "url": "https://www.marketwatch.com/story/nvidias-stock-is-giving-back-more-than-half-of-mondays-rally-as-dip-buyers-cash-in-ee4fa52c?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -662,6 +671,7 @@
   "8eb93a780dec": 1795531548.179378,
   "8ef9e8baaf9e": 1795616674.301996,
   "9192897b2563": 1795529596.879256,
+  "93dfdc107bba": 1795644992.27454,
   "945d301e6843": 1795466096.917447,
   "97b72146dd90": 1795614855.986505,
   "98debb052307": 1795450098.526633,
@@ -1253,6 +1263,23 @@
     "nvidia",
     "remain",
     "risks"
+   ]
+  },
+  "93dfdc107bba": {
+   "t": 1795644992.27454,
+   "tk": null,
+   "w": [
+    "back",
+    "big",
+    "buyers",
+    "cash",
+    "chunk",
+    "dip",
+    "given",
+    "has",
+    "monday",
+    "nvidia",
+    "rally"
    ]
   },
   "97b72146dd90": {
