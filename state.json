@@ -547,6 +547,15 @@
    "title": "ECB and Sveriges Riksbank conclude agreement for Sweden to join T2",
    "ts": 1795627800.0,
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261125_1~6333a90f3a.en.html"
+  },
+  {
+   "kind": "neg",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795630833.140255,
+   "title": "Nvidia’s Billion-Dollar Board Bet: Who’s Protected as Lawsuits Mount?",
+   "ts": 1795629765.0,
+   "url": "https://www.cnbc.com/2026/11/25/nvidias-billion-dollar-board-bet-whos-protected-as-lawsuits-mount.html"
   }
  ],
  "journal": [],
@@ -601,6 +610,7 @@
   "5c07cd40fdca": 1795523415.189579,
   "5c19c9df9c80": 1795520603.309126,
   "5cae40c399ca": 1795430114.074598,
+  "60880c166648": 1795630833.140255,
   "615f17948bd1": 1795613614.544334,
   "62ff719631e9": 1795451738.967813,
   "6760ee22e994": 1795600051.668293,
@@ -1005,6 +1015,21 @@
     "retail",
     "strategist",
     "surge"
+   ]
+  },
+  "60880c166648": {
+   "t": 1795630833.140255,
+   "tk": null,
+   "w": [
+    "bet",
+    "billion",
+    "board",
+    "dollar",
+    "lawsuits",
+    "mount",
+    "nvidia",
+    "protected",
+    "who"
    ]
   },
   "615f17948bd1": {
