@@ -538,6 +538,15 @@
    "title": "HP’s stock is a standout gainer in the tech rout, as an earnings beat still matters",
    "ts": 1795627440.0,
    "url": "https://www.marketwatch.com/story/hps-stock-is-a-standout-gainer-in-the-tech-rout-as-an-earnings-beat-still-matters-8f6c76ad?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "BCE",
+   "t": 1795628263.398289,
+   "title": "ECB and Sveriges Riksbank conclude agreement for Sweden to join T2",
+   "ts": 1795627800.0,
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261125_1~6333a90f3a.en.html"
   }
  ],
  "journal": [],
@@ -567,8 +576,10 @@
   "295892a6f107": 1795515276.982162,
   "2ed5ce3e0659": 1795502488.253546,
   "2f7a23f0c156": 1795531964.876116,
+  "30102b249ca2": 1795628263.398289,
   "36b1d7cf2706": 1795612637.11236,
   "371c1ce5e193": 1795428544.464651,
+  "3ba3fdd32185": 1795628263.398289,
   "3d43e1cf8adb": 1795627411.88615,
   "42d5604fee1c": 1795502488.253546,
   "45b91bf9dfab": 1795526589.661643,
@@ -775,6 +786,19 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "30102b249ca2": {
+   "t": 1795628263.398289,
+   "tk": null,
+   "w": [
+    "agreement",
+    "conclude",
+    "ecb",
+    "join",
+    "riksbank",
+    "sveriges",
+    "sweden"
    ]
   },
   "36b1d7cf2706": {
@@ -1644,7 +1668,7 @@
  "offset": 125508286,
  "positions": {},
  "sent": {
-  "flash|CSIQ": "2026-11-25T15:36:52+00:00",
+  "flash|CSIQ": "2026-11-25T17:37:43+00:00",
   "flash|GC=F": "2026-11-25T17:29:51+00:00",
   "flash|META": "2026-11-25T17:15:53+00:00",
   "flash|NVDA": "2026-11-23T15:35:34+00:00",
