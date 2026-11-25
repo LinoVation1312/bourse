@@ -448,6 +448,15 @@
    "title": "Budget carrier Norse Atlantic falls 74% after warning its finances are ‘critical’ amid soaring fuel costs",
    "ts": 1795600565.0,
    "url": "https://www.cnbc.com/2026/11/25/norse-atlantic-financial-warning-fuel-costs.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795612637.11236,
+   "title": "U.S. proposes new tariffs on 14 trading partners, including China and the EU",
+   "ts": 1795612269.0,
+   "url": "https://www.cnbc.com/2026/11/25/us-tariffs-trump-section-301.html"
   }
  ],
  "journal": [],
@@ -471,6 +480,7 @@
   "295892a6f107": 1795515276.982162,
   "2ed5ce3e0659": 1795502488.253546,
   "2f7a23f0c156": 1795531964.876116,
+  "36b1d7cf2706": 1795612637.11236,
   "371c1ce5e193": 1795428544.464651,
   "42d5604fee1c": 1795502488.253546,
   "45b91bf9dfab": 1795526589.661643,
@@ -656,6 +666,19 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "36b1d7cf2706": {
+   "t": 1795612637.11236,
+   "tk": null,
+   "w": [
+    "14",
+    "china",
+    "including",
+    "partners",
+    "proposes",
+    "tariffs",
+    "trading"
    ]
   },
   "476e0b8f0f07": {
