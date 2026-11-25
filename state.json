@@ -565,6 +565,15 @@
    "title": "SpaceX wins FCC approval to deploy 1 million orbital data center satellites",
    "ts": 1795630979.0,
    "url": "https://www.cnbc.com/2026/11/25/spacex-fcc-satellite-approval.html"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "MarketWatch",
+   "t": 1795635821.754183,
+   "title": "The Fed says inflation hasn’t gotten any better ahead of its key December vote to raise rates",
+   "ts": 1795635540.0,
+   "url": "https://www.marketwatch.com/story/the-fed-says-inflation-hasnt-gotten-any-better-ahead-of-its-key-december-vote-to-raise-rates-65024d33?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -663,6 +672,7 @@
   "b4c4b6cebee7": 1795613157.473528,
   "b5cc64b9c766": 1795627791.284622,
   "b7d649e65d55": 1795528294.351813,
+  "bb2764315f8f": 1795635821.754183,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
   "c71ea1034a15": 1795556291.720931,
@@ -1400,6 +1410,24 @@
     "returns",
     "street",
     "wall"
+   ]
+  },
+  "bb2764315f8f": {
+   "t": 1795635821.754183,
+   "tk": null,
+   "w": [
+    "ahead",
+    "any",
+    "better",
+    "december",
+    "fed",
+    "gotten",
+    "hasn",
+    "inflation",
+    "key",
+    "raise",
+    "rates",
+    "vote"
    ]
   },
   "c71ea1034a15": {
