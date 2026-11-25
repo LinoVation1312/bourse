@@ -529,6 +529,15 @@
    "title": "Nvidia leads tech sell-off as Huang comeback rally fizzles and AI concerns return",
    "ts": 1795626617.0,
    "url": "https://www.cnbc.com/2026/11/25/nvidia-ai-stock-tech-selloff.html"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "MarketWatch",
+   "t": 1795627791.284622,
+   "title": "HP’s stock is a standout gainer in the tech rout, as an earnings beat still matters",
+   "ts": 1795627440.0,
+   "url": "https://www.marketwatch.com/story/hps-stock-is-a-standout-gainer-in-the-tech-rout-as-an-earnings-beat-still-matters-8f6c76ad?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -621,6 +630,7 @@
   "b29b2c2f43a1": 1795613157.473528,
   "b2b08a8dc79d": 1795625836.869651,
   "b4c4b6cebee7": 1795613157.473528,
+  "b5cc64b9c766": 1795627791.284622,
   "b7d649e65d55": 1795528294.351813,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
@@ -1293,6 +1303,20 @@
     "your"
    ]
   },
+  "b5cc64b9c766": {
+   "t": 1795627791.284622,
+   "tk": null,
+   "w": [
+    "beat",
+    "earnings",
+    "gainer",
+    "matters",
+    "rout",
+    "standout",
+    "still",
+    "tech"
+   ]
+  },
   "b7d649e65d55": {
    "t": 1795528294.351813,
    "tk": "NVDA",
@@ -1621,7 +1645,7 @@
  "positions": {},
  "sent": {
   "flash|CSIQ": "2026-11-25T15:36:52+00:00",
-  "flash|GC=F": "2026-11-23T14:34:37+00:00",
+  "flash|GC=F": "2026-11-25T17:29:51+00:00",
   "flash|META": "2026-11-25T17:15:53+00:00",
   "flash|NVDA": "2026-11-23T15:35:34+00:00",
   "flash|PAEEM.PA": "2026-11-24T16:21:55+00:00",
