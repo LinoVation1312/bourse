@@ -520,6 +520,15 @@
    "title": "How soon Trump’s new tariffs could hit the economy — and your wallet",
    "ts": 1795625940.0,
    "url": "https://www.marketwatch.com/story/u-s-proposes-fresh-tariffs-on-china-others-as-trump-doubles-down-on-his-favorite-trade-weapon-cd9a1df9?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 8,
+   "src": "CNBC",
+   "t": 1795627411.88615,
+   "title": "Nvidia leads tech sell-off as Huang comeback rally fizzles and AI concerns return",
+   "ts": 1795626617.0,
+   "url": "https://www.cnbc.com/2026/11/25/nvidia-ai-stock-tech-selloff.html"
   }
  ],
  "journal": [],
@@ -551,6 +560,7 @@
   "2f7a23f0c156": 1795531964.876116,
   "36b1d7cf2706": 1795612637.11236,
   "371c1ce5e193": 1795428544.464651,
+  "3d43e1cf8adb": 1795627411.88615,
   "42d5604fee1c": 1795502488.253546,
   "45b91bf9dfab": 1795526589.661643,
   "476e0b8f0f07": 1795553825.212848,
@@ -768,6 +778,23 @@
     "proposes",
     "tariffs",
     "trading"
+   ]
+  },
+  "3d43e1cf8adb": {
+   "t": 1795627411.88615,
+   "tk": null,
+   "w": [
+    "comeback",
+    "concerns",
+    "fizzles",
+    "huang",
+    "leads",
+    "nvidia",
+    "off",
+    "rally",
+    "return",
+    "sell",
+    "tech"
    ]
   },
   "476e0b8f0f07": {
