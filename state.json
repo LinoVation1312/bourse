@@ -556,6 +556,15 @@
    "title": "Nvidia’s Billion-Dollar Board Bet: Who’s Protected as Lawsuits Mount?",
    "ts": 1795629765.0,
    "url": "https://www.cnbc.com/2026/11/25/nvidias-billion-dollar-board-bet-whos-protected-as-lawsuits-mount.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795631840.541797,
+   "title": "SpaceX wins FCC approval to deploy 1 million orbital data center satellites",
+   "ts": 1795630979.0,
+   "url": "https://www.cnbc.com/2026/11/25/spacex-fcc-satellite-approval.html"
   }
  ],
  "journal": [],
@@ -678,6 +687,7 @@
   "eb8de63b6faa": 1795617933.536787,
   "f0c41dcec155": 1795527512.06567,
   "f4cf136aaa8f": 1795526122.179644,
+  "f771dd989763": 1795631840.541797,
   "f943285f2a83": 1795548322.387366,
   "fa0c11925ba6": 1795432045.882637,
   "fccef80060a9": 1795531548.179378,
@@ -1660,6 +1670,23 @@
     "nvidia",
     "surge",
     "tech"
+   ]
+  },
+  "f771dd989763": {
+   "t": 1795631840.541797,
+   "tk": null,
+   "w": [
+    "1",
+    "approval",
+    "center",
+    "data",
+    "deploy",
+    "fcc",
+    "million",
+    "orbital",
+    "satellites",
+    "spacex",
+    "wins"
    ]
   },
   "f943285f2a83": {
