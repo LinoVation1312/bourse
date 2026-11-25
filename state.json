@@ -475,6 +475,15 @@
    "title": "The Fed is likely to raise rates in December. What it means for your holiday spending",
    "ts": 1795612501.0,
    "url": "https://www.cnbc.com/2026/11/25/fed-december-rate-hike-consumer-impact.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795613614.544334,
+   "title": "Fed’s preferred inflation gauge accelerated to 3.8% in October, likely sealing rate hike",
+   "ts": 1795613505.0,
+   "url": "https://www.cnbc.com/2026/11/25/pce-inflation-report-october-2026.html"
   }
  ],
  "journal": [],
@@ -515,6 +524,7 @@
   "5c07cd40fdca": 1795523415.189579,
   "5c19c9df9c80": 1795520603.309126,
   "5cae40c399ca": 1795430114.074598,
+  "615f17948bd1": 1795613614.544334,
   "62ff719631e9": 1795451738.967813,
   "6760ee22e994": 1795600051.668293,
   "67ebd7359f1c": 1795600457.315268,
@@ -828,6 +838,24 @@
     "retail",
     "strategist",
     "surge"
+   ]
+  },
+  "615f17948bd1": {
+   "t": 1795613614.544334,
+   "tk": null,
+   "w": [
+    "3",
+    "8",
+    "accelerated",
+    "fed",
+    "gauge",
+    "hike",
+    "inflation",
+    "likely",
+    "october",
+    "preferred",
+    "rate",
+    "sealing"
    ]
   },
   "6760ee22e994": {
