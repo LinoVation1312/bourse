@@ -484,6 +484,15 @@
    "title": "Fed’s preferred inflation gauge accelerated to 3.8% in October, likely sealing rate hike",
    "ts": 1795613505.0,
    "url": "https://www.cnbc.com/2026/11/25/pce-inflation-report-october-2026.html"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "MarketWatch",
+   "t": 1795614011.956371,
+   "title": "Inflation gets worse. Now the Fed no choice but to raise U.S. interest rates.",
+   "ts": 1795613640.0,
+   "url": "https://www.marketwatch.com/story/inflation-gets-worse-now-the-fed-no-choice-but-to-raise-u-s-interest-rates-8b0c2c1f?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -570,6 +579,7 @@
   "d07d42ffa920": 1795594643.316229,
   "d1def8ee1884": 1795526122.179644,
   "d2c3aac081e1": 1795554487.169671,
+  "d51d79c6e33c": 1795614011.956371,
   "d5483040aef1": 1795450098.526633,
   "d72bef0062d8": 1795543192.186812,
   "d8cf2473717f": 1795502488.253546,
@@ -1191,6 +1201,22 @@
     "surge",
     "tech",
     "today"
+   ]
+  },
+  "d51d79c6e33c": {
+   "t": 1795614011.956371,
+   "tk": null,
+   "w": [
+    "but",
+    "choice",
+    "fed",
+    "gets",
+    "inflation",
+    "interest",
+    "now",
+    "raise",
+    "rates",
+    "worse"
    ]
   },
   "d72bef0062d8": {
