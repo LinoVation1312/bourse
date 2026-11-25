@@ -430,6 +430,15 @@
    "title": "SoftBank drops 15% as Wall Street AI sell-off ripples across Asian tech names",
    "ts": 1795578723.0,
    "url": "https://www.cnbc.com/2026/11/25/tech-stocks-softbank-group-advantest-sk-hynix-samsung.html"
+  },
+  {
+   "kind": "info",
+   "score": 9,
+   "src": "CNBC",
+   "t": 1795600051.668293,
+   "title": "Tech rout deepens globally; Softbank falls 15%, Nvidia down 4.5% premarket",
+   "ts": 1795599735.0,
+   "url": "https://www.cnbc.com/2026/11/25/tech-stocks-softbank-group-advantest-sk-hynix-samsung.html"
   }
  ],
  "journal": [],
@@ -468,6 +477,7 @@
   "5c19c9df9c80": 1795520603.309126,
   "5cae40c399ca": 1795430114.074598,
   "62ff719631e9": 1795451738.967813,
+  "6760ee22e994": 1795600051.668293,
   "69b5d408c614": 1795444477.253619,
   "6e18a147a66f": 1795514608.381356,
   "6e1f66ae3eb8": 1795538699.349062,
@@ -743,6 +753,23 @@
     "retail",
     "strategist",
     "surge"
+   ]
+  },
+  "6760ee22e994": {
+   "t": 1795600051.668293,
+   "tk": null,
+   "w": [
+    "15",
+    "4",
+    "5",
+    "deepens",
+    "falls",
+    "globally",
+    "nvidia",
+    "premarket",
+    "rout",
+    "softbank",
+    "tech"
    ]
   },
   "6e18a147a66f": {
