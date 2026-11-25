@@ -493,6 +493,15 @@
    "title": "Inflation gets worse. Now the Fed no choice but to raise U.S. interest rates.",
    "ts": 1795613640.0,
    "url": "https://www.marketwatch.com/story/inflation-gets-worse-now-the-fed-no-choice-but-to-raise-u-s-interest-rates-8b0c2c1f?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "MarketWatch",
+   "t": 1795616674.301996,
+   "title": "The S&P 500 is headed for a 14% gain next year — and downturns like this one are actually part of the reason, says JPMorgan",
+   "ts": 1795612980.0,
+   "url": "https://www.marketwatch.com/story/the-s-p-500-is-headed-to-8-200-and-downturns-like-this-one-are-actually-part-of-the-reason-why-says-jpmorgan-b6acae4b?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -523,6 +532,7 @@
   "45b91bf9dfab": 1795526589.661643,
   "476e0b8f0f07": 1795553825.212848,
   "47ebadf7c5dc": 1795446511.901323,
+  "494a0909851e": 1795616674.301996,
   "49decb3579fa": 1795537315.168179,
   "4a69c3abc4cc": 1795586438.513327,
   "4b9953845022": 1795613157.473528,
@@ -553,6 +563,7 @@
   "89e2ba1b4d9f": 1795457388.785203,
   "8db8cdeef0ac": 1795446511.901323,
   "8eb93a780dec": 1795531548.179378,
+  "8ef9e8baaf9e": 1795616674.301996,
   "9192897b2563": 1795529596.879256,
   "945d301e6843": 1795466096.917447,
   "97b72146dd90": 1795614855.986505,
@@ -593,7 +604,8 @@
   "f4cf136aaa8f": 1795526122.179644,
   "f943285f2a83": 1795548322.387366,
   "fa0c11925ba6": 1795432045.882637,
-  "fccef80060a9": 1795531548.179378
+  "fccef80060a9": 1795531548.179378,
+  "fdc38cd6cf49": 1795616674.301996
  },
  "news_sigs": {
   "06bf52b7239a": {
@@ -740,6 +752,25 @@
     "smartsense",
     "technologies",
     "world"
+   ]
+  },
+  "494a0909851e": {
+   "t": 1795616674.301996,
+   "tk": null,
+   "w": [
+    "14",
+    "500",
+    "actually",
+    "downturns",
+    "gain",
+    "headed",
+    "jpmorgan",
+    "like",
+    "next",
+    "one",
+    "part",
+    "reason",
+    "year"
    ]
   },
   "49decb3579fa": {
