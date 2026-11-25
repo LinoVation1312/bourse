@@ -457,6 +457,24 @@
    "title": "U.S. proposes new tariffs on 14 trading partners, including China and the EU",
    "ts": 1795612269.0,
    "url": "https://www.cnbc.com/2026/11/25/us-tariffs-trump-section-301.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "MarketWatch",
+   "t": 1795613157.473528,
+   "title": "U.S. proposes fresh tariffs on China, others as Trump doubles down on his favorite trade weapon",
+   "ts": 1795612860.0,
+   "url": "https://www.marketwatch.com/story/u-s-proposes-fresh-tariffs-on-china-others-as-trump-doubles-down-on-his-favorite-trade-weapon-cd9a1df9?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795613157.473528,
+   "title": "The Fed is likely to raise rates in December. What it means for your holiday spending",
+   "ts": 1795612501.0,
+   "url": "https://www.cnbc.com/2026/11/25/fed-december-rate-hike-consumer-impact.html"
   }
  ],
  "journal": [],
@@ -488,6 +506,7 @@
   "47ebadf7c5dc": 1795446511.901323,
   "49decb3579fa": 1795537315.168179,
   "4a69c3abc4cc": 1795586438.513327,
+  "4b9953845022": 1795613157.473528,
   "4d3a3a903399": 1795605165.786654,
   "52c1dc372bc0": 1795526122.179644,
   "5879af611a15": 1795458892.236038,
@@ -528,6 +547,8 @@
   "af83886d780a": 1795451738.967813,
   "aff16fa03298": 1795433713.121632,
   "b29198883557": 1795541161.973863,
+  "b29b2c2f43a1": 1795613157.473528,
+  "b4c4b6cebee7": 1795613157.473528,
   "b7d649e65d55": 1795528294.351813,
   "bcc3de138648": 1795502488.253546,
   "bfa6a50bb170": 1795466096.917447,
@@ -734,6 +755,23 @@
     "street",
     "tech",
     "wall"
+   ]
+  },
+  "4b9953845022": {
+   "t": 1795613157.473528,
+   "tk": null,
+   "w": [
+    "china",
+    "doubles",
+    "favorite",
+    "fresh",
+    "his",
+    "others",
+    "proposes",
+    "tariffs",
+    "trade",
+    "trump",
+    "weapon"
    ]
   },
   "52c1dc372bc0": {
@@ -977,6 +1015,41 @@
     "return",
     "reverses",
     "valuation"
+   ]
+  },
+  "b29b2c2f43a1": {
+   "t": 1795613157.473528,
+   "tk": "NVDA",
+   "w": [
+    "ahead",
+    "anthropic",
+    "coverage",
+    "data",
+    "dives",
+    "dow",
+    "fed",
+    "inflation",
+    "live",
+    "market",
+    "nvidia",
+    "plunge",
+    "today"
+   ]
+  },
+  "b4c4b6cebee7": {
+   "t": 1795613157.473528,
+   "tk": null,
+   "w": [
+    "december",
+    "fed",
+    "holiday",
+    "likely",
+    "means",
+    "raise",
+    "rates",
+    "spending",
+    "what",
+    "your"
    ]
   },
   "b7d649e65d55": {
