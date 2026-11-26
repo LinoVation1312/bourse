@@ -637,6 +637,15 @@
    "title": "Asia-Pacific markets close higher as investors look past fresh U.S. tariffs",
    "ts": 1795680027.0,
    "url": "https://www.cnbc.com/2026/11/26/stock-markets-today-.html"
+  },
+  {
+   "kind": "info",
+   "score": 6,
+   "src": "CNBC",
+   "t": 1795682672.680086,
+   "title": "Global stocks rally as investors shrug off U.S. tariffs and AI jitters",
+   "ts": 1795682546.0,
+   "url": "https://www.cnbc.com/2026/11/26/stock-markets-today-.html"
   }
  ],
  "journal": [],
@@ -644,6 +653,7 @@
   "day|2026-11-26|PAEEM.PA|+": 1
  },
  "news_seen": {
+  "015933604855": 1795682672.680086,
   "027d956e3a5a": 1795453684.32093,
   "0422d64979e7": 1795531964.876116,
   "04d5a5371668": 1795450098.526633,
@@ -776,6 +786,19 @@
   "fdc38cd6cf49": 1795616674.301996
  },
  "news_sigs": {
+  "015933604855": {
+   "t": 1795682672.680086,
+   "tk": null,
+   "w": [
+    "global",
+    "investors",
+    "jitters",
+    "off",
+    "rally",
+    "shrug",
+    "tariffs"
+   ]
+  },
   "06bf52b7239a": {
    "t": 1795594643.316229,
    "tk": "NVDA",
