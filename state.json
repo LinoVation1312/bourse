@@ -655,6 +655,15 @@
    "title": "The tech rout should bottom soon, with a 25% rally for the S&P 500 to follow, says Deutsche Bank",
    "ts": 1795687860.0,
    "url": "https://www.marketwatch.com/story/the-tech-rout-should-bottom-soon-with-a-25-rally-for-the-s-p-500-to-follow-says-deutsche-bank-c9070bf6?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "Reuters",
+   "t": 1795692856.045884,
+   "title": "How Trump's proposed tariffs for India compare with rival nations - Reuters",
+   "ts": 1795691456.0,
+   "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNazJTSjI3dk40ZnhoM2ZJR2N2eXp0NUFoaWUxNUI4NW9wV19YWEtpd24tS0t5YnFHV2YzSkRmSXdiTnR6cjRuMTROY1d1VlQ2NUR3UjNNMUJkeU5XQVBOeUQ1VnVTQmtQU3BVOUNndHdyeUhvWDcxdmRHMGtheVJCREs4UzdCWS1VVDQwcmdQYWtILXltMHRhN1UxeTVtdGhuMFhpemlOdDRkLTB5?oc=5"
   }
  ],
  "journal": [],
@@ -728,6 +737,7 @@
   "80416ec3425d": 1795637824.119895,
   "810cf17792a9": 1795524466.168338,
   "822993dcb1b2": 1795442964.994116,
+  "824961d89e60": 1795692856.045884,
   "8287e9df0d9f": 1795502488.253546,
   "8474cf89441a": 1795602242.310274,
   "866748552dbf": 1795600857.159434,
@@ -764,6 +774,7 @@
   "b7d649e65d55": 1795528294.351813,
   "bb2764315f8f": 1795635821.754183,
   "bcc3de138648": 1795502488.253546,
+  "be819c72e030": 1795692856.045884,
   "bf7d21abaeae": 1795681019.961133,
   "bfa6a50bb170": 1795466096.917447,
   "c71ea1034a15": 1795556291.720931,
@@ -1388,6 +1399,18 @@
     "you"
    ]
   },
+  "824961d89e60": {
+   "t": 1795692856.045884,
+   "tk": "NVDA",
+   "w": [
+    "amd",
+    "deepens",
+    "micron",
+    "nvidia",
+    "plunge",
+    "selloff"
+   ]
+  },
   "866748552dbf": {
    "t": 1795600857.159434,
    "tk": null,
@@ -1705,6 +1728,21 @@
     "raise",
     "rates",
     "vote"
+   ]
+  },
+  "be819c72e030": {
+   "t": 1795692856.045884,
+   "tk": null,
+   "w": [
+    "compare",
+    "how",
+    "india",
+    "nations",
+    "proposed",
+    "reuters",
+    "rival",
+    "tariffs",
+    "trump"
    ]
   },
   "bf7d21abaeae": {
