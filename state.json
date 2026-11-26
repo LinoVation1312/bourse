@@ -664,6 +664,15 @@
    "title": "How Trump's proposed tariffs for India compare with rival nations - Reuters",
    "ts": 1795691456.0,
    "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNazJTSjI3dk40ZnhoM2ZJR2N2eXp0NUFoaWUxNUI4NW9wV19YWEtpd24tS0t5YnFHV2YzSkRmSXdiTnR6cjRuMTROY1d1VlQ2NUR3UjNNMUJkeU5XQVBOeUQ1VnVTQmtQU3BVOUNndHdyeUhvWDcxdmRHMGtheVJCREs4UzdCWS1VVDQwcmdQYWtILXltMHRhN1UxeTVtdGhuMFhpemlOdDRkLTB5?oc=5"
+  },
+  {
+   "kind": "neg",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795716049.059164,
+   "title": "Trump demands probe into ‘record setting error’ after third-quarter GDP data gets massive revision higher",
+   "ts": 1795715852.0,
+   "url": "https://www.cnbc.com/2026/11/26/trump-gdp-revision-investigation.html"
   }
  ],
  "journal": [],
@@ -678,6 +687,7 @@
   "04d5a5371668": 1795450098.526633,
   "06bf52b7239a": 1795594643.316229,
   "0f6fcf8c1816": 1795531548.179378,
+  "0ff1b5333469": 1795716049.059164,
   "12152a371b6d": 1795446511.901323,
   "12ebd8cc15f5": 1795425131.705267,
   "13e6d646bdfc": 1795688023.791834,
@@ -767,6 +777,7 @@
   "a92ceebbda00": 1795448134.500971,
   "a9f0f2616fc2": 1795686738.143091,
   "ab0892278eb4": 1795533190.061694,
+  "ae36c717e4c1": 1795716049.059164,
   "aeb22b922fc7": 1795526122.179644,
   "af83886d780a": 1795451738.967813,
   "aff16fa03298": 1795433713.121632,
@@ -885,6 +896,26 @@
     "rating",
     "uncertainty",
     "upgrade"
+   ]
+  },
+  "0ff1b5333469": {
+   "t": 1795716049.059164,
+   "tk": null,
+   "w": [
+    "data",
+    "demands",
+    "error",
+    "gdp",
+    "gets",
+    "higher",
+    "massive",
+    "probe",
+    "quarter",
+    "record",
+    "revision",
+    "setting",
+    "third",
+    "trump"
    ]
   },
   "13e6d646bdfc": {
@@ -1672,6 +1703,20 @@
     "investigations",
     "jensen",
     "nvidia"
+   ]
+  },
+  "ae36c717e4c1": {
+   "t": 1795716049.059164,
+   "tk": "NVDA",
+   "w": [
+    "3",
+    "91",
+    "downgrade",
+    "fall",
+    "nvidia",
+    "puts",
+    "rating",
+    "watch"
    ]
   },
   "aeb22b922fc7": {
