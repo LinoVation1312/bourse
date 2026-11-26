@@ -592,16 +592,37 @@
    "title": "Nvidia’s stock has given back a big chunk of Monday’s rally as dip buyers cash in",
    "ts": 1795644660.0,
    "url": "https://www.marketwatch.com/story/nvidias-stock-is-giving-back-more-than-half-of-mondays-rally-as-dip-buyers-cash-in-ee4fa52c?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 7,
+   "src": "CNBC",
+   "t": 1795672833.758146,
+   "title": "S&P warns Nvidia credit rating could be cut over 'rising' management and governance risk",
+   "ts": 1795663184.0,
+   "url": "https://www.cnbc.com/2026/11/26/nvidia-market-governance-risk.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795672833.758146,
+   "title": "North Korea's Kim calls for nuclear arsenal expansion, says status 'will never change'",
+   "ts": 1795672234.0,
+   "url": "https://www.cnbc.com/2026/11/26/north-korea-kim-nuclear-weapons-expansion.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795672833.758146,
+   "title": "How Trump’s latest tariff moves hand India an edge over rival Asian exporters",
+   "ts": 1795666338.0,
+   "url": "https://www.cnbc.com/2026/11/26/trump-us-tariff-india-trade.html"
   }
  ],
  "journal": [],
- "levels": {
-  "day|2026-11-25|BNK.PA|-": 1,
-  "day|2026-11-25|CSIQ|+": 2,
-  "day|2026-11-25|CSIQ|-": 2,
-  "day|2026-11-25|NVDA|-": 1,
-  "day|2026-11-25|PAEEM.PA|-": 1
- },
+ "levels": {},
  "news_seen": {
   "027d956e3a5a": 1795453684.32093,
   "0422d64979e7": 1795531964.876116,
@@ -677,6 +698,8 @@
   "98debb052307": 1795450098.526633,
   "9908d81ec858": 1795457388.785203,
   "99c36caa473d": 1795451738.967813,
+  "9de39b24fdd5": 1795672833.758146,
+  "9e9f5693052c": 1795672833.758146,
   "a07a26c96ec2": 1795462503.669837,
   "a2b29e1f8eb6": 1795617933.536787,
   "a6f7834cb3d1": 1795416609.954776,
@@ -721,6 +744,7 @@
   "ed3acad6d3bb": 1795643807.74629,
   "f0c41dcec155": 1795527512.06567,
   "f4cf136aaa8f": 1795526122.179644,
+  "f532d09da945": 1795672833.758146,
   "f771dd989763": 1795631840.541797,
   "f943285f2a83": 1795548322.387366,
   "fa0c11925ba6": 1795432045.882637,
@@ -1299,6 +1323,40 @@
     "top"
    ]
   },
+  "9de39b24fdd5": {
+   "t": 1795672833.758146,
+   "tk": null,
+   "w": [
+    "arsenal",
+    "calls",
+    "change",
+    "expansion",
+    "kim",
+    "korea",
+    "never",
+    "north",
+    "nuclear",
+    "status",
+    "will"
+   ]
+  },
+  "9e9f5693052c": {
+   "t": 1795672833.758146,
+   "tk": null,
+   "w": [
+    "asian",
+    "edge",
+    "exporters",
+    "hand",
+    "how",
+    "india",
+    "latest",
+    "moves",
+    "rival",
+    "tariff",
+    "trump"
+   ]
+  },
   "a2b29e1f8eb6": {
    "t": 1795617933.536787,
    "tk": "QNC",
@@ -1793,6 +1851,22 @@
     "nvidia",
     "surge",
     "tech"
+   ]
+  },
+  "f532d09da945": {
+   "t": 1795672833.758146,
+   "tk": null,
+   "w": [
+    "could",
+    "credit",
+    "cut",
+    "governance",
+    "management",
+    "nvidia",
+    "rating",
+    "rising",
+    "risk",
+    "warns"
    ]
   },
   "f771dd989763": {
