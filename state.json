@@ -646,6 +646,15 @@
    "title": "Global stocks rally as investors shrug off U.S. tariffs and AI jitters",
    "ts": 1795682546.0,
    "url": "https://www.cnbc.com/2026/11/26/stock-markets-today-.html"
+  },
+  {
+   "kind": "info",
+   "score": 8,
+   "src": "MarketWatch",
+   "t": 1795688542.731635,
+   "title": "The tech rout should bottom soon, with a 25% rally for the S&P 500 to follow, says Deutsche Bank",
+   "ts": 1795687860.0,
+   "url": "https://www.marketwatch.com/story/the-tech-rout-should-bottom-soon-with-a-25-rally-for-the-s-p-500-to-follow-says-deutsche-bank-c9070bf6?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -694,6 +703,7 @@
   "4d3a3a903399": 1795605165.786654,
   "52c1dc372bc0": 1795526122.179644,
   "57e8a82f8e8d": 1795626505.570455,
+  "585e9c624876": 1795688542.731635,
   "5879af611a15": 1795458892.236038,
   "588971645d39": 1795444477.253619,
   "5abfa447c8c3": 1795554985.447776,
@@ -1136,6 +1146,23 @@
     "trump",
     "wallet",
     "your"
+   ]
+  },
+  "585e9c624876": {
+   "t": 1795688542.731635,
+   "tk": null,
+   "w": [
+    "25",
+    "500",
+    "bank",
+    "bottom",
+    "deutsche",
+    "follow",
+    "rally",
+    "rout",
+    "should",
+    "soon",
+    "tech"
    ]
   },
   "5b5ac4c02a87": {
