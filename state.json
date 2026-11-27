@@ -718,6 +718,15 @@
    "title": "Defense giant Rheinmetall embraces ‘new normal’ of caution after military contract setback; stock rises",
    "ts": 1795774269.0,
    "url": "https://www.cnbc.com/2026/11/27/rheinmetall-stock-cmd-guidance-sales.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "MarketWatch",
+   "t": 1795775845.20089,
+   "title": "The AI stock crash is mostly over, JPMorgan says — but a worse phase could be coming in 2027",
+   "ts": 1795775520.0,
+   "url": "https://www.marketwatch.com/story/the-ai-stock-crash-is-mostly-over-jpmorgan-says-but-a-worse-phase-could-be-coming-in-2027-fa769fbd?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -776,7 +785,6 @@
   "5b5ac4c02a87": 1795624616.642911,
   "5c07cd40fdca": 1795523415.189579,
   "5c19c9df9c80": 1795520603.309126,
-  "5cae40c399ca": 1795430114.074598,
   "60880c166648": 1795630833.140255,
   "615f17948bd1": 1795613614.544334,
   "62ff719631e9": 1795451738.967813,
@@ -860,6 +868,7 @@
   "dcc56d337922": 1795617933.536787,
   "dde849c7a232": 1795545239.53704,
   "deb03c929f74": 1795514608.381356,
+  "e033734149fa": 1795775845.20089,
   "e2331c3622a8": 1795621887.508501,
   "e4453a1de96a": 1795617933.536787,
   "e8055c34ae18": 1795457388.785203,
@@ -2298,6 +2307,21 @@
     "nvidia",
     "premarket",
     "rally"
+   ]
+  },
+  "e033734149fa": {
+   "t": 1795775845.20089,
+   "tk": null,
+   "w": [
+    "2027",
+    "but",
+    "coming",
+    "could",
+    "crash",
+    "jpmorgan",
+    "mostly",
+    "phase",
+    "worse"
    ]
   },
   "e2331c3622a8": {
