@@ -673,18 +673,35 @@
    "title": "Trump demands probe into ‘record setting error’ after third-quarter GDP data gets massive revision higher",
    "ts": 1795715852.0,
    "url": "https://www.cnbc.com/2026/11/26/trump-gdp-revision-investigation.html"
+  },
+  {
+   "kind": "pos",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795759462.096937,
+   "title": "Fast cars, big money: Why sportswear races into Formula 1 as sponsorship spending soars 75%",
+   "ts": 1795758364.0,
+   "url": "https://www.cnbc.com/2026/11/27/nike-formula-1-sportswear-brands-sponsorship-adidas-puma.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "Reuters",
+   "t": 1795759462.096937,
+   "title": "Australia sanctions two alleged Iranian agents over antisemitic attacks - Reuters",
+   "ts": 1795749420.0,
+   "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNSHBtblZnbWZBQUo5LVNGb2sxQkpHOFdJTGI0YlozM0YxUGh0bnZkLWZOeWJrMFBoX0h3aGNkTEtCVVA3Zjg0WEpuYi1MdjBEa2dKVDg3Rk5yWFJCNEs1NDFnYTRrVmpJeVQ1Y1lMR0daaDItcWczSEhzT3VfVTRxVno4Zm9HVGdTN2RDT2NtYmk5NlZqTGJnekNMSTI5dERMY1dZaFpFUy1IM01aVUFjbzI3MDEteXFNS2FvaEhFLTJhZnBvRTVRbzln?oc=5"
   }
  ],
  "journal": [],
- "levels": {
-  "day|2026-11-26|PAEEM.PA|+": 1
- },
+ "levels": {},
  "news_seen": {
   "015933604855": 1795682672.680086,
   "01c8b5a7da77": 1795683491.529673,
   "027d956e3a5a": 1795453684.32093,
   "0422d64979e7": 1795531964.876116,
   "04d5a5371668": 1795450098.526633,
+  "0560b280425c": 1795759462.096937,
   "06bf52b7239a": 1795594643.316229,
   "0f6fcf8c1816": 1795531548.179378,
   "0ff1b5333469": 1795716049.059164,
@@ -771,6 +788,7 @@
   "9de39b24fdd5": 1795672833.758146,
   "9e9f5693052c": 1795672833.758146,
   "a07a26c96ec2": 1795462503.669837,
+  "a1b2aeb6ddc4": 1795759462.096937,
   "a2b29e1f8eb6": 1795617933.536787,
   "a6f7834cb3d1": 1795416609.954776,
   "a734ec8c0602": 1795535860.382256,
@@ -863,6 +881,25 @@
     "wall",
     "while",
     "wins"
+   ]
+  },
+  "0560b280425c": {
+   "t": 1795759462.096937,
+   "tk": null,
+   "w": [
+    "1",
+    "75",
+    "big",
+    "cars",
+    "fast",
+    "formula",
+    "money",
+    "races",
+    "soars",
+    "spending",
+    "sponsorship",
+    "sportswear",
+    "why"
    ]
   },
   "06bf52b7239a": {
@@ -1652,6 +1689,21 @@
     "rival",
     "tariff",
     "trump"
+   ]
+  },
+  "a1b2aeb6ddc4": {
+   "t": 1795759462.096937,
+   "tk": null,
+   "w": [
+    "agents",
+    "alleged",
+    "antisemitic",
+    "attacks",
+    "australia",
+    "iranian",
+    "reuters",
+    "sanctions",
+    "two"
    ]
   },
   "a2b29e1f8eb6": {
