@@ -700,6 +700,24 @@
    "title": "ECB Consumer Expectations Survey results – October 2026",
    "ts": 1795770000.0,
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261127~2e53af695e.en.html"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "CNBC",
+   "t": 1795774961.002471,
+   "title": "SpaceX shares jump 4% amid tech rally and after Musk says he will expand on Trump Account share donations",
+   "ts": 1795774839.0,
+   "url": "https://www.cnbc.com/2026/11/27/spacex-shares-musk-donations.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795774961.002471,
+   "title": "Defense giant Rheinmetall embraces ‘new normal’ of caution after military contract setback; stock rises",
+   "ts": 1795774269.0,
+   "url": "https://www.cnbc.com/2026/11/27/rheinmetall-stock-cmd-guidance-sales.html"
   }
  ],
  "journal": [],
@@ -734,6 +752,7 @@
   "36b1d7cf2706": 1795612637.11236,
   "391b6ce3bdff": 1795716998.926877,
   "39c6b5417c88": 1795693712.114561,
+  "3b1e24e1f86f": 1795774961.002471,
   "3ba3fdd32185": 1795628263.398289,
   "3d43e1cf8adb": 1795627411.88615,
   "400635f5fc7d": 1795642983.489492,
@@ -790,6 +809,7 @@
   "93dfdc107bba": 1795644992.27454,
   "945d301e6843": 1795466096.917447,
   "97b72146dd90": 1795614855.986505,
+  "97df1ab71d87": 1795774961.002471,
   "98debb052307": 1795450098.526633,
   "9908d81ec858": 1795457388.785203,
   "99c36caa473d": 1795451738.967813,
@@ -1147,6 +1167,22 @@
     "upgrades",
     "wall",
     "wins"
+   ]
+  },
+  "3b1e24e1f86f": {
+   "t": 1795774961.002471,
+   "tk": null,
+   "w": [
+    "caution",
+    "contract",
+    "defense",
+    "embraces",
+    "giant",
+    "military",
+    "normal",
+    "rheinmetall",
+    "rises",
+    "setback"
    ]
   },
   "3d43e1cf8adb": {
@@ -1679,6 +1715,24 @@
     "plunge",
     "sold",
     "top"
+   ]
+  },
+  "97df1ab71d87": {
+   "t": 1795774961.002471,
+   "tk": null,
+   "w": [
+    "4",
+    "account",
+    "donations",
+    "expand",
+    "jump",
+    "musk",
+    "rally",
+    "share",
+    "spacex",
+    "tech",
+    "trump",
+    "will"
    ]
   },
   "9de39b24fdd5": {
