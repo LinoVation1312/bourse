@@ -736,6 +736,15 @@
    "title": "Stocks are poised for a Friday jump — right into a $100 billion wave of automated selling, Goldman Sachs warns",
    "ts": 1795776840.0,
    "url": "https://www.marketwatch.com/story/stocks-are-poised-for-a-friday-jump-right-into-a-100-billion-wave-of-automated-selling-goldman-sachs-warns-aba6440f?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "neg",
+   "score": 9,
+   "src": "MarketWatch",
+   "t": 1795781958.488637,
+   "title": "Nvidia’s stock has tumbled 27% over one chaotic month. The next big test lies in the week ahead",
+   "ts": 1795780860.0,
+   "url": "https://www.marketwatch.com/story/nvidias-stock-has-tumbled-27-over-one-chaotic-month-the-next-big-test-lies-in-the-week-ahead-06449777?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -854,6 +863,7 @@
   "b4c4b6cebee7": 1795613157.473528,
   "b5cc64b9c766": 1795627791.284622,
   "b7d649e65d55": 1795528294.351813,
+  "ba2e5a499060": 1795781958.488637,
   "bb2764315f8f": 1795635821.754183,
   "bcc3de138648": 1795502488.253546,
   "be819c72e030": 1795692856.045884,
@@ -2060,6 +2070,25 @@
     "returns",
     "street",
     "wall"
+   ]
+  },
+  "ba2e5a499060": {
+   "t": 1795781958.488637,
+   "tk": null,
+   "w": [
+    "27",
+    "ahead",
+    "big",
+    "chaotic",
+    "has",
+    "lies",
+    "month",
+    "next",
+    "nvidia",
+    "one",
+    "test",
+    "tumbled",
+    "week"
    ]
   },
   "bb2764315f8f": {
