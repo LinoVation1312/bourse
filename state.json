@@ -745,6 +745,15 @@
    "title": "Nvidia’s stock has tumbled 27% over one chaotic month. The next big test lies in the week ahead",
    "ts": 1795780860.0,
    "url": "https://www.marketwatch.com/story/nvidias-stock-has-tumbled-27-over-one-chaotic-month-the-next-big-test-lies-in-the-week-ahead-06449777?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "pos",
+   "score": 5,
+   "src": "SeekingAlpha",
+   "t": 1795787495.662433,
+   "title": "OceanaGold secures Ausgold shareholder approval for acquisition",
+   "ts": 1795783898.0,
+   "url": "https://seekingalpha.com/news/4677009-oceanagold-secures-ausgold-shareholder-approval-for-acquisition?utm_source=feed_news_m_a&utm_medium=referral&feed_item_type=news"
   }
  ],
  "journal": [],
@@ -818,6 +827,7 @@
   "776bcb37ff21": 1795555457.437341,
   "7ae18b5ff434": 1795455285.33129,
   "7c9845702978": 1795453684.32093,
+  "7faab78e7f9b": 1795787495.662433,
   "80416ec3425d": 1795637824.119895,
   "810cf17792a9": 1795524466.168338,
   "822993dcb1b2": 1795442964.994116,
@@ -1601,6 +1611,18 @@
     "rally",
     "sinks",
     "unravels"
+   ]
+  },
+  "7faab78e7f9b": {
+   "t": 1795787495.662433,
+   "tk": null,
+   "w": [
+    "acquisition",
+    "approval",
+    "ausgold",
+    "oceanagold",
+    "secures",
+    "shareholder"
    ]
   },
   "80416ec3425d": {
