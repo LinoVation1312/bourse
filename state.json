@@ -754,6 +754,15 @@
    "title": "OceanaGold secures Ausgold shareholder approval for acquisition",
    "ts": 1795783898.0,
    "url": "https://seekingalpha.com/news/4677009-oceanagold-secures-ausgold-shareholder-approval-for-acquisition?utm_source=feed_news_m_a&utm_medium=referral&feed_item_type=news"
+  },
+  {
+   "kind": "info",
+   "score": 8,
+   "src": "BCE",
+   "t": 1795788826.613523,
+   "title": "Decisions taken by the Governing Council of the ECB (in addition to decisions setting interest rates)",
+   "ts": 1795788000.0,
+   "url": "https://www.ecb.europa.eu//press/govcdec/otherdec/2026/html/ecb.gc261127~13ecadc0f2.en.html"
   }
  ],
  "journal": [],
@@ -783,7 +792,9 @@
   "290006d302a0": 1795537817.617173,
   "295892a6f107": 1795515276.982162,
   "2ed5ce3e0659": 1795502488.253546,
+  "2f15890604f5": 1795788826.613523,
   "2f7a23f0c156": 1795531964.876116,
+  "2fc326459755": 1795788826.613523,
   "30102b249ca2": 1795628263.398289,
   "36b1d7cf2706": 1795612637.11236,
   "391b6ce3bdff": 1795716998.926877,
@@ -830,7 +841,6 @@
   "7faab78e7f9b": 1795787495.662433,
   "80416ec3425d": 1795637824.119895,
   "810cf17792a9": 1795524466.168338,
-  "822993dcb1b2": 1795442964.994116,
   "824961d89e60": 1795692856.045884,
   "8287e9df0d9f": 1795502488.253546,
   "8474cf89441a": 1795602242.310274,
@@ -879,7 +889,6 @@
   "bf7d21abaeae": 1795681019.961133,
   "bfa6a50bb170": 1795466096.917447,
   "c71ea1034a15": 1795556291.720931,
-  "c8785b006043": 1795442964.994116,
   "cb772d6ef89c": 1795460803.529935,
   "cbc0431e293c": 1795606049.091508,
   "cf2048d27f3c": 1795522556.732776,
@@ -1147,6 +1156,36 @@
     "sanofi",
     "three",
     "years"
+   ]
+  },
+  "2f15890604f5": {
+   "t": 1795788826.613523,
+   "tk": null,
+   "w": [
+    "addition",
+    "council",
+    "decisions",
+    "ecb",
+    "governing",
+    "interest",
+    "rates",
+    "setting",
+    "taken"
+   ]
+  },
+  "2fc326459755": {
+   "t": 1795788826.613523,
+   "tk": "SPCX",
+   "w": [
+    "bankrupt",
+    "centers",
+    "data",
+    "happens",
+    "space",
+    "spacex",
+    "they",
+    "wants",
+    "what"
    ]
   },
   "30102b249ca2": {
