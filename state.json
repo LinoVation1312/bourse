@@ -691,6 +691,15 @@
    "title": "Australia sanctions two alleged Iranian agents over antisemitic attacks - Reuters",
    "ts": 1795749420.0,
    "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNSHBtblZnbWZBQUo5LVNGb2sxQkpHOFdJTGI0YlozM0YxUGh0bnZkLWZOeWJrMFBoX0h3aGNkTEtCVVA3Zjg0WEpuYi1MdjBEa2dKVDg3Rk5yWFJCNEs1NDFnYTRrVmpJeVQ1Y1lMR0daaDItcWczSEhzT3VfVTRxVno4Zm9HVGdTN2RDT2NtYmk5NlZqTGJnekNMSTI5dERMY1dZaFpFUy1IM01aVUFjbzI3MDEteXFNS2FvaEhFLTJhZnBvRTVRbzln?oc=5"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "BCE",
+   "t": 1795770943.06516,
+   "title": "ECB Consumer Expectations Survey results – October 2026",
+   "ts": 1795770000.0,
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261127~2e53af695e.en.html"
   }
  ],
  "journal": [],
@@ -706,7 +715,6 @@
   "0f6fcf8c1816": 1795531548.179378,
   "0ff1b5333469": 1795716049.059164,
   "12152a371b6d": 1795446511.901323,
-  "12ebd8cc15f5": 1795425131.705267,
   "13e6d646bdfc": 1795688023.791834,
   "15649170fa5e": 1795536725.684588,
   "1a1e6d92116a": 1795552552.317799,
@@ -805,6 +813,7 @@
   "b29198883557": 1795541161.973863,
   "b29b2c2f43a1": 1795613157.473528,
   "b2b08a8dc79d": 1795625836.869651,
+  "b43b2b172439": 1795770943.06516,
   "b4c4b6cebee7": 1795613157.473528,
   "b5cc64b9c766": 1795627791.284622,
   "b7d649e65d55": 1795528294.351813,
@@ -1878,6 +1887,19 @@
     "tumble",
     "unravels",
     "weigh"
+   ]
+  },
+  "b43b2b172439": {
+   "t": 1795770943.06516,
+   "tk": null,
+   "w": [
+    "2026",
+    "consumer",
+    "ecb",
+    "expectations",
+    "october",
+    "results",
+    "survey"
    ]
   },
   "b4c4b6cebee7": {
