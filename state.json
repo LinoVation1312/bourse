@@ -763,6 +763,15 @@
    "title": "Decisions taken by the Governing Council of the ECB (in addition to decisions setting interest rates)",
    "ts": 1795788000.0,
    "url": "https://www.ecb.europa.eu//press/govcdec/otherdec/2026/html/ecb.gc261127~13ecadc0f2.en.html"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "CNBC",
+   "t": 1795789717.820145,
+   "title": "EU leaders fail to break $1.7 trillion budget deadlock as political pressure mounts",
+   "ts": 1795788775.0,
+   "url": "https://www.cnbc.com/2026/11/27/eu-budget-2028-2034-deadlock.html"
   }
  ],
  "journal": [],
@@ -796,6 +805,7 @@
   "2f7a23f0c156": 1795531964.876116,
   "2fc326459755": 1795788826.613523,
   "30102b249ca2": 1795628263.398289,
+  "32bf5fe26a89": 1795789717.820145,
   "36b1d7cf2706": 1795612637.11236,
   "391b6ce3bdff": 1795716998.926877,
   "39c6b5417c88": 1795693712.114561,
@@ -1199,6 +1209,23 @@
     "riksbank",
     "sveriges",
     "sweden"
+   ]
+  },
+  "32bf5fe26a89": {
+   "t": 1795789717.820145,
+   "tk": null,
+   "w": [
+    "1",
+    "7",
+    "break",
+    "budget",
+    "deadlock",
+    "fail",
+    "leaders",
+    "mounts",
+    "political",
+    "pressure",
+    "trillion"
    ]
   },
   "36b1d7cf2706": {
