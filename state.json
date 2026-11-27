@@ -781,6 +781,15 @@
    "title": "These stocks soared the most during a wild week highlighted by Huang’s return to Nvidia",
    "ts": 1795794720.0,
    "url": "https://www.marketwatch.com/story/these-stocks-soared-the-most-during-a-wild-week-highlighted-by-huangs-return-to-nvidia-578b3f9a?mod=mw_rss_topstories"
+  },
+  {
+   "kind": "info",
+   "score": 4,
+   "src": "Reuters",
+   "t": 1795806569.074232,
+   "title": "Britain's FTSE 100 posts biggest weekly gain in eight months as miners, banks rally - Reuters",
+   "ts": 1795799774.0,
+   "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNSFRCSGhuNWlueUFObDgwZDBGenpUODhVdkhrQWtra2lxOWdNVldJZXNLVnRQNldMVTdaTmtRNUNjM3hndjJRYmtUNXE5c2p1TmMyaVVZY1M1a2dSX1Bfbm00ck8zamF0SkVUc0p2ZkM0Z0pfVVIyU0VzeU5vYklZRkxDUnBxZ3cwbktSQmROQVVacnlWekpNY3hLS2IyampaZEJPMFJ0X2dIQQ?oc=5"
   }
  ],
  "journal": [],
@@ -869,6 +878,7 @@
   "9b07211e2651": 1795794124.417084,
   "9b8a60e2d9fb": 1795775362.96182,
   "9de39b24fdd5": 1795672833.758146,
+  "9e075bd0827c": 1795806569.074232,
   "9e9f5693052c": 1795672833.758146,
   "a07a26c96ec2": 1795462503.669837,
   "a1b2aeb6ddc4": 1795759462.096937,
@@ -896,7 +906,6 @@
   "bfa6a50bb170": 1795466096.917447,
   "c0594d5079a0": 1795791502.782525,
   "c71ea1034a15": 1795556291.720931,
-  "cb772d6ef89c": 1795460803.529935,
   "cbc0431e293c": 1795606049.091508,
   "cf2048d27f3c": 1795522556.732776,
   "d07d42ffa920": 1795594643.316229,
@@ -1963,6 +1972,25 @@
     "nuclear",
     "status",
     "will"
+   ]
+  },
+  "9e075bd0827c": {
+   "t": 1795806569.074232,
+   "tk": null,
+   "w": [
+    "100",
+    "banks",
+    "biggest",
+    "britain",
+    "eight",
+    "ftse",
+    "gain",
+    "miners",
+    "months",
+    "posts",
+    "rally",
+    "reuters",
+    "weekly"
    ]
   },
   "9e9f5693052c": {
