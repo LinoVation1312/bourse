@@ -772,6 +772,15 @@
    "title": "EU leaders fail to break $1.7 trillion budget deadlock as political pressure mounts",
    "ts": 1795788775.0,
    "url": "https://www.cnbc.com/2026/11/27/eu-budget-2028-2034-deadlock.html"
+  },
+  {
+   "kind": "info",
+   "score": 5,
+   "src": "MarketWatch",
+   "t": 1795794944.852832,
+   "title": "These stocks soared the most during a wild week highlighted by Huang’s return to Nvidia",
+   "ts": 1795794720.0,
+   "url": "https://www.marketwatch.com/story/these-stocks-soared-the-most-during-a-wild-week-highlighted-by-huangs-return-to-nvidia-578b3f9a?mod=mw_rss_topstories"
   }
  ],
  "journal": [],
@@ -804,6 +813,7 @@
   "2f7a23f0c156": 1795531964.876116,
   "2fc326459755": 1795788826.613523,
   "30102b249ca2": 1795628263.398289,
+  "31896ec0a743": 1795794944.852832,
   "32bf5fe26a89": 1795789717.820145,
   "36b1d7cf2706": 1795612637.11236,
   "391b6ce3bdff": 1795716998.926877,
@@ -822,6 +832,7 @@
   "4b9953845022": 1795613157.473528,
   "4c2f2d9f8f47": 1795693278.539214,
   "4d3a3a903399": 1795605165.786654,
+  "4e27c9c2b0d9": 1795794944.852832,
   "52c1dc372bc0": 1795526122.179644,
   "57e8a82f8e8d": 1795626505.570455,
   "585e9c624876": 1795688542.731635,
@@ -1206,6 +1217,22 @@
     "riksbank",
     "sveriges",
     "sweden"
+   ]
+  },
+  "31896ec0a743": {
+   "t": 1795794944.852832,
+   "tk": null,
+   "w": [
+    "during",
+    "highlighted",
+    "huang",
+    "most",
+    "nvidia",
+    "return",
+    "soared",
+    "these",
+    "week",
+    "wild"
    ]
   },
   "32bf5fe26a89": {
